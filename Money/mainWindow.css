@@ -1,0 +1,327 @@
+#mainWindow {
+	background-color: rgb(66, 143, 143);
+	color: white;	
+}
+
+#pricallButton {
+	background-image: none;
+	background-color: rgb(26, 100, 31);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(239, 255, 0);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px; 
+}
+
+#pricallButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#moneypriceButton {
+	background-image: none;
+	background-color: rgb(26, 100, 31);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(239, 255, 0);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px; 	
+}
+
+#moneypriceButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+
+#moneyvolumeButton {
+	background-image: none;
+	background-color: rgb(26, 100, 31);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(239, 255, 0);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#moneyvolumeButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#pricedealsButton {
+	background-image: none;
+	background-color: rgb(0, 145, 255);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(8, 8, 8);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#aboutprButton {
+	background-image: none;
+	background-color: rgb(69, 168, 213);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(8, 8, 8);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#aboutprButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#pricedealsButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#dealsmoneyprButton {
+	background-image: none;
+	background-color: rgb(0, 145, 255);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(8, 8, 8);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#dealsmoneyprButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#dealsvolumeButton {
+	background-image: none;
+	background-color: rgb(0, 145, 255);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(8, 8, 8);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#dealsvolumeButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#commongraphicallButton {
+	background-image: none;
+	background-color: rgb(176, 0, 255);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(239, 255, 0);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#commongraphicallButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;	
+}
+
+#commongraphicdealsButton {
+	background-image: none;
+	background-color: rgb(255, 152, 0);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(8, 8, 8);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#commongraphicdealsButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#psdButton {
+	background-image: none;
+	background-color: rgb(26, 100, 31);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(239, 255, 0);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#psdButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#volumetotalButton {
+	background-image: none;
+	background-color: rgb(26, 100, 31);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(239, 255, 0);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#volumetotalButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#moneytotalButton {
+	background-image: none;
+	background-color: rgb(26, 100, 31);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(239, 255, 0);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;	
+}
+
+#moneytotalButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#commonpsdButton {
+	background-image: none;
+	background-color: rgb(177, 152, 119);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(8, 8, 8);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#commonpsdButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#downloadButton {
+	background-image: none;
+	background-color: rgb(239, 255, 0);
+	border-width: 1px;
+	border-color: black;
+	color: rgb(8, 8, 8);
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#downloadButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#downloadButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#dialog {
+	background-color: rgb(0, 145, 255);
+}
+
+#dialogButton {
+	background-image: none;
+	border-width: 1px;
+    border-radius: 10px;
+    border-color: black;
+	background-color: rgb(255, 9, 0);
+	color: yellow;
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#dialogButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#aboutprButton:active {
+	background-color: rgb(199, 43, 10);
+	color: white;
+}
+
+#dialogButton:active {
+	background-color: rgb(199, 43, 10);
+	color: white;
+}
+
+#moneytotalButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#commonpsdButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#volumetotalButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#psdButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#commongraphicdealsButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#commongraphicallButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#dealsvolumeButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#dealsmoneyprButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#pricedealsButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#moneyvolumeButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#moneypriceButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#pricallButton:active {
+	background-color: rgb(199, 43, 10);
+}

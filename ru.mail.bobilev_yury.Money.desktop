@@ -1,0 +1,15 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=Money
+Comment=Money collects MOEX statistic
+GenericName=Money
+Exec=money
+Icon=money
+Categories=Science;Economy;
+Terminal=false
+Type=Application
+Version=1.5
+Name[ru]=Money
+Comment[ru]=Программа сбора статистики Московской биржи
+GenericName[ru]=Money
+Name[ru_RU]=Money
