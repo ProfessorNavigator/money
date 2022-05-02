@@ -19,7 +19,7 @@ You may need superuser privileges to execute last command.
 
 ### Windows
 
-Proper installer will be created later. Now you can build Money from source by MSYS2 project [https://www.msys2.org/](https://www.msys2.org/). Follow installation instructions from their site. Install dependencies from `Dependencies` section and git (mingw64 packages). Than create folder where you want to download source code (path must not include spaces or non Latin letters). Open mingw64 console and execute following commands (in example we download code to C:\Money)\
+Proper installer will be created later. Now you can build Money from source by MSYS2 project [https://www.msys2.org/](https://www.msys2.org/). Follow installation instructions from their site. Install dependencies from [Dependencies](README.md#dependencies) section and git (mingw64 packages). Than create folder where you want to download source code (path must not include spaces or non Latin letters). Open mingw64 console and execute following commands (in example we download code to C:\Money)\
 
 `cd /c/Money`\
 `git clone https://github.com/ProfessorNavigator/Money.git`\
