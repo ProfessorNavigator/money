@@ -28,7 +28,7 @@ Proper installer will be created later. Now you can build Money from source by M
 `cd build`\
 `ninja install`
 
-If everything was correct, you can find money.exe file in `your_msys2_folder/mingw64/bin`.
+If everything was correct, you can find money.exe file in `msys64/mingw64/bin`. Icon to create desktop shortcut can be found in `msys64/mingw64/share/icons/hicolor/128x128/money.ico` path.
 
 ## Dependencies
 
