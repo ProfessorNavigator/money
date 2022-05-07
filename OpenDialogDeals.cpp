@@ -18,10 +18,11 @@
 #include "OpenDialogDeals.h"
 
 OpenDialogDeals::OpenDialogDeals (Glib::RefPtr<Gtk::Application> app,
-				  Gtk::Window *mwin)
+				  Gtk::Window *mwin, std::string *opendate)
 {
   App = app;
   Mwin = mwin;
+  Opendate = opendate;
   css_provider = Gtk::CssProvider::create ();
   AuxFunc af;
   std::filesystem::path p = std::filesystem::u8path (af.get_selfpath ());
@@ -876,6 +877,7 @@ OpenDialogDeals::openFile ()
   std::string openfile, outfolder;
   af.homePath (&openfile);
   openfile = openfile + "/Money/Deals/" + dates[selecteddate] + ".zip";
+  *Opendate = dates[selecteddate];
   outfolder = std::filesystem::temp_directory_path ().u8string ();
 #ifdef __linux
   outfolder = outfolder + "/Money/DealsToShow";

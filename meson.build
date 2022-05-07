@@ -10,9 +10,9 @@ mathgl = cpp.find_library ('mgl2', has_headers: ['mgl2/mgl.h'], required: true)
 thread_dep = dependency ('threads')
 executable ('money', sources : src, dependencies : [gmp, gtkmm, icu, zip, curl, mathgl, thread_dep], install : true, gui_app : true)
 install_subdir ('Money', install_dir : 'share')
-install_data ('ru.mail.bobilev_yury.Money.desktop', install_dir : 'share/applications')
 if host_machine.system() == 'linux'
 	install_data ('money.png', install_dir : 'share/icons/hicolor/128x128/apps')
+	install_data ('ru.mail.bobilev_yury.Money.desktop', install_dir : 'share/applications')
 endif
 if host_machine.system() == 'windows'
 	install_data ('money.ico', install_dir : 'share/icons/hicolor/128x128/apps')

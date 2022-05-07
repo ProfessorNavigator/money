@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-29 15:28+0400\n"
+"POT-Creation-Date: 2022-05-05 15:51+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,293 +17,297 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: CalcIndex.cpp:69
+#: CalcIndex.cpp:79
 msgid "File list creation:"
 msgstr ""
 
-#: CalcIndex.cpp:101
+#: CalcIndex.cpp:111
 msgid "Data collection:"
 msgstr ""
 
-#: CalcIndex.cpp:266
+#: CalcIndex.cpp:276
 msgid "Result saving:"
 msgstr ""
 
-#: DownloadMenu.cpp:418
+#: DownloadMenu.cpp:428
 msgid "Download menu"
 msgstr ""
 
-#: DownloadMenu.cpp:480
+#: DownloadMenu.cpp:490
 msgid "Transactions for instrument"
 msgstr ""
 
-#: DownloadMenu.cpp:490
+#: DownloadMenu.cpp:500
 msgid "Daily results for instrument"
 msgstr ""
 
-#: DownloadMenu.cpp:500
+#: DownloadMenu.cpp:510
 msgid "Last available date on server: "
 msgstr ""
 
-#: DownloadMenu.cpp:511
+#: DownloadMenu.cpp:521
 msgid "Last downloaded data, date: "
 msgstr ""
 
-#: DownloadMenu.cpp:522
+#: DownloadMenu.cpp:532
 msgid "All transactions for current date"
 msgstr ""
 
-#: DownloadMenu.cpp:532
+#: DownloadMenu.cpp:542
 msgid "All results"
 msgstr ""
 
-#: DownloadMenu.cpp:960 DownloadMenu.cpp:1509 DownloadMenu.cpp:1694
+#: DownloadMenu.cpp:970 DownloadMenu.cpp:1519 DownloadMenu.cpp:1704
 msgid "Downloading..."
 msgstr ""
 
-#: DownloadMenu.cpp:971 DownloadMenu.cpp:1519 DownloadMenu.cpp:1704
+#: DownloadMenu.cpp:981 DownloadMenu.cpp:1529 DownloadMenu.cpp:1714
 msgid "Downloading in progress..."
 msgstr ""
 
-#: DownloadMenu.cpp:983 DownloadMenu.cpp:1211 DownloadMenu.cpp:1322
-#: DownloadMenu.cpp:1534 DownloadMenu.cpp:1716 GraphicWidget.cpp:556
-#: MainWindow.cpp:425 OpenDialog.cpp:210 OpenDialogDeals.cpp:386
+#: DownloadMenu.cpp:993 DownloadMenu.cpp:1221 DownloadMenu.cpp:1332
+#: DownloadMenu.cpp:1544 DownloadMenu.cpp:1726 GraphicWidget.cpp:583
+#: MainWindow.cpp:435 OpenDialog.cpp:220 OpenDialogDeals.cpp:397
 msgid "Cancel"
 msgstr ""
 
-#: DownloadMenu.cpp:1124 DownloadMenu.cpp:1468 MainWindow.cpp:481
+#: DownloadMenu.cpp:1134 DownloadMenu.cpp:1478 MainWindow.cpp:491
 msgid "Network error"
 msgstr ""
 
-#: DownloadMenu.cpp:1134
+#: DownloadMenu.cpp:1144
 msgid "Network error!"
 msgstr ""
 
-#: DownloadMenu.cpp:1140 DownloadMenu.cpp:1478 GraphicWidget.cpp:252
-#: MainWindow.cpp:482
+#: DownloadMenu.cpp:1150 DownloadMenu.cpp:1488 GraphicWidget.cpp:279
+#: MainWindow.cpp:492
 msgid "Close"
 msgstr ""
 
-#: DownloadMenu.cpp:1190
+#: DownloadMenu.cpp:1200
 msgid "PPm calculation"
 msgstr ""
 
-#: DownloadMenu.cpp:1298
+#: DownloadMenu.cpp:1308
 msgid "Transactions downloading"
 msgstr ""
 
-#: DownloadMenu.cpp:1309
+#: DownloadMenu.cpp:1319
 msgid "Transaction downloading progress:"
 msgstr ""
 
-#: DownloadMenu.cpp:1462
+#: DownloadMenu.cpp:1472
 msgid "No transactions today"
 msgstr ""
 
-#: DownloadMenu.cpp:1464
+#: DownloadMenu.cpp:1474
 msgid "Message"
 msgstr ""
 
-#: DownloadMenu.cpp:1469
+#: DownloadMenu.cpp:1479
 msgid "Error!"
 msgstr ""
 
-#: DownloadMenu.cpp:1648
+#: DownloadMenu.cpp:1658
 msgid "Downloading completed"
 msgstr ""
 
-#: DownloadMenu.cpp:1658
+#: DownloadMenu.cpp:1668
 msgid "Downloading completed!"
 msgstr ""
 
-#: GraphicWidget.cpp:127
+#: GraphicWidget.cpp:141
 msgid "Instrument: "
 msgstr ""
 
-#: GraphicWidget.cpp:133
+#: GraphicWidget.cpp:152
+msgid "Date: "
+msgstr ""
+
+#: GraphicWidget.cpp:160
 msgid "Increase"
 msgstr ""
 
-#: GraphicWidget.cpp:145
+#: GraphicWidget.cpp:172
 msgid "Decrease"
 msgstr ""
 
-#: GraphicWidget.cpp:157
+#: GraphicWidget.cpp:184
 msgid "Move up"
 msgstr ""
 
-#: GraphicWidget.cpp:169
+#: GraphicWidget.cpp:196
 msgid "Move down"
 msgstr ""
 
-#: GraphicWidget.cpp:181
+#: GraphicWidget.cpp:208
 msgid "Move left"
 msgstr ""
 
-#: GraphicWidget.cpp:193
+#: GraphicWidget.cpp:220
 msgid "Move right"
 msgstr ""
 
-#: GraphicWidget.cpp:205
+#: GraphicWidget.cpp:232
 msgid "Recover"
 msgstr ""
 
-#: GraphicWidget.cpp:217
+#: GraphicWidget.cpp:244
 msgid "Save as jpg"
 msgstr ""
 
-#: GraphicWidget.cpp:228
+#: GraphicWidget.cpp:255
 msgid "Save as png"
 msgstr ""
 
-#: GraphicWidget.cpp:239
+#: GraphicWidget.cpp:266
 msgid "Minimize"
 msgstr ""
 
-#: GraphicWidget.cpp:307
+#: GraphicWidget.cpp:334
 msgid "Date"
 msgstr ""
 
-#: GraphicWidget.cpp:315
+#: GraphicWidget.cpp:342
 msgid "CPP"
 msgstr ""
 
-#: GraphicWidget.cpp:538
+#: GraphicWidget.cpp:565
 msgid "File name"
 msgstr ""
 
-#: GraphicWidget.cpp:547
+#: GraphicWidget.cpp:574
 msgid "/Images"
 msgstr ""
 
-#: GraphicWidget.cpp:564
+#: GraphicWidget.cpp:591
 msgid "Save"
 msgstr ""
 
-#: GraphicWidget.cpp:611
+#: GraphicWidget.cpp:638
 msgid "File already exists. Replace?"
 msgstr ""
 
-#: GraphicWidget.cpp:613
+#: GraphicWidget.cpp:640
 msgid "Yes"
 msgstr ""
 
-#: GraphicWidget.cpp:616
+#: GraphicWidget.cpp:643
 msgid "No"
 msgstr ""
 
-#: GraphicWidget.cpp:755 GraphicWidget.cpp:804 GraphicWidget.cpp:953
+#: GraphicWidget.cpp:782 GraphicWidget.cpp:831 GraphicWidget.cpp:980
 msgid "PPm "
 msgstr ""
 
-#: GraphicWidget.cpp:767 GraphicWidget.cpp:816 GraphicWidget.cpp:965
+#: GraphicWidget.cpp:794 GraphicWidget.cpp:843 GraphicWidget.cpp:992
 msgid "PPTm "
 msgstr ""
 
-#: GraphicWidget.cpp:779
+#: GraphicWidget.cpp:806
 msgid "PPTm/PPm "
 msgstr ""
 
-#: GraphicWidget.cpp:791
+#: GraphicWidget.cpp:818
 msgid "Everage speed "
 msgstr ""
 
-#: GraphicWidget.cpp:828
-msgid "Shares' turnover "
+#: GraphicWidget.cpp:855
+msgid "Share's turnover "
 msgstr ""
 
-#: GraphicWidget.cpp:840 GraphicWidget.cpp:854
+#: GraphicWidget.cpp:867 GraphicWidget.cpp:881
 msgid "Money turnover "
 msgstr ""
 
-#: GraphicWidget.cpp:866 GraphicWidget.cpp:991
+#: GraphicWidget.cpp:893 GraphicWidget.cpp:1018
 msgid "Average turnover "
 msgstr ""
 
-#: GraphicWidget.cpp:880
+#: GraphicWidget.cpp:907
 msgid "Weighted average price "
 msgstr ""
 
-#: GraphicWidget.cpp:893
+#: GraphicWidget.cpp:920
 msgid "First price "
 msgstr ""
 
-#: GraphicWidget.cpp:905
+#: GraphicWidget.cpp:932
 msgid "Last price "
 msgstr ""
 
-#: GraphicWidget.cpp:979
+#: GraphicWidget.cpp:1006
 msgid "Turnover "
 msgstr ""
 
-#: MainWindow.cpp:75 PlotPriceAll.cpp:221 PlotPriceDeals.cpp:213
-#: PlotPriceDeals.cpp:284
+#: MainWindow.cpp:85 PlotPriceAll.cpp:231 PlotPriceDeals.cpp:223
+#: PlotPriceDeals.cpp:294
 msgid "Price"
 msgstr ""
 
-#: MainWindow.cpp:85 PlotAllCommon.cpp:217 PlotDealsCommon.cpp:273
-#: PlotGlobalCommon.cpp:168 PlotPSDGlobal.cpp:129 PSD.cpp:163 PSDDeals.cpp:193
+#: MainWindow.cpp:95 PlotAllCommon.cpp:227 PlotDealsCommon.cpp:283
+#: PlotGlobalCommon.cpp:178 PlotPSDGlobal.cpp:139 PSD.cpp:173 PSDDeals.cpp:203
 msgid "Purchasing power of money"
 msgstr ""
 
-#: MainWindow.cpp:95
-msgid "Shares' turnover"
-msgstr ""
-
 #: MainWindow.cpp:105
-msgid "Prices for transactions"
+msgid "Share's turnover"
 msgstr ""
 
 #: MainWindow.cpp:115
-msgid "PPm for transactions"
+msgid "Prices for transactions"
 msgstr ""
 
 #: MainWindow.cpp:125
-msgid "Shares' turnover for transactions"
+msgid "PPm for transactions"
 msgstr ""
 
 #: MainWindow.cpp:135
-msgid "Prediction plots (common)"
+msgid "Share's turnover for transactions"
 msgstr ""
 
 #: MainWindow.cpp:145
+msgid "Prediction plots (common)"
+msgstr ""
+
+#: MainWindow.cpp:155
 msgid "Prediction plots (daily)"
 msgstr ""
 
-#: MainWindow.cpp:154
+#: MainWindow.cpp:164
 msgid "PPm global"
 msgstr ""
 
-#: MainWindow.cpp:164
+#: MainWindow.cpp:174
 msgid "Shares' turnover global"
 msgstr ""
 
-#: MainWindow.cpp:174
+#: MainWindow.cpp:184
 msgid "Money turnover global"
 msgstr ""
 
-#: MainWindow.cpp:184
+#: MainWindow.cpp:194
 msgid "PPm common plots"
 msgstr ""
 
-#: MainWindow.cpp:194
+#: MainWindow.cpp:204
 msgid "Download data"
 msgstr ""
 
-#: MainWindow.cpp:203 MainWindow.cpp:516 MainWindow.cpp:561
+#: MainWindow.cpp:213 MainWindow.cpp:526 MainWindow.cpp:571
 msgid "About"
 msgstr ""
 
-#: MainWindow.cpp:415
+#: MainWindow.cpp:425
 msgid ""
-"<span foreground='#EFFF00' size='large'>Wait, shares' list is downloading..."
+"<span foreground='#EFFF00' size='large'>Wait, share's list is downloading..."
 "</span>"
 msgstr ""
 
-#: MainWindow.cpp:527
+#: MainWindow.cpp:537
 msgid ""
 "Money is a programm to collect statistics from moex.com\n"
-"Author Yury Bobylev.\n"
+"Author Yury Bobylev <bobilev_yury@mail.ru>.\n"
 "Program uses next libraries:\n"
 "GTK https://www.gtk.org\n"
 "Libcurl https://curl.se/libcurl/\n"
@@ -311,157 +315,157 @@ msgid ""
 "GMP https://gmplib.org/ICU https://icu.unicode.org"
 msgstr ""
 
-#: MainWindow.cpp:608
+#: MainWindow.cpp:618
 msgid "Licence"
 msgstr ""
 
-#: OpenDialog.cpp:102 OpenDialogDeals.cpp:200
+#: OpenDialog.cpp:112 OpenDialogDeals.cpp:211
 msgid "Instrument selection"
 msgstr ""
 
-#: OpenDialog.cpp:114 OpenDialogDeals.cpp:250
+#: OpenDialog.cpp:124 OpenDialogDeals.cpp:261
 msgid "Mode:"
 msgstr ""
 
-#: OpenDialog.cpp:154 OpenDialogDeals.cpp:329
+#: OpenDialog.cpp:164 OpenDialogDeals.cpp:340
 msgid "Instrument:"
 msgstr ""
 
-#: OpenDialog.cpp:197 OpenDialogDeals.cpp:373
+#: OpenDialog.cpp:207 OpenDialogDeals.cpp:384
 msgid "Confirm"
 msgstr ""
 
-#: OpenDialogDeals.cpp:211
+#: OpenDialogDeals.cpp:222
 msgid "Date:"
 msgstr ""
 
-#: OpenDialogDeals.cpp:292
+#: OpenDialogDeals.cpp:303
 msgid "Sort by:"
 msgstr ""
 
-#: OpenDialogDeals.cpp:301 OpenDialogDeals.cpp:422 OpenDialogDeals.cpp:695
+#: OpenDialogDeals.cpp:312 OpenDialogDeals.cpp:433 OpenDialogDeals.cpp:706
 msgid "Size"
 msgstr ""
 
-#: OpenDialogDeals.cpp:425
+#: OpenDialogDeals.cpp:436
 msgid "Name"
 msgstr ""
 
-#: OpenDialogDeals.cpp:428
+#: OpenDialogDeals.cpp:439
 msgid "Codename"
 msgstr ""
 
-#: PlotAllCommon.cpp:274 PlotDealsCommon.cpp:329 PSD.cpp:240 PSDDeals.cpp:246
+#: PlotAllCommon.cpp:284 PlotDealsCommon.cpp:339 PSD.cpp:250 PSDDeals.cpp:256
 msgid "Shares/USD"
 msgstr ""
 
-#: PlotAllCommon.cpp:279 PlotDealsCommon.cpp:334 PSD.cpp:245 PSDDeals.cpp:251
+#: PlotAllCommon.cpp:289 PlotDealsCommon.cpp:344 PSD.cpp:255 PSDDeals.cpp:261
 msgid "Shares/EUR"
 msgstr ""
 
-#: PlotAllCommon.cpp:283 PlotDealsCommon.cpp:338 PlotGlobalCommon.cpp:215
-#: PlotPSDGlobal.cpp:176 PSD.cpp:249 PSDDeals.cpp:255
+#: PlotAllCommon.cpp:293 PlotDealsCommon.cpp:348 PlotGlobalCommon.cpp:225
+#: PlotPSDGlobal.cpp:186 PSD.cpp:259 PSDDeals.cpp:265
 msgid "Shares/Ruble"
 msgstr ""
 
-#: PlotAllCommon.cpp:285 PlotAllCommon.cpp:382 PlotAllCommon.cpp:465
-#: PlotGlobalCommon.cpp:214 PlotGlobalCommon.cpp:292 PlotGlobalCommon.cpp:366
-#: PlotMoneyGlobal.cpp:170 PlotPriceAll.cpp:290 PlotPSDGlobal.cpp:175
-#: PlotVolumeAll.cpp:183 PlotVolumeGlobal.cpp:169 PSD.cpp:251
+#: PlotAllCommon.cpp:295 PlotAllCommon.cpp:392 PlotAllCommon.cpp:475
+#: PlotGlobalCommon.cpp:224 PlotGlobalCommon.cpp:302 PlotGlobalCommon.cpp:376
+#: PlotMoneyGlobal.cpp:180 PlotPriceAll.cpp:300 PlotPSDGlobal.cpp:185
+#: PlotVolumeAll.cpp:193 PlotVolumeGlobal.cpp:179 PSD.cpp:261
 msgid "Days"
 msgstr ""
 
-#: PlotAllCommon.cpp:303 PlotDealsCommon.cpp:348 PlotGlobalCommon.cpp:219
-#: PlotPSDGlobal.cpp:181 PSD.cpp:269 PSDDeals.cpp:264
+#: PlotAllCommon.cpp:313 PlotDealsCommon.cpp:358 PlotGlobalCommon.cpp:229
+#: PlotPSDGlobal.cpp:191 PSD.cpp:279 PSDDeals.cpp:274
 msgid "PPm"
 msgstr ""
 
-#: PlotAllCommon.cpp:304 PlotDealsCommon.cpp:349 PlotGlobalCommon.cpp:218
-#: PlotPSDGlobal.cpp:180 PSD.cpp:270 PSDDeals.cpp:265
+#: PlotAllCommon.cpp:314 PlotDealsCommon.cpp:359 PlotGlobalCommon.cpp:228
+#: PlotPSDGlobal.cpp:190 PSD.cpp:280 PSDDeals.cpp:275
 msgid "PPTm"
 msgstr ""
 
-#: PlotAllCommon.cpp:334 PlotDealsCommon.cpp:365
+#: PlotAllCommon.cpp:344 PlotDealsCommon.cpp:375
 msgid "PPTm/PPm in %"
 msgstr ""
 
-#: PlotAllCommon.cpp:383 PlotAllCommon.cpp:399 PlotDealsCommon.cpp:413
-#: PlotDealsCommon.cpp:420
+#: PlotAllCommon.cpp:393 PlotAllCommon.cpp:409 PlotDealsCommon.cpp:423
+#: PlotDealsCommon.cpp:430
 msgid "PPTm/PPm (%)"
 msgstr ""
 
-#: PlotAllCommon.cpp:415 PlotDealsCommon.cpp:433
+#: PlotAllCommon.cpp:425 PlotDealsCommon.cpp:443
 msgid "Average speed"
 msgstr ""
 
-#: PlotAllCommon.cpp:466
+#: PlotAllCommon.cpp:476
 msgid "Shares per day"
 msgstr ""
 
-#: PlotAllCommon.cpp:492 PlotDealsCommon.cpp:488
+#: PlotAllCommon.cpp:502 PlotDealsCommon.cpp:498
 msgid "Speed"
 msgstr ""
 
-#: PlotDealsCommon.cpp:340 PlotDealsCommon.cpp:412 PlotDealsCommon.cpp:481
-#: PlotPriceDeals.cpp:277 PlotVolumeDeals.cpp:196 PSDDeals.cpp:257
+#: PlotDealsCommon.cpp:350 PlotDealsCommon.cpp:422 PlotDealsCommon.cpp:491
+#: PlotPriceDeals.cpp:287 PlotVolumeDeals.cpp:206 PSDDeals.cpp:267
 msgid "Transactions"
 msgstr ""
 
-#: PlotDealsCommon.cpp:350
+#: PlotDealsCommon.cpp:360
 msgid "PPTm(0)"
 msgstr ""
 
-#: PlotDealsCommon.cpp:482
+#: PlotDealsCommon.cpp:492
 msgid "Shares per second"
 msgstr ""
 
-#: PlotGlobalCommon.cpp:249 PlotGlobalCommon.cpp:297 PlotVolumeAll.cpp:132
-#: PlotVolumeDeals.cpp:145 PlotVolumeDeals.cpp:203 PlotVolumeGlobal.cpp:123
+#: PlotGlobalCommon.cpp:259 PlotGlobalCommon.cpp:307 PlotVolumeAll.cpp:142
+#: PlotVolumeDeals.cpp:155 PlotVolumeDeals.cpp:213 PlotVolumeGlobal.cpp:133
 msgid "Shares turnover"
 msgstr ""
 
-#: PlotGlobalCommon.cpp:293 PlotVolumeAll.cpp:184 PlotVolumeDeals.cpp:197
-#: PlotVolumeGlobal.cpp:170
+#: PlotGlobalCommon.cpp:303 PlotVolumeAll.cpp:194 PlotVolumeDeals.cpp:207
+#: PlotVolumeGlobal.cpp:180
 msgid "Shares quantity"
 msgstr ""
 
-#: PlotGlobalCommon.cpp:323 PlotGlobalCommon.cpp:371 PlotMoneyGlobal.cpp:124
+#: PlotGlobalCommon.cpp:333 PlotGlobalCommon.cpp:381 PlotMoneyGlobal.cpp:134
 msgid "Money turnover"
 msgstr ""
 
-#: PlotGlobalCommon.cpp:367 PlotMoneyGlobal.cpp:171 PlotPriceAll.cpp:288
-#: PlotPriceDeals.cpp:275
+#: PlotGlobalCommon.cpp:377 PlotMoneyGlobal.cpp:181 PlotPriceAll.cpp:298
+#: PlotPriceDeals.cpp:285
 msgid "Rubles"
 msgstr ""
 
-#: PlotMoneyGlobal.cpp:174 PlotVolumeGlobal.cpp:174
+#: PlotMoneyGlobal.cpp:184 PlotVolumeGlobal.cpp:184
 msgid "Turnover"
 msgstr ""
 
-#: PlotMoneyGlobal.cpp:175 PlotVolumeAll.cpp:203 PlotVolumeGlobal.cpp:175
+#: PlotMoneyGlobal.cpp:185 PlotVolumeAll.cpp:213 PlotVolumeGlobal.cpp:185
 msgid "Average turnover"
 msgstr ""
 
-#: PlotPriceAll.cpp:309
+#: PlotPriceAll.cpp:319
 msgid "Weighted average price"
 msgstr ""
 
-#: PlotPriceAll.cpp:310
+#: PlotPriceAll.cpp:320
 msgid "First"
 msgstr ""
 
-#: PlotPriceAll.cpp:311
+#: PlotPriceAll.cpp:321
 msgid "Last"
 msgstr ""
 
-#: PlotPriceAll.cpp:312 PlotPriceDeals.cpp:285
+#: PlotPriceAll.cpp:322 PlotPriceDeals.cpp:295
 msgid "ECg"
 msgstr ""
 
-#: PlotVolumeAll.cpp:202
+#: PlotVolumeAll.cpp:212
 msgid "Daily turnover"
 msgstr ""
 
-#: PlotVolumeDeals.cpp:204
+#: PlotVolumeDeals.cpp:214
 msgid "Average shares turnover"
 msgstr ""

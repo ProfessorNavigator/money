@@ -102,7 +102,7 @@ MainWindow::windowFunc ()
   grid->attach (*moneyprice, 0, 1);
 
   Gtk::Button *moneyvolume = Gtk::make_managed<Gtk::Button> (
-      gettext ("Shares' turnover"));
+      gettext ("Share's turnover"));
   moneyvolume->set_name ("moneyvolumeButton");
   moneyvolume->set_margin (5);
   moneyvolume->get_style_context ()->add_provider (
@@ -132,7 +132,7 @@ MainWindow::windowFunc ()
   grid->attach (*dealsmoneypr, 0, 4);
 
   Gtk::Button *dealsvolume = Gtk::make_managed<Gtk::Button> (
-      gettext ("Shares' turnover for transactions"));
+      gettext ("Share's turnover for transactions"));
   dealsvolume->set_name ("dealsvolumeButton");
   dealsvolume->set_margin (5);
   dealsvolume->get_style_context ()->add_provider (
@@ -423,7 +423,7 @@ MainWindow::downloadMenu ()
 {
   Gtk::MessageDialog *dialog = new Gtk::MessageDialog (
       *this, gettext ("<span foreground='#EFFF00' size='large'>"
-		      "Wait, shares' list is downloading..."
+		      "Wait, share's list is downloading..."
 		      "</span>"),
       true, Gtk::MessageType::INFO, Gtk::ButtonsType::NONE, true);
   dialog->set_decorated (false);

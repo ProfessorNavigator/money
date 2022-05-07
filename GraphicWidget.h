@@ -86,6 +86,7 @@ private:
   std::vector<std::tuple<std::string, double, double, double, double>> dateplot;
   Glib::RefPtr<Gtk::Application> App;
   Gtk::Window *Mwin;
+  std::string Opendate;
 };
 
 #endif /* GRAPHICWIDGET_H_ */

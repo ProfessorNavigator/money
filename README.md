@@ -3,14 +3,14 @@ Money is a simple program to collect statistics from [https://www.moex.com/](htt
 
 ## Description
 
-Money plots diagrams to show price and other parameters of different securities (mostly). Explanation of diagrams' parameters can be found here: [http://samlib.ru/editors/b/bobylew_j_w/society.shtml](http://samlib.ru/editors/b/bobylew_j_w/society.shtml) (unfortunately only in Russian now).
+Money plots diagrams to show price and other parameters of different securities (mostly). Explanation of diagram's parameters can be found here: [http://samlib.ru/editors/b/bobylew_j_w/society.shtml](http://samlib.ru/editors/b/bobylew_j_w/society.shtml) (unfortunately only in Russian now).
 
 ## Installation
 
 ### Linux
 
-`git clone https://github.com/ProfessorNavigator/Money.git`\
-`cd Money`\
+`git clone https://github.com/ProfessorNavigator/money.git`\
+`cd money`\
 `meson -Dbuildtype=release build`\
 `cd build`\
 `ninja install`
@@ -22,8 +22,8 @@ You may need superuser privileges to execute last command.
 Proper installer will be created later. Now you can build Money from source by MSYS2 project [https://www.msys2.org/](https://www.msys2.org/). Follow installation instructions from their site. Install dependencies from [Dependencies](README.md#dependencies) section and git (mingw64 packages). Than create folder where you want to download source code (path must not include spaces or non Latin letters). Open mingw64 console and execute following commands (in example we download code to C:\Money)\
 
 `cd /c/Money`\
-`git clone https://github.com/ProfessorNavigator/Money.git`\
-`cd Money`\
+`git clone https://github.com/ProfessorNavigator/money.git`\
+`cd money`\
 `meson -Dbuildtype=release build`\
 `cd build`\
 `ninja install`

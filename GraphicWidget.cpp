@@ -45,6 +45,7 @@ GraphicWidget::~GraphicWidget ()
 void
 GraphicWidget::plot (int variant, int graphic)
 {
+  Opendate = "";
   if (variant == 0)
     {
       OpenDialog *openfile = new OpenDialog (App, Mwin);
@@ -57,7 +58,7 @@ GraphicWidget::plot (int variant, int graphic)
     }
   if (variant == 1)
     {
-      OpenDialogDeals *openfile = new OpenDialogDeals (App, Mwin);
+      OpenDialogDeals *openfile = new OpenDialogDeals (App, Mwin, &Opendate);
       openfile->dealsfilepath.connect (
 	  sigc::bind (sigc::mem_fun (*this, &GraphicWidget::graphic), graphic));
       openfile->deleteSign.connect ( [openfile]
@@ -126,9 +127,12 @@ GraphicWidget::graphic (std::string file, int graphvar)
   overlay->add_overlay (*grid);
   if (p.filename ().stem ().u8string () != "PPm")
     {
+      Gtk::Grid *instrgr = Gtk::make_managed<Gtk::Grid> ();
+      instrgr->set_halign (Gtk::Align::START);
+      instrgr->set_valign (Gtk::Align::START);
+
       Gtk::Label *instrnm = Gtk::make_managed<Gtk::Label> ();
       instrnm->set_halign (Gtk::Align::START);
-      instrnm->set_valign (Gtk::Align::START);
       instrnm->set_margin (5);
       instrnm->set_name ("instrumLab");
       instrnm->get_style_context ()->add_provider (css_provider,
@@ -136,7 +140,20 @@ GraphicWidget::graphic (std::string file, int graphvar)
       instrnm->set_text (
 	  gettext ("Instrument: ")
 	      + Glib::ustring (p.filename ().stem ().u8string ()));
-      overlay->add_overlay (*instrnm);
+      instrgr->attach (*instrnm, 0, 0, 1, 1);
+      if (Opendate != "")
+	{
+	  Gtk::Label *date = Gtk::make_managed<Gtk::Label> ();
+	  date->set_halign (Gtk::Align::START);
+	  date->set_margin (5);
+	  date->set_name ("instrumLab");
+	  date->get_style_context ()->add_provider (css_provider,
+	  GTK_STYLE_PROVIDER_PRIORITY_USER);
+	  date->set_text (gettext ("Date: ") + Glib::ustring (Opendate));
+	  instrgr->attach (*date, 0, 1, 1, 1);
+	}
+
+      overlay->add_overlay (*instrgr);
     }
 
   Gtk::Button *increase = Gtk::make_managed<Gtk::Button> ();
@@ -835,7 +852,7 @@ GraphicWidget::rightClick (int n_press, double x, double y,
 	      strm.imbue (loc);
 	      strm << std::fixed << tmpd;
 	      labdif->set_text (
-		  gettext ("Shares' turnover ") + Glib::ustring (strm.str ()));
+		  gettext ("Share's turnover ") + Glib::ustring (strm.str ()));
 	      grid->attach (*labdif, 0, 3, 1, 1);
 
 	      Gtk::Label *labsp = Gtk::make_managed<Gtk::Label> ();

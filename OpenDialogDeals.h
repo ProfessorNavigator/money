@@ -1,5 +1,5 @@
 /*
-Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -32,7 +32,8 @@ Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
 class OpenDialogDeals
 {
 public:
-  OpenDialogDeals (Glib::RefPtr<Gtk::Application> app, Gtk::Window *mwin);
+  OpenDialogDeals (Glib::RefPtr<Gtk::Application> app, Gtk::Window *mwin,
+		   std::string *opendate);
   virtual
   ~OpenDialogDeals ();
   sigc::signal<void
@@ -91,6 +92,7 @@ private:
   Glib::RefPtr<Gtk::CssProvider> css_provider;
   Glib::RefPtr<Gtk::Application> App;
   Gtk::Window *Mwin;
+  std::string *Opendate;
 };
 
 #endif /* OPENDIALOGDEALS_H_ */
