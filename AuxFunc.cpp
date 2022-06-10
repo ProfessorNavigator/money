@@ -606,6 +606,7 @@ AuxFunc::utf8to (std::string line)
     }
   line.clear ();
   line = std::string (target2.begin (), target2.end ());
+  ucnv_close (c);
 
   return line;
 }

@@ -25,8 +25,7 @@ main (int argc, char *argv[])
   AuxFunc af;
   std::string Sharepath;
   std::filesystem::path p (std::filesystem::u8path (af.get_selfpath ()));
-  Sharepath = p.parent_path ().u8string () + "/../share/Money";
-  Sharepath = Sharepath + "/Translations.d";
+  Sharepath = p.parent_path ().u8string () + "/../share/locale";
   bindtextdomain ("Money", Sharepath.c_str ());
   bind_textdomain_codeset ("Money", "UTF-8");
   textdomain ("Money");

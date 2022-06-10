@@ -8,6 +8,7 @@ curl = dependency ('libcurl', method : 'pkg-config')
 cpp = meson.get_compiler ('cpp')
 mathgl = cpp.find_library ('mgl2', has_headers: ['mgl2/mgl.h'], required: true)
 thread_dep = dependency ('threads')
+subdir ('po')
 executable ('money', sources : src, dependencies : [gmp, gtkmm, icu, zip, curl, mathgl, thread_dep], install : true, gui_app : true)
 install_subdir ('Money', install_dir : 'share')
 if host_machine.system() == 'linux'
