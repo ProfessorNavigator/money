@@ -15,9 +15,9 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#include "PlotVolumeAll.h"
+#include "PlotMoneyVolumeAll.h"
 
-PlotVolumeAll::PlotVolumeAll (
+PlotMoneyVolumeAll::PlotMoneyVolumeAll (
     std::string file,
     int Height,
     int Width,
@@ -29,22 +29,66 @@ PlotVolumeAll::PlotVolumeAll (
   plotdate = Plotdate;
 }
 
-PlotVolumeAll::~PlotVolumeAll ()
+PlotMoneyVolumeAll::~PlotMoneyVolumeAll ()
 {
   // TODO Auto-generated destructor stub
 }
 
 void
-PlotVolumeAll::calcForDraw ()
+PlotMoneyVolumeAll::calcForDraw ()
 {
   plotdate->clear ();
   mpf_set_default_prec (512);
   int count = 0;
   std::fstream f;
   std::string line, midd, temp;
+
+  std::filesystem::path p;
+  AuxFunc af;
+  af.homePath (&line);
+  line = line + "/.Money/BoardsList";
+  p = af.utf8to (line);
+  if (std::filesystem::exists (p))
+    {
+      f.open (p, std::ios_base::in);
+      while (!f.eof ())
+	{
+	  getline (f, line);
+	  if (count > 2 && line != "")
+	    {
+	      af.cp1251toutf8 (line);
+	      std::string::size_type nusd, neur;
+	      neur = line.find ("EUR");
+	      nusd = line.find ("USD");
+	      if (neur != std::string::npos || nusd != std::string::npos)
+		{
+		  temp = line;
+		  temp.erase (0, temp.find (";") + std::string (";").size ());
+		  temp.erase (0, temp.find (";") + std::string (";").size ());
+		  temp = temp.substr (0, temp.find (";"));
+		  if (neur != std::string::npos)
+		    {
+		      eurv.push_back (temp);
+		    }
+		  if (nusd != std::string::npos)
+		    {
+		      usdv.push_back (temp);
+		    }
+		}
+	    }
+	  count++;
+	}
+      f.close ();
+    }
+  line = "";
+  temp = "";
+  count = 0;
+
+  yname = filename.parent_path ().filename ().u8string ();
+
   if (!std::filesystem::exists (filename))
     {
-      std::cout << "File for plot volume (All) not opened" << std::endl;
+      std::cout << "File for plot money volume (All) not opened" << std::endl;
     }
   else
     {
@@ -62,7 +106,7 @@ PlotVolumeAll::calcForDraw ()
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 4; i++)
+	      for (int i = 0; i < 5; i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd.erase (0, temp.size () + std::string (";").size ());
@@ -74,7 +118,7 @@ PlotVolumeAll::calcForDraw ()
 	      strm.imbue (loc);
 	      strm << midd;
 	      strm >> tmpdouble;
-	      Vol.push_back (tmpdouble);
+	      VolM.push_back (tmpdouble);
 	      std::get<1> (ttup) = tmpdouble;
 	      plotdate->push_back (ttup);
 	    }
@@ -85,13 +129,13 @@ PlotVolumeAll::calcForDraw ()
   mpf_class summ (0);
   mpf_class vols (0);
   mpf_class res (0);
-  for (size_t i = 0; i < Vol.size (); i++)
+  for (size_t i = 0; i < VolM.size (); i++)
     {
       summ = summ + 1;
-      vols = vols + Vol[i];
+      vols = vols + VolM[i];
       res = vols / summ;
-      Volmid.push_back (res.get_d ());
-      std::get<2> (plotdate->at (i)) = Volmid[i];
+      VolMmid.push_back (res.get_d ());
+      std::get<2> (plotdate->at (i)) = VolMmid[i];
     }
 
   if (plotdate->size () > 0)
@@ -102,15 +146,15 @@ PlotVolumeAll::calcForDraw ()
 }
 
 int
-PlotVolumeAll::Draw (mglGraph *gr)
+PlotMoneyVolumeAll::Draw (mglGraph *gr)
 {
   calcForDraw ();
   std::vector<int> X;
-  for (size_t i = 0; i < Vol.size (); i++)
+  for (size_t i = 0; i < VolM.size (); i++)
     {
       X.push_back (i);
     }
-  mglData x (X), y (Vol), y2 (Volmid);
+  mglData x (X), y (VolM), y2 (VolMmid);
 
   //Координаты подписей оси х
   mglPoint p1 (x.Minimal (),
@@ -139,11 +183,11 @@ PlotVolumeAll::Draw (mglGraph *gr)
     }
 
   AuxFunc af;
-  std::string grnm = gettext ("Share turnover");
+  std::string grnm = gettext ("Money turnover");
   grnm = af.utf8to (grnm);
 
   //Общие настройки графика
-  gr->SetObjId (12);
+  gr->SetObjId (32);
   gr->SetSize (width, height);
   gr->Title (grnm.c_str (), "", 5);
   gr->SetQuality (3);
@@ -190,8 +234,22 @@ PlotVolumeAll::Draw (mglGraph *gr)
   gr->SetOriginTick (false);
   gr->Axis ("y", "k");
   gr->Axis ("x!f0", "k");
+  auto itusd = std::find (usdv.begin (), usdv.end (), yname);
+  if (itusd != usdv.end ())
+    {
+      yname = "USD";
+    }
+  auto iteur = std::find (eurv.begin (), eurv.end (), yname);
+  if (iteur != eurv.end ())
+    {
+      yname = "EUR";
+    }
+  if (itusd == usdv.end () && iteur == eurv.end ())
+    {
+      yname = gettext ("Rubles");
+    }
   gr->Label ('x', af.utf8to (gettext ("Days")).c_str (), 0);
-  gr->Label ('y', af.utf8to (gettext ("Share quantity")).c_str (), 0);
+  gr->Label ('y', af.utf8to (yname).c_str (), 0);
 
   //Подписи оси х
   datebeg = af.utf8to (datebeg);
@@ -207,12 +265,11 @@ PlotVolumeAll::Draw (mglGraph *gr)
     }
 
   //Отображение графика
-  gr->Plot (x, y, "g");
+  gr->Plot (x, y, "{x8900FF}");
   gr->Plot (x, y2, "r");
-  gr->AddLegend (af.utf8to (gettext ("Daily turnover")).c_str (), "g");
+  gr->AddLegend (af.utf8to (gettext ("Daily turnover")).c_str (), "{x8900FF}");
   gr->AddLegend (af.utf8to (gettext ("Average turnover")).c_str (), "r");
   gr->SetFontSize (3);
   gr->Legend (1.1, 1.3);
   return 0;
 }
-

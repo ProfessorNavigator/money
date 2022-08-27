@@ -177,14 +177,6 @@ PlotAllCommon::calcForDraw ()
     {
       midd.erase (n, std::string (".csv").size ());
     }
-  mpf_class summa (0), tempor;
-  for (size_t i = 0; i < volume.size (); i++)
-    {
-      summa = summa + volume[i];
-      tempor = summa / (int) (i + 1);
-      Speed.push_back (tempor.get_d ());
-      std::get<4> (plotdate->at (i)) = Speed[i];
-    }
 }
 
 int
@@ -231,7 +223,7 @@ PlotAllCommon::Draw (mglGraph *gr)
   //Общие настройки графика
   gr->SetSize (width, height);
   gr->SetObjId (21);
-  gr->SubPlot (1, 3, 0, ">^_");
+  gr->SubPlot (1, 2, 0, ">^_");
   gr->Title (grnm.c_str (), "", 5);
   gr->SetQuality (3);
   gr->SetRanges (x, y1);
@@ -346,7 +338,7 @@ PlotAllCommon::Draw (mglGraph *gr)
 
   //Общие настройки графика
   gr->SetObjId (21);
-  gr->SubPlot (1, 3, 1, ">^_");
+  gr->SubPlot (1, 2, 1, ">^_");
   gr->Title (grnm.c_str (), "", 5);
   gr->SetQuality (3);
   gr->SetRanges (x1, y11);
@@ -407,100 +399,6 @@ PlotAllCommon::Draw (mglGraph *gr)
   gr->Plot (x1, y11, "r");
   gr->SetFontSize (3);
   gr->AddLegend (af.utf8to (gettext ("PPTm/PPm (%)")).c_str (), "r");
-  gr->Legend (1.1, 1.3);
-  gr->ClearLegend ();
-
-  std::vector<int> X2;
-  for (size_t i = 0; i < Speed.size (); i++)
-    {
-      X2.push_back (i);
-    }
-  mglData x2 (X2), y2 (Speed);
-
-  mglPoint p2 (x2.Minimal (),
-	       y2.Maximal () + ((y2.Maximal () - y2.Minimal ()) * 0.02));
-  mglPoint p21 (x2.Maximal (),
-		y2.Maximal () + ((y2.Maximal () - y2.Minimal ()) * 0.02));
-
-  grnm = gettext ("Average speed");
-  grnm = af.utf8to (grnm);
-
-  //Общие настройки графика
-  gr->SetObjId (21);
-  gr->SubPlot (1, 3, 2, ">^_");
-  gr->Title (grnm.c_str (), "", 5);
-  gr->SetQuality (3);
-  gr->SetRanges (x2, y2);
-  gr->SetFontSize (3);
-  gr->SetOriginTick (false);
-
-  ticks.clear ();
-  tickstep = (y2.Maximal () - y2.Minimal ()) / 3;
-  if (tickstep < 0)
-    {
-      tickstep = -tickstep;
-    }
-  tickval = y2.Minimal ();
-  tickstr = "";
-  for (int i = 0; i < 2; i++)
-    {
-      strm.str ("");
-      strm.clear ();
-      strm.imbue (loc);
-      strm << std::fixed;
-      strm << std::setprecision (0);
-      tickval = tickval + tickstep;
-      strm << tickval;
-      tick = strm.str ();
-      ticks.push_back (tickval);
-      if (tickstr != "")
-	{
-	  tickstr = tickstr + "\n" + tick;
-	}
-      else
-	{
-	  tickstr = tick;
-	}
-    }
-  mglData fortick3 (ticks);
-
-  tickstr = af.utf8to (tickstr);
-
-  gr->SetTicksVal ('y', fortick3, tickstr.c_str ());
-  gr->SetTicks ('x', d);
-  gr->SetTickSkip (true);
-  gr->Grid ("xy", "{xA0A136}");
-  gr->Axis ("y", "k");
-  gr->Axis ("!f0x", "k");
-  gr->Label ('x', af.utf8to (gettext ("Days")).c_str (), 0);
-  gr->Label ('y', af.utf8to (gettext ("Shares per day")).c_str (), 0);
-
-  //Подписи оси х
-  gr->Puts (p2, datebeg.c_str (), "k", 3);
-  gr->Puts (p21, dateend.c_str (), "k", 3);
-
-  Coord.clear ();
-
-  for (size_t i = 0; i < X2.size (); i = i + d)
-    {
-      if (i > 0)
-	{
-	  mglPoint p (i,
-		      y2.Maximal () + ((y2.Maximal () - y2.Minimal ()) * 0.02));
-	  Coord.push_back (p);
-	}
-    }
-
-  for (size_t i = 0; i < dates.size (); i++)
-    {
-      std::string tl = dates[i];
-      gr->Puts (Coord[i], tl.c_str (), "k", 3);
-    }
-
-  //Отображение графика
-  gr->Plot (x2, y2, "r");
-  gr->AddLegend (af.utf8to (gettext ("Speed")).c_str (), "r");
-  gr->SetFontSize (3);
   gr->Legend (1.1, 1.3);
   gr->ClearLegend ();
 

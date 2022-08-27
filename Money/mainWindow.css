@@ -3,7 +3,7 @@
 	color: white;	
 }
 
-#pricallButton {
+#allButton {
 	background-image: none;
 	background-color: rgb(26, 100, 31);
 	border-width: 1px;
@@ -15,47 +15,12 @@
    rgba(0,0,0,.8) 0 3px 8px -3px; 
 }
 
-#pricallButton:hover {
+#allButton:hover {
 	background-color: rgb(51, 36, 249);
 	color: white;
 }
 
-#moneypriceButton {
-	background-image: none;
-	background-color: rgb(26, 100, 31);
-	border-width: 1px;
-	border-color: black;
-	color: rgb(239, 255, 0);
-	box-shadow:
-   inset rgba(0,0,0,.6) 0 -3px 8px,
-   inset rgba(252,255,255,.7) 0 3px 8px,
-   rgba(0,0,0,.8) 0 3px 8px -3px; 	
-}
-
-#moneypriceButton:hover {
-	background-color: rgb(51, 36, 249);
-	color: white;
-}
-
-
-#moneyvolumeButton {
-	background-image: none;
-	background-color: rgb(26, 100, 31);
-	border-width: 1px;
-	border-color: black;
-	color: rgb(239, 255, 0);
-	box-shadow:
-   inset rgba(0,0,0,.6) 0 -3px 8px,
-   inset rgba(252,255,255,.7) 0 3px 8px,
-   rgba(0,0,0,.8) 0 3px 8px -3px;
-}
-
-#moneyvolumeButton:hover {
-	background-color: rgb(51, 36, 249);
-	color: white;
-}
-
-#pricedealsButton {
+#dealsButton {
 	background-image: none;
 	background-color: rgb(0, 145, 255);
 	border-width: 1px;
@@ -84,7 +49,7 @@
 	color: white;
 }
 
-#pricedealsButton:hover {
+#dealsButton:hover {
 	background-color: rgb(51, 36, 249);
 	color: white;
 }
@@ -310,18 +275,10 @@
 	background-color: rgb(199, 43, 10);
 }
 
-#pricedealsButton:active {
+#dealsButton:active {
 	background-color: rgb(199, 43, 10);
 }
 
-#moneyvolumeButton:active {
-	background-color: rgb(199, 43, 10);
-}
-
-#moneypriceButton:active {
-	background-color: rgb(199, 43, 10);
-}
-
-#pricallButton:active {
+#allButton:active {
 	background-color: rgb(199, 43, 10);
 }

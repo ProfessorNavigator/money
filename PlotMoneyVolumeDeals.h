@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTGLOBALCOMMON_H_
-#define PLOTGLOBALCOMMON_H_
+#ifndef PLOTMONEYVOLUMEDEALS_H_
+#define PLOTMONEYVOLUMEDEALS_H_
 
 #include <mgl2/wnd.h>
 #include <filesystem>
@@ -29,29 +29,31 @@
 #include <libintl.h>
 #include "AuxFunc.h"
 
-class PlotGlobalCommon : public mglDraw
+class PlotMoneyVolumeDeals
 {
 public:
-  PlotGlobalCommon (
+  PlotMoneyVolumeDeals (
       std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
   virtual
-  ~PlotGlobalCommon ();
+  ~PlotMoneyVolumeDeals ();
   int
   Draw (mglGraph *gr);
+private:
   void
   calcForDraw ();
   std::filesystem::path filename;
   int height, width;
-  std::vector<double> Index;
-  std::vector<double> Daily;
-  std::vector<double> Money;
-  std::vector<double> Volume;
   std::string datebeg;
   std::string dateend;
+  std::vector<double> VolumeM;
+  std::vector<double> VolMmid;
+  std::vector<std::string> usdv;
+  std::vector<std::string> eurv;
+  std::string yname;
   std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
 };
 
-#endif /* PLOTGLOBALCOMMON_H_ */
+#endif /* PLOTMONEYVOLUMEDEALS_H_ */

@@ -63,8 +63,13 @@ MoneyApplication::create_appwindow ()
 void
 MoneyApplication::on_activate ()
 {
-  auto appwin = create_appwindow ();
-  appwin->present ();
-  Glib::PropertyProxy<bool> pr = this->property_register_session ();
-  pr.set_value (true);
+  std::vector<Gtk::Window*> winv;
+  winv = this->get_windows ();
+  if (winv.size () == 0)
+    {
+      auto appwin = create_appwindow ();
+      appwin->present ();
+      Glib::PropertyProxy<bool> pr = this->property_register_session ();
+      pr.set_value (true);
+    }
 }

@@ -49,7 +49,6 @@ private:
   std::vector<double> Tc;
   std::vector<double> Dc;
   std::vector<double> Ot;
-  std::vector<double> Speed;
   std::string datebeg;
   std::string dateend;
   std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;

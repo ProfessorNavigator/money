@@ -289,7 +289,7 @@ GraphicWidget::graphic (std::string file, int graphvar)
 		  drar));
   close->signal_clicked ().connect (
       sigc::mem_fun (*window, &Gtk::Window::close));
-  if (graphvar == 8)
+  if (graphvar == 10)
     {
       Gtk::TreeModel::ColumnRecord record;
       Gtk::TreeModelColumn<std::string> dates;
@@ -428,51 +428,56 @@ GraphicWidget::on_draw (const Cairo::RefPtr<Cairo::Context> &cr, int width,
       PlotVolumeAll val (file, Height, Width, &dateplot);
       val.Draw (graph);
     }
-
   if (variant == 3)
+    {
+      PlotMoneyVolumeAll val (file, Height, Width, &dateplot);
+      val.Draw (graph);
+    }
+
+  if (variant == 4)
     {
       PlotPriceDeals pd (file, Height, Width, &dateplot);
       pd.Draw (graph);
     }
-  if (variant == 4)
+  if (variant == 5)
     {
       PSDDeals psdd (file, Height, Width, &dateplot);
       psdd.Draw (graph);
     }
-  if (variant == 5)
+  if (variant == 6)
     {
       PlotVolumeDeals vd (file, Height, Width, &dateplot);
       vd.Draw (graph);
     }
-  if (variant == 6)
+  if (variant == 7)
+    {
+      PlotMoneyVolumeDeals vd (file, Height, Width, &dateplot);
+      vd.Draw (graph);
+    }
+  if (variant == 8)
     {
       PlotAllCommon ac (file, Height, Width, &dateplot);
       ac.Draw (graph);
     }
-  if (variant == 7)
+  if (variant == 9)
     {
       PlotDealsCommon dc (file, Height, Width, &dateplot);
       dc.Draw (graph);
     }
-  if (variant == 8)
+  if (variant == 10)
     {
       PlotPSDGlobal psdg (file, Height, Width, &dateplot);
       psdg.Draw (graph);
     }
-  if (variant == 9)
+  if (variant == 11)
     {
       PlotVolumeGlobal pvg (file, Height, Width, &dateplot);
       pvg.Draw (graph);
     }
-  if (variant == 10)
+  if (variant == 12)
     {
       PlotMoneyGlobal pmg (file, Height, Width, &dateplot);
       pmg.Draw (graph);
-    }
-  if (variant == 11)
-    {
-      PlotGlobalCommon pgc (file, Height, Width, &dateplot);
-      pgc.Draw (graph);
     }
   auto image = Gdk::Pixbuf::create_from_data (
       graph->GetRGB (), Gdk::Colorspace::RGB, false, 8, graph->GetWidth (),
@@ -805,67 +810,6 @@ GraphicWidget::rightClick (int n_press, double x, double y,
 	      labdif->set_text (
 		  gettext ("PPTm/PPm ") + Glib::ustring (strm.str ()) + "%");
 	      grid->attach (*labdif, 0, 3, 1, 1);
-
-	      Gtk::Label *labsp = Gtk::make_managed<Gtk::Label> ();
-	      labsp->set_margin (5);
-	      labsp->set_halign (Gtk::Align::START);
-	      tmpd = std::get<4> (dateplot[index]);
-	      strm.clear ();
-	      strm.str ("");
-	      strm.imbue (loc);
-	      strm << std::fixed << tmpd;
-	      labsp->set_text (
-		  gettext ("Everage speed ") + Glib::ustring (strm.str ()));
-	      grid->attach (*labsp, 0, 4, 1, 1);
-	    }
-	  if (gr->GetSplId (x, Height - y) == 22)
-	    {
-	      Gtk::Label *labpsd = Gtk::make_managed<Gtk::Label> ();
-	      labpsd->set_margin (5);
-	      labpsd->set_halign (Gtk::Align::START);
-	      double tmpd = std::get<1> (dateplot[index]);
-	      std::stringstream strm;
-	      std::locale loc ("C");
-	      strm.imbue (loc);
-	      strm << std::fixed << tmpd;
-	      labpsd->set_text (gettext ("PPm ") + Glib::ustring (strm.str ()));
-	      grid->attach (*labpsd, 0, 1, 1, 1);
-
-	      Gtk::Label *labpsod = Gtk::make_managed<Gtk::Label> ();
-	      labpsod->set_margin (5);
-	      labpsod->set_halign (Gtk::Align::START);
-	      tmpd = std::get<4> (dateplot[index]);
-	      strm.clear ();
-	      strm.str ("");
-	      strm.imbue (loc);
-	      strm << std::fixed << tmpd;
-	      labpsod->set_text (
-		  gettext ("PPTm ") + Glib::ustring (strm.str ()));
-	      grid->attach (*labpsod, 0, 2, 1, 1);
-
-	      Gtk::Label *labdif = Gtk::make_managed<Gtk::Label> ();
-	      labdif->set_margin (5);
-	      labdif->set_halign (Gtk::Align::START);
-	      tmpd = std::get<2> (dateplot[index]);
-	      strm.clear ();
-	      strm.str ("");
-	      strm.imbue (loc);
-	      strm << std::fixed << tmpd;
-	      labdif->set_text (
-		  gettext ("Share's turnover ") + Glib::ustring (strm.str ()));
-	      grid->attach (*labdif, 0, 3, 1, 1);
-
-	      Gtk::Label *labsp = Gtk::make_managed<Gtk::Label> ();
-	      labsp->set_margin (5);
-	      labsp->set_halign (Gtk::Align::START);
-	      tmpd = std::get<3> (dateplot[index]);
-	      strm.clear ();
-	      strm.str ("");
-	      strm.imbue (loc);
-	      strm << std::fixed << tmpd;
-	      labsp->set_text (
-		  gettext ("Money turnover ") + Glib::ustring (strm.str ()));
-	      grid->attach (*labsp, 0, 4, 1, 1);
 	    }
 	  if (gr->GetSplId (x, Height - y) == 32)
 	    {

@@ -93,30 +93,68 @@ PlotDealsCommon::calcForDraw () //График покупательной спо
     }
   else
     {
+      std::tuple<int, int, int> temptup;
       f.open (filename, std::ios_base::in);
       while (!f.eof ())
 	{
 	  getline (f, line);
+	  if (count == 2)
+	    {
+	      midd = line;
+	      int countch = 0;
+	      while (midd.size () > 0)
+		{
+		  temp = midd.substr (0, midd.find (";"));
+		  std::string::size_type n;
+		  if (temp == "TRADETIME")
+		    {
+		      std::get<0> (temptup) = countch;
+		    }
+		  if (temp == "VALUE")
+		    {
+		      std::get<1> (temptup) = countch;
+		    }
+		  if (temp == "PRICE")
+		    {
+		      std::get<2> (temptup) = countch;
+		    }
+		  n = midd.find (";");
+		  if (n != std::string::npos)
+		    {
+		      midd.erase (0, n + std::string (";").size ());
+		    }
+		  else
+		    {
+		      break;
+		    }
+		  countch++;
+		}
+	    }
 	  if (count > 2 && line != "")
 	    {
 	      if (count == 3)
 		{
 		  yname = line;
-		  yname.erase (0, yname.find (";") + 1);
-		  yname.erase (0, yname.find (";") + 1);
+		  yname.erase (0, yname.find (";") + std::string (";").size ());
+		  yname.erase (0, yname.find (";") + std::string (";").size ());
 		  yname = yname.substr (0, yname.find (";"));
 		}
 
 	      midd = line;
-	      temp = midd.substr (0, midd.find (";"));
-	      midd = midd.erase (0, temp.size () + std::string (";").size ());
+	      temp = line;
+	      for (int i = 0; i < std::get<0> (temptup); i++)
+		{
+		  temp = midd.substr (0, midd.find (";"));
+		  midd = midd.erase (0,
+				     temp.size () + std::string (";").size ());
+		}
 	      midd = midd.substr (0, midd.find (";"));
 	      std::tuple<std::string, double, double, double, double> ttup;
 	      std::get<0> (ttup) = midd;
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 6; i++)
+	      for (int i = 0; i < std::get<1> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,
@@ -132,7 +170,7 @@ PlotDealsCommon::calcForDraw () //График покупательной спо
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 4; i++)
+	      for (int i = 0; i < std::get<2> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,
@@ -179,57 +217,6 @@ PlotDealsCommon::calcForDraw () //График покупательной спо
       MRSP.push_back ((Dc[i] / Tc[i] - 1) * 100);
       std::get<3> (plotdate->at (i)) = MRSP[i];
     }
-
-  int t0, t1;
-  int hh, mm, ss;
-  line = std::get<0> (plotdate->at (0));
-  line = line.substr (0, line.find (":"));
-  hh = std::stoi (line);
-  line = std::get<0> (plotdate->at (0));
-  line.erase (0, line.find (":") + std::string (":").size ());
-  line = line.substr (0, line.find (":"));
-  mm = std::stoi (line);
-  line = std::get<0> (plotdate->at (0));
-  line.erase (0, line.find (":") + std::string (":").size ());
-  line.erase (0, line.find (":") + std::string (":").size ());
-  ss = std::stoi (line);
-  t0 = hh * 3600 + mm * 60 + ss;
-  summa = 0;
-  summm = 0;
-  for (size_t i = 0; i < Quan.size (); i++)
-    {
-      line = std::get<0> (plotdate->at (i));
-      line = line.substr (0, line.find (":"));
-      hh = std::stoi (line);
-      line = std::get<0> (plotdate->at (i));
-      line.erase (0, line.find (":") + std::string (":").size ());
-      line = line.substr (0, line.find (":"));
-      mm = std::stoi (line);
-      line = std::get<0> (plotdate->at (i));
-      line.erase (0, line.find (":") + std::string (":").size ());
-      line.erase (0, line.find (":") + std::string (":").size ());
-      ss = std::stoi (line);
-      t1 = hh * 3600 + mm * 60 + ss;
-      summa = summa + Quan[i];
-      if (t1 - t0 > 0)
-	{
-	  Speed.push_back (summa.get_d () / (t1 - t0));
-	  std::get<4> (plotdate->at (i)) = Speed[i];
-	}
-      else
-	{
-	  if (i > 0)
-	    {
-	      Speed.push_back (summa.get_d () / i);
-	      std::get<4> (plotdate->at (i)) = Speed[i];
-	    }
-	  else
-	    {
-	      Speed.push_back (summa.get_d ());
-	      std::get<4> (plotdate->at (i)) = Speed[i];
-	    }
-	}
-    }
 }
 
 int
@@ -272,13 +259,6 @@ PlotDealsCommon::Draw (mglGraph *gr)
     }
   mglData x2 (X2), y2 (Y2);
 
-  std::vector<int> X3;
-  for (size_t i = 0; i < Speed.size (); i++)
-    {
-      X3.push_back (i);
-    }
-  mglData x3 (X3), y3 (Speed);
-
   AuxFunc af;
   std::string grnm = gettext ("Purchasing power of money");
   grnm = af.utf8to (grnm);
@@ -286,7 +266,7 @@ PlotDealsCommon::Draw (mglGraph *gr)
   //Общие настройки графика
   gr->SetSize (width, height);
   gr->SetObjId (21);
-  gr->SubPlot (1, 3, 0, ">^_");
+  gr->SubPlot (1, 2, 0, ">^_");
   gr->Title (grnm.c_str (), "", 5);
   gr->SetQuality (3);
   gr->SetRanges (x1, y11);
@@ -377,7 +357,7 @@ PlotDealsCommon::Draw (mglGraph *gr)
 
   //Общие настройки графика
   gr->SetObjId (21);
-  gr->SubPlot (1, 3, 1, ">^_");
+  gr->SubPlot (1, 2, 1, ">^_");
   gr->Title (grnm.c_str (), "", 5);
   gr->SetQuality (3);
   gr->SetRanges (x, y);
@@ -442,71 +422,6 @@ PlotDealsCommon::Draw (mglGraph *gr)
 
   grnm = gettext ("Average speed");
   grnm = af.utf8to (grnm);
-
-  //Общие настройки графика
-  gr->SetObjId (21);
-  gr->SubPlot (1, 3, 2, ">^_");
-  gr->Title (grnm.c_str (), "", 5);
-  gr->SetQuality (3);
-  gr->SetRanges (x3, y3);
-  gr->SetFontSize (3);
-  gr->SetOriginTick (false);
-
-  ticks.clear ();
-  tickstep = (y3.Maximal () - y3.Minimal ()) / 3;
-  if (tickstep < 0)
-    {
-      tickstep = -tickstep;
-    }
-  tickval = y3.Minimal ();
-  tickstr = "";
-  for (int i = 0; i < 2; i++)
-    {
-      strm.str ("");
-      strm.clear ();
-      strm.imbue (loc);
-      strm << std::fixed;
-      strm << std::setprecision (0);
-      tickval = tickval + tickstep;
-      strm << tickval;
-      tick = strm.str ();
-      ticks.push_back (tickval);
-      if (tickstr != "")
-	{
-	  tickstr = tickstr + "\n" + tick;
-	}
-      else
-	{
-	  tickstr = tick;
-	}
-    }
-  mglData fortick3 (ticks);
-  tickstr = af.utf8to (tickstr);
-
-  gr->SetTicksVal ('y', fortick3, tickstr.c_str ());
-  gr->SetTicks ('x', d);
-  gr->Axis ("y", "k");
-  gr->Axis ("!f0x", "k");
-  gr->SetTickSkip (true);
-  gr->Label ('x', af.utf8to (gettext ("Transactions")).c_str (), 0);
-  gr->Label ('y', af.utf8to (gettext ("Shares per second")).c_str (), 0);
-
-  //Отображение графика
-  gr->Grid ("xy", "{xA0A136}");
-  gr->Plot (x3, y3, "r");
-  gr->SetFontSize (3);
-  gr->AddLegend (af.utf8to (gettext ("Speed")).c_str (), "r");
-  gr->Legend (1.1, 1.3);
-  gr->ClearLegend ();
-
-  //Подписи оси х
-  mglPoint p3 (x3.Minimal (),
-	       y3.Maximal () + ((y3.Maximal () - y3.Minimal ()) * 0.02));
-  mglPoint p4 (x3.Maximal (),
-	       y3.Maximal () + ((y3.Maximal () - y3.Minimal ()) * 0.02));
-
-  gr->Puts (p3, datebeg.c_str (), "k", 3);
-  gr->Puts (p4, dateend.c_str (), "k", 3);
 
   return 0;
 }

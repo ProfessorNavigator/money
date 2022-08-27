@@ -46,11 +46,15 @@ private:
   void
   plotVolumeAll ();
   void
+  plotMoneyVolumeAll ();
+  void
   plotPriceDeals ();
   void
   plotPSDDeals ();
   void
   plotVolumeDeals ();
+  void
+  plotMoneyVolDeals ();
   void
   plotAllCommon ();
   void
@@ -61,8 +65,6 @@ private:
   plotVolumeGlobal ();
   void
   plotMoneyGlobal ();
-  void
-  plotGlobalCommon ();
   void
   downloadMenu ();
   void

@@ -51,15 +51,48 @@ PlotVolumeDeals::calcForDraw ()
     }
   else
     {
+      std::tuple<int, int, int> temptup;
       f.open (filename, std::ios_base::in);
       while (!f.eof ())
 	{
 	  getline (f, line);
+	  if (count == 2)
+	    {
+	      midd = line;
+	      int countch = 0;
+	      while (midd.size () > 0)
+		{
+		  temp = midd.substr (0, midd.find (";"));
+		  std::string::size_type n;
+		  if (temp == "TRADETIME")
+		    {
+		      std::get<0> (temptup) = countch;
+		    }
+		  if (temp == "VALUE")
+		    {
+		      std::get<1> (temptup) = countch;
+		    }
+		  if (temp == "PRICE")
+		    {
+		      std::get<2> (temptup) = countch;
+		    }
+		  n = midd.find (";");
+		  if (n != std::string::npos)
+		    {
+		      midd.erase (0, n + std::string (";").size ());
+		    }
+		  else
+		    {
+		      break;
+		    }
+		  countch++;
+		}
+	    }
 	  if (count > 2 && line != "")
 	    {
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 1; i++)
+	      for (int i = 0; i < std::get<0> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,
@@ -71,7 +104,7 @@ PlotVolumeDeals::calcForDraw ()
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 6; i++)
+	      for (int i = 0; i < std::get<1> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,
@@ -87,7 +120,7 @@ PlotVolumeDeals::calcForDraw ()
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 4; i++)
+	      for (int i = 0; i < std::get<2> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,
@@ -152,7 +185,7 @@ PlotVolumeDeals::Draw (mglGraph *gr)
   d = number / d;
 
   AuxFunc af;
-  std::string grnm = gettext ("Shares turnover");
+  std::string grnm = gettext ("Share turnover");
   grnm = af.utf8to (grnm);
 
   //Общие настройки графика
@@ -204,14 +237,14 @@ PlotVolumeDeals::Draw (mglGraph *gr)
   gr->Axis ("!fx", "k");
   gr->SetTickSkip (true);
   gr->Label ('x', af.utf8to (gettext ("Transactions")).c_str (), 0);
-  gr->Label ('y', af.utf8to (gettext ("Shares quantity")).c_str (), 0);
+  gr->Label ('y', af.utf8to (gettext ("Share quantity")).c_str (), 0);
 
   //Отображение графика
   gr->Grid ("xy", "{xA0A136}");
   gr->Plot (x, y, "g");
   gr->Plot (x, y2, "r");
-  gr->AddLegend (af.utf8to (gettext ("Shares turnover")).c_str (), "g");
-  gr->AddLegend (af.utf8to (gettext ("Average shares turnover")).c_str (), "r");
+  gr->AddLegend (af.utf8to (gettext ("Share turnover")).c_str (), "g");
+  gr->AddLegend (af.utf8to (gettext ("Average share turnover")).c_str (), "r");
   gr->SetFontSize (3);
   gr->Legend (1.1, 1.3);
 

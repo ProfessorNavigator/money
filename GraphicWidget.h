@@ -30,6 +30,7 @@
 #include "PlotPriceAll.h"
 #include "PSD.h"
 #include "PlotVolumeAll.h"
+#include "PlotMoneyVolumeAll.h"
 #include "PlotPriceDeals.h"
 #include "PSDDeals.h"
 #include "PlotVolumeDeals.h"
@@ -38,7 +39,7 @@
 #include "PlotPSDGlobal.h"
 #include "PlotVolumeGlobal.h"
 #include "PlotMoneyGlobal.h"
-#include "PlotGlobalCommon.h"
+#include "PlotMoneyVolumeDeals.h"
 #include "AuxFunc.h"
 
 class GraphicWidget

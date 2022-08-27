@@ -15,9 +15,9 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#include "PSDDeals.h"
+#include "PlotMoneyVolumeDeals.h"
 
-PSDDeals::PSDDeals (
+PlotMoneyVolumeDeals::PlotMoneyVolumeDeals (
     std::string file,
     int Height,
     int Width,
@@ -29,18 +29,17 @@ PSDDeals::PSDDeals (
   plotdate = Plotdate;
 }
 
-PSDDeals::~PSDDeals ()
+PlotMoneyVolumeDeals::~PlotMoneyVolumeDeals ()
 {
   // TODO Auto-generated destructor stub
 }
 
 void
-PSDDeals::calcForDraw ()
+PlotMoneyVolumeDeals::calcForDraw ()
 {
   plotdate->clear ();
   mpf_set_default_prec (512);
-  mpf_class quan, mon, summa, summm;
-  std::vector<mpf_class> Quan;
+  mpf_class quan (0), mon (0);
   std::vector<mpf_class> Mon;
   std::fstream f;
   std::string line, midd, temp;
@@ -89,15 +88,22 @@ PSDDeals::calcForDraw ()
 
   if (!std::filesystem::exists (filename))
     {
-      std::cout << "File to plot daily PSD not opened" << std::endl;
+      std::cout << "File to plot daily money volume not opened" << std::endl;
     }
   else
     {
-      std::tuple<int, int, int> temptup;
       f.open (filename, std::ios_base::in);
+      std::tuple<int, int> temptup;
       while (!f.eof ())
 	{
 	  getline (f, line);
+	  if (count == 3)
+	    {
+	      yname = line;
+	      yname.erase (0, yname.find (";") + std::string (";").size ());
+	      yname.erase (0, yname.find (";") + std::string (";").size ());
+	      yname = yname.substr (0, yname.find (";"));
+	    }
 	  if (count == 2)
 	    {
 	      midd = line;
@@ -114,10 +120,6 @@ PSDDeals::calcForDraw ()
 		    {
 		      std::get<1> (temptup) = countch;
 		    }
-		  if (temp == "PRICE")
-		    {
-		      std::get<2> (temptup) = countch;
-		    }
 		  n = midd.find (";");
 		  if (n != std::string::npos)
 		    {
@@ -132,14 +134,6 @@ PSDDeals::calcForDraw ()
 	    }
 	  if (count > 2 && line != "")
 	    {
-	      if (count == 3)
-		{
-		  yname = line;
-		  yname.erase (0, yname.find (";") + std::string (";").size ());
-		  yname.erase (0, yname.find (";") + std::string (";").size ());
-		  yname = yname.substr (0, yname.find (";"));
-		}
-
 	      midd = line;
 	      temp = line;
 	      for (int i = 0; i < std::get<0> (temptup); i++)
@@ -167,42 +161,29 @@ PSDDeals::calcForDraw ()
 	      strm << midd;
 	      strm >> mon;
 	      Mon.push_back (mon);
-
-	      midd = line;
-	      temp = line;
-	      for (int i = 0; i < std::get<2> (temptup); i++)
-		{
-		  temp = midd.substr (0, midd.find (";"));
-		  midd = midd.erase (0,
-				     temp.size () + std::string (";").size ());
-		}
-	      midd = midd.substr (0, midd.find (";"));
-	      strm.str ("");
-	      strm.clear ();
-	      strm.imbue (loc);
-	      strm << midd;
-	      strm >> quan;
-	      Quan.push_back (mon / quan);
 	      plotdate->push_back (ttup);
 	    }
 	  count = count + 1;
 	}
       f.close ();
     }
-  for (size_t i = 0; i < Quan.size (); i++)
+  mpf_class temp2;
+  for (size_t i = 0; i < Mon.size (); i++)
     {
-      DC.push_back (Quan[i] / Mon[i]);
-      summa = summa + Quan[i];
-      summm = summm + Mon[i];
-      TC.push_back (summa / summm);
+      temp2 = Mon[i];
+      VolumeM.push_back (temp2.get_d ());
+      std::get<1> (plotdate->at (i)) = VolumeM[i];
     }
-
-  for (size_t i = 0; i < TC.size (); i++)
+  mpf_class summ (0);
+  mpf_class vols (0);
+  mpf_class res (0);
+  for (size_t i = 0; i < VolumeM.size (); i++)
     {
-      Tc.push_back (TC[i].get_d ());
-      Dc.push_back (DC[i].get_d ());
-      std::get<2> (plotdate->at (i)) = Dc[i];
-      std::get<1> (plotdate->at (i)) = Tc[i];
+      summ = summ + 1;
+      vols = vols + VolumeM[i];
+      res = vols / summ;
+      VolMmid.push_back (res.get_d ());
+      std::get<2> (plotdate->at (i)) = VolMmid[i];
     }
 
   if (plotdate->size () > 0)
@@ -213,15 +194,15 @@ PSDDeals::calcForDraw ()
 }
 
 int
-PSDDeals::Draw (mglGraph *gr)
+PlotMoneyVolumeDeals::Draw (mglGraph *gr)
 {
-  calcForDraw ();
   std::vector<int> X;
-  for (size_t i = 0; i < Tc.size (); i++)
+  calcForDraw ();
+  for (size_t i = 0; i < VolumeM.size (); i++)
     {
       X.push_back (i);
     }
-  mglData x (X), y (Tc), y1 (Dc);
+  mglData x (X), y (VolumeM), y2 (VolMmid);
 
   int d = 6;
   int number = X.size ();
@@ -231,27 +212,26 @@ PSDDeals::Draw (mglGraph *gr)
     }
   d = number / d;
 
-  //Координаты подписей оси х
   AuxFunc af;
-  std::string grnm = gettext ("Purchasing power of money");
+  std::string grnm = gettext ("Money turnover");
   grnm = af.utf8to (grnm);
 
   //Общие настройки графика
-  gr->SetObjId (31);
+  gr->SetObjId (32);
   gr->SetSize (width, height);
   gr->Title (grnm.c_str (), "", 5);
   gr->SetQuality (3);
-  gr->SetRanges (x, y1);
+  gr->SetRanges (x, y);
   gr->SetFontSize (3);
   gr->SetOriginTick (false);
 
   std::vector<double> ticks;
-  double tickstep = (y1.Maximal () - y1.Minimal ()) / 3;
+  double tickstep = (y.Maximal () - y.Minimal ()) / 3;
   if (tickstep < 0)
     {
       tickstep = -tickstep;
     }
-  double tickval = y1.Minimal ();
+  double tickval = y.Minimal ();
   std::stringstream strm;
   std::locale loc ("C");
   std::string tickstr, tick;
@@ -261,7 +241,7 @@ PSDDeals::Draw (mglGraph *gr)
       strm.clear ();
       strm.imbue (loc);
       strm << std::fixed;
-      strm << std::setprecision (5);
+      strm << std::setprecision (0);
       tickval = tickval + tickstep;
       strm << tickval;
       tick = strm.str ();
@@ -276,44 +256,45 @@ PSDDeals::Draw (mglGraph *gr)
 	}
     }
   mglData fortick (ticks);
+
   tickstr = af.utf8to (tickstr);
 
   gr->SetTicksVal ('y', fortick, tickstr.c_str ());
   gr->SetTicks ('x', d);
-  gr->SetTickSkip (true);
   gr->Axis ("y", "k");
-  gr->Axis ("!f0x", "k");
+  gr->Axis ("!fx", "k");
+  gr->SetTickSkip (true);
   auto itusd = std::find (usdv.begin (), usdv.end (), yname);
   if (itusd != usdv.end ())
     {
-      yname = gettext ("Shares/USD");
+      yname = "USD";
     }
   auto iteur = std::find (eurv.begin (), eurv.end (), yname);
   if (iteur != eurv.end ())
     {
-      yname = gettext ("Shares/EUR");
+      yname = "EUR";
     }
   if (itusd == usdv.end () && iteur == eurv.end ())
     {
-      yname = gettext ("Shares/Ruble");
+      yname = gettext ("Rubles");
     }
   gr->Label ('x', af.utf8to (gettext ("Transactions")).c_str (), 0);
   gr->Label ('y', af.utf8to (yname).c_str (), 0);
 
   //Отображение графика
   gr->Grid ("xy", "{xA0A136}");
-  gr->Plot (x, y, "r");
-  gr->Plot (x, y1, "g");
-  gr->AddLegend (af.utf8to (gettext ("PPm")).c_str (), "r");
-  gr->AddLegend (af.utf8to (gettext ("PPTm")).c_str (), "g");
+  gr->Plot (x, y, "{x8900FF}");
+  gr->Plot (x, y2, "r");
+  gr->AddLegend (af.utf8to (gettext ("Money turnover")).c_str (), "{x8900FF}");
+  gr->AddLegend (af.utf8to (gettext ("Average money turnover")).c_str (), "r");
   gr->SetFontSize (3);
-  gr->Legend (1.3, 1.3);
+  gr->Legend (1.1, 1.3);
 
   //Подписи оси х
   mglPoint p1 (x.Minimal (),
-	       y1.Maximal () + ((y1.Maximal () - y1.Minimal ()) * 0.02));
+	       y.Maximal () + ((y.Maximal () - y.Minimal ()) * 0.02));
   mglPoint p5 (x.Maximal (),
-	       y1.Maximal () + ((y1.Maximal () - y1.Minimal ()) * 0.02));
+	       y.Maximal () + ((y.Maximal () - y.Minimal ()) * 0.02));
   datebeg = af.utf8to (datebeg);
   dateend = af.utf8to (dateend);
   gr->Puts (p1, datebeg.c_str (), "k", 3);

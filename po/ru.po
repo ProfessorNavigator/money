@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Money\n"
-"POT-Creation-Date: 2022-06-10 22:43+0400\n"
-"PO-Revision-Date: 2022-06-10 22:43+0400\n"
+"POT-Creation-Date: 2022-08-28 01:16+0400\n"
+"PO-Revision-Date: 2022-08-28 01:17+0400\n"
 "Last-Translator: \n"
 "Language-Team: Юрий Бобылев\n"
 "Language: ru_RU\n"
@@ -15,50 +15,36 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: AuxFunc.cpp\n"
-"X-Poedit-SearchPath-1: AuxFunc.h\n"
-"X-Poedit-SearchPath-2: CalcIndex.cpp\n"
-"X-Poedit-SearchPath-3: CalcIndex.h\n"
-"X-Poedit-SearchPath-4: DownloadAll.cpp\n"
-"X-Poedit-SearchPath-5: DownloadAll.h\n"
-"X-Poedit-SearchPath-6: DownloadDeals.cpp\n"
-"X-Poedit-SearchPath-7: DownloadDeals.h\n"
-"X-Poedit-SearchPath-8: DownloadMenu.cpp\n"
-"X-Poedit-SearchPath-9: DownloadMenu.h\n"
-"X-Poedit-SearchPath-10: GraphicWidget.cpp\n"
-"X-Poedit-SearchPath-11: GraphicWidget.h\n"
-"X-Poedit-SearchPath-12: MainWindow.cpp\n"
-"X-Poedit-SearchPath-13: MainWindow.h\n"
-"X-Poedit-SearchPath-14: Money.cpp\n"
-"X-Poedit-SearchPath-15: MoneyApplication.cpp\n"
-"X-Poedit-SearchPath-16: MoneyApplication.h\n"
-"X-Poedit-SearchPath-17: OpenDialog.cpp\n"
-"X-Poedit-SearchPath-18: OpenDialog.h\n"
-"X-Poedit-SearchPath-19: OpenDialogDeals.cpp\n"
-"X-Poedit-SearchPath-20: OpenDialogDeals.h\n"
-"X-Poedit-SearchPath-21: PlotAllCommon.cpp\n"
-"X-Poedit-SearchPath-22: PlotAllCommon.h\n"
-"X-Poedit-SearchPath-23: PlotDealsCommon.cpp\n"
-"X-Poedit-SearchPath-24: PlotDealsCommon.h\n"
-"X-Poedit-SearchPath-25: PlotGlobalCommon.cpp\n"
-"X-Poedit-SearchPath-26: PlotGlobalCommon.h\n"
-"X-Poedit-SearchPath-27: PlotMoneyGlobal.cpp\n"
-"X-Poedit-SearchPath-28: PlotMoneyGlobal.h\n"
-"X-Poedit-SearchPath-29: PlotPriceAll.cpp\n"
-"X-Poedit-SearchPath-30: PlotPriceAll.h\n"
-"X-Poedit-SearchPath-31: PlotPriceDeals.cpp\n"
-"X-Poedit-SearchPath-32: PlotPriceDeals.h\n"
-"X-Poedit-SearchPath-33: PlotPSDGlobal.cpp\n"
-"X-Poedit-SearchPath-34: PlotPSDGlobal.h\n"
-"X-Poedit-SearchPath-35: PlotVolumeAll.cpp\n"
-"X-Poedit-SearchPath-36: PlotVolumeAll.h\n"
-"X-Poedit-SearchPath-37: PlotVolumeDeals.cpp\n"
-"X-Poedit-SearchPath-38: PlotVolumeDeals.h\n"
-"X-Poedit-SearchPath-39: PlotVolumeGlobal.cpp\n"
-"X-Poedit-SearchPath-40: PlotVolumeGlobal.h\n"
-"X-Poedit-SearchPath-41: PSD.cpp\n"
-"X-Poedit-SearchPath-42: PSD.h\n"
-"X-Poedit-SearchPath-43: PSDDeals.cpp\n"
-"X-Poedit-SearchPath-44: PSDDeals.h\n"
+"X-Poedit-SearchPath-1: CalcIndex.cpp\n"
+"X-Poedit-SearchPath-2: DownloadAll.cpp\n"
+"X-Poedit-SearchPath-3: DownloadDeals.cpp\n"
+"X-Poedit-SearchPath-4: DownloadMenu.cpp\n"
+"X-Poedit-SearchPath-5: GraphicWidget.cpp\n"
+"X-Poedit-SearchPath-6: MainWindow.cpp\n"
+"X-Poedit-SearchPath-7: Money.cpp\n"
+"X-Poedit-SearchPath-8: MoneyApplication.cpp\n"
+"X-Poedit-SearchPath-9: OpenDialog.cpp\n"
+"X-Poedit-SearchPath-10: OpenDialogDeals.cpp\n"
+"X-Poedit-SearchPath-11: PlotAllCommon.cpp\n"
+"X-Poedit-SearchPath-12: PlotDealsCommon.cpp\n"
+"X-Poedit-SearchPath-13: PlotMoneyGlobal.cpp\n"
+"X-Poedit-SearchPath-14: PlotPriceAll.cpp\n"
+"X-Poedit-SearchPath-15: PlotPriceAll.h\n"
+"X-Poedit-SearchPath-16: PlotPriceDeals.cpp\n"
+"X-Poedit-SearchPath-17: PlotPriceDeals.h\n"
+"X-Poedit-SearchPath-18: PlotPSDGlobal.cpp\n"
+"X-Poedit-SearchPath-19: PlotPSDGlobal.h\n"
+"X-Poedit-SearchPath-20: PlotVolumeAll.cpp\n"
+"X-Poedit-SearchPath-21: PlotVolumeAll.h\n"
+"X-Poedit-SearchPath-22: PlotVolumeDeals.cpp\n"
+"X-Poedit-SearchPath-23: PlotVolumeDeals.h\n"
+"X-Poedit-SearchPath-24: PlotVolumeGlobal.cpp\n"
+"X-Poedit-SearchPath-25: PlotVolumeGlobal.h\n"
+"X-Poedit-SearchPath-26: PSD.cpp\n"
+"X-Poedit-SearchPath-27: PSD.h\n"
+"X-Poedit-SearchPath-28: PSDDeals.cpp\n"
+"X-Poedit-SearchPath-29: PlotMoneyVolumeAll.cpp\n"
+"X-Poedit-SearchPath-30: PlotMoneyVolumeDeals.cpp\n"
 
 #: CalcIndex.cpp:79
 msgid "File list creation:"
@@ -109,12 +95,12 @@ msgid "Downloading in progress..."
 msgstr "Загрузка..."
 
 #: DownloadMenu.cpp:993 DownloadMenu.cpp:1221 DownloadMenu.cpp:1332
-#: DownloadMenu.cpp:1544 DownloadMenu.cpp:1726 GraphicWidget.cpp:583
-#: MainWindow.cpp:435 OpenDialog.cpp:220 OpenDialogDeals.cpp:397
+#: DownloadMenu.cpp:1544 DownloadMenu.cpp:1726 GraphicWidget.cpp:588
+#: MainWindow.cpp:459 OpenDialog.cpp:220 OpenDialogDeals.cpp:397
 msgid "Cancel"
 msgstr "Отмена"
 
-#: DownloadMenu.cpp:1134 DownloadMenu.cpp:1478 MainWindow.cpp:491
+#: DownloadMenu.cpp:1134 DownloadMenu.cpp:1478 MainWindow.cpp:515
 msgid "Network error"
 msgstr "Ошибка сети"
 
@@ -123,7 +109,7 @@ msgid "Network error!"
 msgstr "Ошибка сети!"
 
 #: DownloadMenu.cpp:1150 DownloadMenu.cpp:1488 GraphicWidget.cpp:279
-#: MainWindow.cpp:492
+#: MainWindow.cpp:516
 msgid "Close"
 msgstr "Закрыть"
 
@@ -215,141 +201,139 @@ msgstr "Дата"
 msgid "CPP"
 msgstr "ИПС"
 
-#: GraphicWidget.cpp:565
+#: GraphicWidget.cpp:570
 msgid "File name"
 msgstr "Имя файла"
 
-#: GraphicWidget.cpp:574
+#: GraphicWidget.cpp:579
 msgid "/Images"
 msgstr "/Изображения"
 
-#: GraphicWidget.cpp:591
+#: GraphicWidget.cpp:596
 msgid "Save"
 msgstr "Сохранить"
 
-#: GraphicWidget.cpp:638
+#: GraphicWidget.cpp:643
 msgid "File already exists. Replace?"
 msgstr "Файл уже существует. Заменить?"
 
-#: GraphicWidget.cpp:640
+#: GraphicWidget.cpp:645
 msgid "Yes"
 msgstr "Да"
 
-#: GraphicWidget.cpp:643
+#: GraphicWidget.cpp:648
 msgid "No"
 msgstr "Нет"
 
-#: GraphicWidget.cpp:782 GraphicWidget.cpp:831 GraphicWidget.cpp:980
+#: GraphicWidget.cpp:787 GraphicWidget.cpp:924
 msgid "PPm "
 msgstr "ПСд "
 
-#: GraphicWidget.cpp:794 GraphicWidget.cpp:843 GraphicWidget.cpp:992
+#: GraphicWidget.cpp:799 GraphicWidget.cpp:936
 msgid "PPTm "
 msgstr "ПСОд "
 
-#: GraphicWidget.cpp:806
+#: GraphicWidget.cpp:811
 msgid "PPTm/PPm "
 msgstr "ПСОд/ПСд "
 
-#: GraphicWidget.cpp:818
-msgid "Everage speed "
-msgstr "Средняя скорость "
-
-#: GraphicWidget.cpp:855
-msgid "Share's turnover "
-msgstr "Оборот акций "
-
-#: GraphicWidget.cpp:867 GraphicWidget.cpp:881
+#: GraphicWidget.cpp:825
 msgid "Money turnover "
 msgstr "Оборот денег "
 
-#: GraphicWidget.cpp:893 GraphicWidget.cpp:1018
+#: GraphicWidget.cpp:837 GraphicWidget.cpp:962
 msgid "Average turnover "
 msgstr "Средний оборот "
 
-#: GraphicWidget.cpp:907
+#: GraphicWidget.cpp:851
 msgid "Weighted average price "
 msgstr "Средневзвешенная цена "
 
-#: GraphicWidget.cpp:920
+#: GraphicWidget.cpp:864
 msgid "First price "
 msgstr "Первая цена "
 
-#: GraphicWidget.cpp:932
+#: GraphicWidget.cpp:876
 msgid "Last price "
 msgstr "Последняя цена "
 
-#: GraphicWidget.cpp:1006
+#: GraphicWidget.cpp:950
 msgid "Turnover "
 msgstr "Оборот "
 
-#: MainWindow.cpp:85 PlotPriceAll.cpp:231 PlotPriceDeals.cpp:223
-#: PlotPriceDeals.cpp:294
+#: MainWindow.cpp:85 PlotPriceAll.cpp:231 PlotPriceDeals.cpp:256
+#: PlotPriceDeals.cpp:327
 msgid "Price"
 msgstr "Цена"
 
-#: MainWindow.cpp:95 PSD.cpp:173 PSDDeals.cpp:203 PlotAllCommon.cpp:227
-#: PlotDealsCommon.cpp:283 PlotGlobalCommon.cpp:178 PlotPSDGlobal.cpp:139
+#: MainWindow.cpp:95 PSD.cpp:173 PSDDeals.cpp:236 PlotAllCommon.cpp:219
+#: PlotDealsCommon.cpp:263 PlotPSDGlobal.cpp:139
 msgid "Purchasing power of money"
 msgstr "Покупательная способность денег"
 
-#: MainWindow.cpp:105
-msgid "Share's turnover"
+#: MainWindow.cpp:105 PlotVolumeAll.cpp:142 PlotVolumeDeals.cpp:188
+#: PlotVolumeDeals.cpp:246 PlotVolumeGlobal.cpp:133
+msgid "Share turnover"
 msgstr "Оборот акций"
 
-#: MainWindow.cpp:115
+#: MainWindow.cpp:115 PlotMoneyGlobal.cpp:134 PlotMoneyVolumeAll.cpp:186
+#: PlotMoneyVolumeDeals.cpp:216 PlotMoneyVolumeDeals.cpp:288
+msgid "Money turnover"
+msgstr "Оборот денег"
+
+#: MainWindow.cpp:125
 msgid "Prices for transactions"
 msgstr "Цена по сделкам"
 
-#: MainWindow.cpp:125
+#: MainWindow.cpp:135
 msgid "PPm for transactions"
 msgstr "ПСд по сделкам"
 
-#: MainWindow.cpp:135
-msgid "Share's turnover for transactions"
-msgstr "Цена по сделкам"
-
 #: MainWindow.cpp:145
+msgid "Share turnover for transactions"
+msgstr "Оборот акций по сделкам"
+
+#: MainWindow.cpp:155
+msgid "Money turnover for transactions"
+msgstr "Оборот денег по сделкам"
+
+#: MainWindow.cpp:165
 msgid "Prediction plots (common)"
 msgstr "Графики для прогнозов (общие)"
 
-#: MainWindow.cpp:155
+#: MainWindow.cpp:175
 msgid "Prediction plots (daily)"
 msgstr "Графики для прогнозов (дневные)"
 
-#: MainWindow.cpp:164
+#: MainWindow.cpp:184
 msgid "PPm global"
 msgstr "ПСд по рынку"
 
-#: MainWindow.cpp:174
-msgid "Shares' turnover global"
+#: MainWindow.cpp:194
+msgid "Share turnover global"
 msgstr "Оборот акций по рынку"
 
-#: MainWindow.cpp:184
+#: MainWindow.cpp:204
 msgid "Money turnover global"
 msgstr "Оборот денег по рынку"
 
-#: MainWindow.cpp:194
-msgid "PPm common plots"
-msgstr "ПСд, графики для прогнозов"
-
-#: MainWindow.cpp:204
+#: MainWindow.cpp:214
 msgid "Download data"
 msgstr "Скачать данные"
 
-#: MainWindow.cpp:213 MainWindow.cpp:526 MainWindow.cpp:571
+#: MainWindow.cpp:223 MainWindow.cpp:550 MainWindow.cpp:595
 msgid "About"
 msgstr "О программе"
 
-#: MainWindow.cpp:425
+#: MainWindow.cpp:449
 msgid ""
-"<span foreground='#EFFF00' size='large'>Wait, share's list is downloading..."
-"</span>"
+"<span foreground='#EFFF00' size='large'>Wait, share list is downloading...</"
+"span>"
 msgstr ""
 "<span foreground='#EFFF00' size='large'>Подождите, идёт загрузка списка "
 "инструментов...</span>"
 
-#: MainWindow.cpp:537
+#: MainWindow.cpp:561
 msgid ""
 "Money is a programm to collect statistics from moex.com\n"
 "Author Yury Bobylev <bobilev_yury@mail.ru>.\n"
@@ -367,7 +351,7 @@ msgstr ""
 "Libzip https://libzip.org\n"
 "GMP https://gmplib.org/ICU https://icu.unicode.org"
 
-#: MainWindow.cpp:618
+#: MainWindow.cpp:642
 msgid "Licence"
 msgstr "Лицензия"
 
@@ -407,86 +391,59 @@ msgstr "Имя"
 msgid "Codename"
 msgstr "Имя (по коду)"
 
-#: PSD.cpp:250 PSDDeals.cpp:256 PlotAllCommon.cpp:284 PlotDealsCommon.cpp:339
+#: PSD.cpp:250 PSDDeals.cpp:289 PlotAllCommon.cpp:276 PlotDealsCommon.cpp:319
 msgid "Shares/USD"
 msgstr "Акций/USD"
 
-#: PSD.cpp:255 PSDDeals.cpp:261 PlotAllCommon.cpp:289 PlotDealsCommon.cpp:344
+#: PSD.cpp:255 PSDDeals.cpp:294 PlotAllCommon.cpp:281 PlotDealsCommon.cpp:324
 msgid "Shares/EUR"
 msgstr "Акций/EUR"
 
-#: PSD.cpp:259 PSDDeals.cpp:265 PlotAllCommon.cpp:293 PlotDealsCommon.cpp:348
-#: PlotGlobalCommon.cpp:225 PlotPSDGlobal.cpp:186
+#: PSD.cpp:259 PSDDeals.cpp:298 PlotAllCommon.cpp:285 PlotDealsCommon.cpp:328
+#: PlotPSDGlobal.cpp:186
 msgid "Shares/Ruble"
 msgstr "Акций/Рубль"
 
-#: PSD.cpp:261 PlotAllCommon.cpp:295 PlotAllCommon.cpp:392
-#: PlotAllCommon.cpp:475 PlotGlobalCommon.cpp:224 PlotGlobalCommon.cpp:302
-#: PlotGlobalCommon.cpp:376 PlotMoneyGlobal.cpp:180 PlotPSDGlobal.cpp:185
+#: PSD.cpp:261 PlotAllCommon.cpp:287 PlotAllCommon.cpp:384
+#: PlotMoneyGlobal.cpp:180 PlotMoneyVolumeAll.cpp:251 PlotPSDGlobal.cpp:185
 #: PlotPriceAll.cpp:300 PlotVolumeAll.cpp:193 PlotVolumeGlobal.cpp:179
 msgid "Days"
 msgstr "Дни"
 
-#: PSD.cpp:279 PSDDeals.cpp:274 PlotAllCommon.cpp:313 PlotDealsCommon.cpp:358
-#: PlotGlobalCommon.cpp:229 PlotPSDGlobal.cpp:191
+#: PSD.cpp:279 PSDDeals.cpp:307 PlotAllCommon.cpp:305 PlotDealsCommon.cpp:338
+#: PlotPSDGlobal.cpp:191
 msgid "PPm"
 msgstr "ПСд"
 
-#: PSD.cpp:280 PSDDeals.cpp:275 PlotAllCommon.cpp:314 PlotDealsCommon.cpp:359
-#: PlotGlobalCommon.cpp:228 PlotPSDGlobal.cpp:190
+#: PSD.cpp:280 PSDDeals.cpp:308 PlotAllCommon.cpp:306 PlotDealsCommon.cpp:339
+#: PlotPSDGlobal.cpp:190
 msgid "PPTm"
 msgstr "ПСОд"
 
-#: PSDDeals.cpp:267 PlotDealsCommon.cpp:350 PlotDealsCommon.cpp:422
-#: PlotDealsCommon.cpp:491 PlotPriceDeals.cpp:287 PlotVolumeDeals.cpp:206
+#: PSDDeals.cpp:300 PlotDealsCommon.cpp:330 PlotDealsCommon.cpp:402
+#: PlotMoneyVolumeDeals.cpp:281 PlotPriceDeals.cpp:320 PlotVolumeDeals.cpp:239
 msgid "Transactions"
 msgstr "Сделки"
 
-#: PlotAllCommon.cpp:344 PlotDealsCommon.cpp:375
+#: PlotAllCommon.cpp:336 PlotDealsCommon.cpp:355
 msgid "PPTm/PPm in %"
 msgstr "ПСОд/ПСд в %"
 
-#: PlotAllCommon.cpp:393 PlotAllCommon.cpp:409 PlotDealsCommon.cpp:423
-#: PlotDealsCommon.cpp:430
+#: PlotAllCommon.cpp:385 PlotAllCommon.cpp:401 PlotDealsCommon.cpp:403
+#: PlotDealsCommon.cpp:410
 msgid "PPTm/PPm (%)"
 msgstr "ПСОд/ПСд  (%)"
 
-#: PlotAllCommon.cpp:425 PlotDealsCommon.cpp:443
-msgid "Average speed"
-msgstr "Средняя скорость"
-
-#: PlotAllCommon.cpp:476
-msgid "Shares per day"
-msgstr "Акций в день"
-
-#: PlotAllCommon.cpp:502 PlotDealsCommon.cpp:498
-msgid "Speed"
-msgstr "Скорость"
-
-#: PlotDealsCommon.cpp:360
+#: PlotDealsCommon.cpp:340
 msgid "PPTm(0)"
 msgstr "ПСОд(0)"
 
-#: PlotDealsCommon.cpp:492
-msgid "Shares per second"
-msgstr "Акций в секунду"
+#: PlotDealsCommon.cpp:423
+msgid "Average speed"
+msgstr "Средняя скорость"
 
-#: PlotGlobalCommon.cpp:259 PlotGlobalCommon.cpp:307 PlotVolumeAll.cpp:142
-#: PlotVolumeDeals.cpp:155 PlotVolumeDeals.cpp:213 PlotVolumeGlobal.cpp:133
-msgid "Shares turnover"
-msgstr "Оборот акций"
-
-#: PlotGlobalCommon.cpp:303 PlotVolumeAll.cpp:194 PlotVolumeDeals.cpp:207
-#: PlotVolumeGlobal.cpp:180
-msgid "Shares quantity"
-msgstr "Количество акций"
-
-#: PlotGlobalCommon.cpp:333 PlotGlobalCommon.cpp:381 PlotMoneyGlobal.cpp:134
-msgid "Money turnover"
-msgstr "Оборот денег"
-
-#: PlotGlobalCommon.cpp:377 PlotMoneyGlobal.cpp:181 PlotPriceAll.cpp:298
-#: PlotPriceDeals.cpp:285
+#: PlotMoneyGlobal.cpp:181 PlotMoneyVolumeAll.cpp:249
+#: PlotMoneyVolumeDeals.cpp:279 PlotPriceAll.cpp:298 PlotPriceDeals.cpp:318
 msgid "Rubles"
 msgstr "Рубли"
 
@@ -494,9 +451,18 @@ msgstr "Рубли"
 msgid "Turnover"
 msgstr "Оборот"
 
-#: PlotMoneyGlobal.cpp:185 PlotVolumeAll.cpp:213 PlotVolumeGlobal.cpp:185
+#: PlotMoneyGlobal.cpp:185 PlotMoneyVolumeAll.cpp:271 PlotVolumeAll.cpp:213
+#: PlotVolumeGlobal.cpp:185
 msgid "Average turnover"
 msgstr "Средний оборот"
+
+#: PlotMoneyVolumeAll.cpp:270 PlotVolumeAll.cpp:212
+msgid "Daily turnover"
+msgstr "Суточный оборот"
+
+#: PlotMoneyVolumeDeals.cpp:289
+msgid "Average money turnover"
+msgstr "Средний оборот денег"
 
 #: PlotPriceAll.cpp:319
 msgid "Weighted average price"
@@ -510,17 +476,41 @@ msgstr "Первая"
 msgid "Last"
 msgstr "Последняя"
 
-#: PlotPriceAll.cpp:322 PlotPriceDeals.cpp:295
+#: PlotPriceAll.cpp:322 PlotPriceDeals.cpp:328
 msgid "ECg"
 msgstr "ОСт"
 
-#: PlotVolumeAll.cpp:212
-msgid "Daily turnover"
-msgstr "Суточный оборот"
+#: PlotVolumeAll.cpp:194 PlotVolumeDeals.cpp:240 PlotVolumeGlobal.cpp:180
+msgid "Share quantity"
+msgstr "Количество акций"
 
-#: PlotVolumeDeals.cpp:214
-msgid "Average shares turnover"
+#: PlotVolumeDeals.cpp:247
+msgid "Average share turnover"
 msgstr "Средний оборот акций"
+
+#~ msgid "Shares turnover"
+#~ msgstr "Оборот акций"
+
+#~ msgid "Everage speed "
+#~ msgstr "Средняя скорость "
+
+#~ msgid "Share's turnover "
+#~ msgstr "Оборот акций "
+
+#~ msgid "PPm common plots"
+#~ msgstr "ПСд, графики для прогнозов"
+
+#~ msgid "Shares per day"
+#~ msgstr "Акций в день"
+
+#~ msgid "Speed"
+#~ msgstr "Скорость"
+
+#~ msgid "Shares per second"
+#~ msgstr "Акций в секунду"
+
+#~ msgid "Share's turnover"
+#~ msgstr "Оборот акций"
 
 #~ msgid "Shares' turnover"
 #~ msgstr "Оборот акций"

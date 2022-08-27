@@ -1,5 +1,5 @@
 project ('Money', 'cpp', default_options : ['cpp_std=c++17'])
-src = ['AuxFunc.cpp', 'CalcIndex.cpp', 'DownloadAll.cpp', 'DownloadDeals.cpp', 'DownloadMenu.cpp', 'GraphicWidget.cpp', 'MainWindow.cpp', 'MoneyApplication.cpp', 'Money.cpp', 'OpenDialog.cpp', 'OpenDialogDeals.cpp', 'PlotAllCommon.cpp', 'PlotDealsCommon.cpp', 'PlotGlobalCommon.cpp', 'PlotMoneyGlobal.cpp', 'PlotPriceAll.cpp', 'PlotPriceDeals.cpp', 'PlotPSDGlobal.cpp', 'PlotVolumeAll.cpp', 'PlotVolumeDeals.cpp', 'PlotVolumeGlobal.cpp', 'PSD.cpp', 'PSDDeals.cpp']
+src = ['AuxFunc.cpp', 'CalcIndex.cpp', 'DownloadAll.cpp', 'DownloadDeals.cpp', 'DownloadMenu.cpp', 'GraphicWidget.cpp', 'MainWindow.cpp', 'MoneyApplication.cpp', 'Money.cpp', 'OpenDialog.cpp', 'OpenDialogDeals.cpp', 'PlotAllCommon.cpp', 'PlotDealsCommon.cpp', 'PlotMoneyGlobal.cpp', 'PlotMoneyVolumeAll.cpp', 'PlotMoneyVolumeDeals.cpp', 'PlotPriceAll.cpp', 'PlotPriceDeals.cpp', 'PlotPSDGlobal.cpp', 'PlotVolumeAll.cpp', 'PlotVolumeDeals.cpp', 'PlotVolumeGlobal.cpp', 'PSD.cpp', 'PSDDeals.cpp']
 gmp = dependency ('gmpxx', method : 'pkg-config')
 gtkmm = dependency ('gtkmm-4.0', method : 'pkg-config')
 icu = dependency ('icu-i18n', method : 'pkg-config')

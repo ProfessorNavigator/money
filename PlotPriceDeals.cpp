@@ -95,23 +95,56 @@ PlotPriceDeals::calcForDraw ()
     }
   else
     {
+      std::tuple<int, int, int> temptup;
       f.open (filename, std::ios_base::in);
       while (!f.eof ())
 	{
 	  getline (f, line);
+	  if (count == 2)
+	    {
+	      midd = line;
+	      int countch = 0;
+	      while (midd.size () > 0)
+		{
+		  temp = midd.substr (0, midd.find (";"));
+		  std::string::size_type n;
+		  if (temp == "TRADETIME")
+		    {
+		      std::get<0> (temptup) = countch;
+		    }
+		  if (temp == "VALUE")
+		    {
+		      std::get<1> (temptup) = countch;
+		    }
+		  if (temp == "PRICE")
+		    {
+		      std::get<2> (temptup) = countch;
+		    }
+		  n = midd.find (";");
+		  if (n != std::string::npos)
+		    {
+		      midd.erase (0, n + std::string (";").size ());
+		    }
+		  else
+		    {
+		      break;
+		    }
+		  countch++;
+		}
+	    }
 	  if (count > 2 && line != "")
 	    {
 	      if (count == 3)
 		{
 		  yname = line;
-		  yname.erase (0, yname.find (";") + 1);
-		  yname.erase (0, yname.find (";") + 1);
+		  yname.erase (0, yname.find (";") + std::string (";").size ());
+		  yname.erase (0, yname.find (";") + std::string (";").size ());
 		  yname = yname.substr (0, yname.find (";"));
 		}
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 1; i++)
+	      for (int i = 0; i < std::get<0> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,
@@ -123,7 +156,7 @@ PlotPriceDeals::calcForDraw ()
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 6; i++)
+	      for (int i = 0; i < std::get<1> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,
@@ -139,7 +172,7 @@ PlotPriceDeals::calcForDraw ()
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 4; i++)
+	      for (int i = 0; i < std::get<2> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,
@@ -156,7 +189,7 @@ PlotPriceDeals::calcForDraw ()
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 4; i++)
+	      for (int i = 0; i < std::get<2> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,

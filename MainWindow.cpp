@@ -83,7 +83,7 @@ MainWindow::windowFunc ()
   this->set_child (*grid);
 
   Gtk::Button *priceall = Gtk::make_managed<Gtk::Button> (gettext ("Price"));
-  priceall->set_name ("pricallButton");
+  priceall->set_name ("allButton");
   priceall->set_margin (5);
   priceall->get_style_context ()->add_provider (
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
@@ -93,7 +93,7 @@ MainWindow::windowFunc ()
 
   Gtk::Button *moneyprice = Gtk::make_managed<Gtk::Button> (
       gettext ("Purchasing power of money"));
-  moneyprice->set_name ("moneypriceButton");
+  moneyprice->set_name ("allButton");
   moneyprice->set_margin (5);
   moneyprice->get_style_context ()->add_provider (
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
@@ -102,8 +102,8 @@ MainWindow::windowFunc ()
   grid->attach (*moneyprice, 0, 1);
 
   Gtk::Button *moneyvolume = Gtk::make_managed<Gtk::Button> (
-      gettext ("Share's turnover"));
-  moneyvolume->set_name ("moneyvolumeButton");
+      gettext ("Share turnover"));
+  moneyvolume->set_name ("allButton");
   moneyvolume->set_margin (5);
   moneyvolume->get_style_context ()->add_provider (
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
@@ -111,15 +111,25 @@ MainWindow::windowFunc ()
       sigc::mem_fun (*this, &MainWindow::plotVolumeAll));
   grid->attach (*moneyvolume, 0, 2);
 
+  Gtk::Button *moneyvolumev = Gtk::make_managed<Gtk::Button> (
+      gettext ("Money turnover"));
+  moneyvolumev->set_name ("allButton");
+  moneyvolumev->set_margin (5);
+  moneyvolumev->get_style_context ()->add_provider (
+      css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
+  moneyvolumev->signal_clicked ().connect (
+      sigc::mem_fun (*this, &MainWindow::plotMoneyVolumeAll));
+  grid->attach (*moneyvolumev, 0, 3);
+
   Gtk::Button *pricedeals = Gtk::make_managed<Gtk::Button> (
       gettext ("Prices for transactions"));
-  pricedeals->set_name ("pricedealsButton");
+  pricedeals->set_name ("dealsButton");
   pricedeals->set_margin (5);
   pricedeals->get_style_context ()->add_provider (
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   pricedeals->signal_clicked ().connect (
       sigc::mem_fun (*this, &MainWindow::plotPriceDeals));
-  grid->attach (*pricedeals, 0, 3);
+  grid->attach (*pricedeals, 0, 4);
 
   Gtk::Button *dealsmoneypr = Gtk::make_managed<Gtk::Button> (
       gettext ("PPm for transactions"));
@@ -129,17 +139,27 @@ MainWindow::windowFunc ()
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   dealsmoneypr->signal_clicked ().connect (
       sigc::mem_fun (*this, &MainWindow::plotPSDDeals));
-  grid->attach (*dealsmoneypr, 0, 4);
+  grid->attach (*dealsmoneypr, 0, 5);
 
   Gtk::Button *dealsvolume = Gtk::make_managed<Gtk::Button> (
-      gettext ("Share's turnover for transactions"));
+      gettext ("Share turnover for transactions"));
   dealsvolume->set_name ("dealsvolumeButton");
   dealsvolume->set_margin (5);
   dealsvolume->get_style_context ()->add_provider (
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   dealsvolume->signal_clicked ().connect (
       sigc::mem_fun (*this, &MainWindow::plotVolumeDeals));
-  grid->attach (*dealsvolume, 0, 5);
+  grid->attach (*dealsvolume, 0, 6);
+
+  Gtk::Button *dealsmoneyvol = Gtk::make_managed<Gtk::Button> (
+      gettext ("Money turnover for transactions"));
+  dealsmoneyvol->set_name ("dealsvolumeButton");
+  dealsmoneyvol->set_margin (5);
+  dealsmoneyvol->get_style_context ()->add_provider (
+      css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
+  dealsmoneyvol->signal_clicked ().connect (
+      sigc::mem_fun (*this, &MainWindow::plotMoneyVolDeals));
+  grid->attach (*dealsmoneyvol, 0, 7);
 
   Gtk::Button *commongraphicall = Gtk::make_managed<Gtk::Button> (
       gettext ("Prediction plots (common)"));
@@ -149,7 +169,7 @@ MainWindow::windowFunc ()
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   commongraphicall->signal_clicked ().connect (
       sigc::mem_fun (*this, &MainWindow::plotAllCommon));
-  grid->attach (*commongraphicall, 0, 6);
+  grid->attach (*commongraphicall, 0, 8);
 
   Gtk::Button *commongraphicdeals = Gtk::make_managed<Gtk::Button> (
       gettext ("Prediction plots (daily)"));
@@ -159,7 +179,7 @@ MainWindow::windowFunc ()
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   commongraphicdeals->signal_clicked ().connect (
       sigc::mem_fun (*this, &MainWindow::plotDealsCommon));
-  grid->attach (*commongraphicdeals, 0, 7);
+  grid->attach (*commongraphicdeals, 0, 9);
 
   Gtk::Button *psd = Gtk::make_managed<Gtk::Button> (gettext ("PPm global"));
   psd->set_name ("psdButton");
@@ -168,17 +188,17 @@ MainWindow::windowFunc ()
   GTK_STYLE_PROVIDER_PRIORITY_USER);
   psd->signal_clicked ().connect (
       sigc::mem_fun (*this, &MainWindow::plotPSDGlobal));
-  grid->attach (*psd, 0, 8);
+  grid->attach (*psd, 0, 10);
 
   Gtk::Button *volumetotal = Gtk::make_managed<Gtk::Button> (
-      gettext ("Shares' turnover global"));
+      gettext ("Share turnover global"));
   volumetotal->set_name ("volumetotalButton");
   volumetotal->set_margin (5);
   volumetotal->get_style_context ()->add_provider (
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   volumetotal->signal_clicked ().connect (
       sigc::mem_fun (*this, &MainWindow::plotVolumeGlobal));
-  grid->attach (*volumetotal, 0, 9);
+  grid->attach (*volumetotal, 0, 11);
 
   Gtk::Button *moneytotal = Gtk::make_managed<Gtk::Button> (
       gettext ("Money turnover global"));
@@ -188,17 +208,7 @@ MainWindow::windowFunc ()
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   moneytotal->signal_clicked ().connect (
       sigc::mem_fun (*this, &MainWindow::plotMoneyGlobal));
-  grid->attach (*moneytotal, 0, 10);
-
-  Gtk::Button *commonpsd = Gtk::make_managed<Gtk::Button> (
-      gettext ("PPm common plots"));
-  commonpsd->set_name ("commonpsdButton");
-  commonpsd->set_margin (5);
-  commonpsd->get_style_context ()->add_provider (
-      css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
-  commonpsd->signal_clicked ().connect (
-      sigc::mem_fun (*this, &MainWindow::plotGlobalCommon));
-  grid->attach (*commonpsd, 0, 11);
+  grid->attach (*moneytotal, 0, 12);
 
   Gtk::Button *download = Gtk::make_managed<Gtk::Button> (
       gettext ("Download data"));
@@ -208,7 +218,7 @@ MainWindow::windowFunc ()
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   download->signal_clicked ().connect (
       sigc::mem_fun (*this, &MainWindow::downloadMenu));
-  grid->attach (*download, 0, 12);
+  grid->attach (*download, 0, 13);
 
   Gtk::Button *aboutpr = Gtk::make_managed<Gtk::Button> (gettext ("About"));
   aboutpr->set_name ("aboutprButton");
@@ -217,7 +227,7 @@ MainWindow::windowFunc ()
       css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   aboutpr->signal_clicked ().connect (
       sigc::mem_fun (*this, &MainWindow::aboutProg));
-  grid->attach (*aboutpr, 0, 13);
+  grid->attach (*aboutpr, 0, 14);
   this->signal_close_request ().connect ( [this, &af]
   {
     std::vector<Gtk::Window*> win = this->get_application ()->get_windows ();
@@ -293,7 +303,7 @@ MainWindow::plotVolumeAll ()
 }
 
 void
-MainWindow::plotPriceDeals ()
+MainWindow::plotMoneyVolumeAll ()
 {
   Gdk::Rectangle req = screenRes ();
   GraphicWidget *gr = new GraphicWidget (this->get_application (),
@@ -303,11 +313,11 @@ MainWindow::plotPriceDeals ()
   {
     delete gr;
   });
-  gr->plot (1, 3);
+  gr->plot (0, 3);
 }
 
 void
-MainWindow::plotPSDDeals ()
+MainWindow::plotPriceDeals ()
 {
   Gdk::Rectangle req = screenRes ();
   GraphicWidget *gr = new GraphicWidget (this->get_application (),
@@ -321,7 +331,7 @@ MainWindow::plotPSDDeals ()
 }
 
 void
-MainWindow::plotVolumeDeals ()
+MainWindow::plotPSDDeals ()
 {
   Gdk::Rectangle req = screenRes ();
   GraphicWidget *gr = new GraphicWidget (this->get_application (),
@@ -335,7 +345,7 @@ MainWindow::plotVolumeDeals ()
 }
 
 void
-MainWindow::plotAllCommon ()
+MainWindow::plotVolumeDeals ()
 {
   Gdk::Rectangle req = screenRes ();
   GraphicWidget *gr = new GraphicWidget (this->get_application (),
@@ -345,11 +355,11 @@ MainWindow::plotAllCommon ()
   {
     delete gr;
   });
-  gr->plot (0, 6);
+  gr->plot (1, 6);
 }
 
 void
-MainWindow::plotDealsCommon ()
+MainWindow::plotMoneyVolDeals ()
 {
   Gdk::Rectangle req = screenRes ();
   GraphicWidget *gr = new GraphicWidget (this->get_application (),
@@ -363,35 +373,35 @@ MainWindow::plotDealsCommon ()
 }
 
 void
+MainWindow::plotAllCommon ()
+{
+  Gdk::Rectangle req = screenRes ();
+  GraphicWidget *gr = new GraphicWidget (this->get_application (),
+					 req.get_width (), req.get_height (),
+					 this);
+  gr->class_finished.connect ( [gr]
+  {
+    delete gr;
+  });
+  gr->plot (0, 8);
+}
+
+void
+MainWindow::plotDealsCommon ()
+{
+  Gdk::Rectangle req = screenRes ();
+  GraphicWidget *gr = new GraphicWidget (this->get_application (),
+					 req.get_width (), req.get_height (),
+					 this);
+  gr->class_finished.connect ( [gr]
+  {
+    delete gr;
+  });
+  gr->plot (1, 9);
+}
+
+void
 MainWindow::plotPSDGlobal ()
-{
-  Gdk::Rectangle req = screenRes ();
-  GraphicWidget *gr = new GraphicWidget (this->get_application (),
-					 req.get_width (), req.get_height (),
-					 this);
-  gr->class_finished.connect ( [gr]
-  {
-    delete gr;
-  });
-  gr->plot (2, 8);
-}
-
-void
-MainWindow::plotVolumeGlobal ()
-{
-  Gdk::Rectangle req = screenRes ();
-  GraphicWidget *gr = new GraphicWidget (this->get_application (),
-					 req.get_width (), req.get_height (),
-					 this);
-  gr->class_finished.connect ( [gr]
-  {
-    delete gr;
-  });
-  gr->plot (2, 9);
-}
-
-void
-MainWindow::plotMoneyGlobal ()
 {
   Gdk::Rectangle req = screenRes ();
   GraphicWidget *gr = new GraphicWidget (this->get_application (),
@@ -405,7 +415,7 @@ MainWindow::plotMoneyGlobal ()
 }
 
 void
-MainWindow::plotGlobalCommon ()
+MainWindow::plotVolumeGlobal ()
 {
   Gdk::Rectangle req = screenRes ();
   GraphicWidget *gr = new GraphicWidget (this->get_application (),
@@ -419,11 +429,25 @@ MainWindow::plotGlobalCommon ()
 }
 
 void
+MainWindow::plotMoneyGlobal ()
+{
+  Gdk::Rectangle req = screenRes ();
+  GraphicWidget *gr = new GraphicWidget (this->get_application (),
+					 req.get_width (), req.get_height (),
+					 this);
+  gr->class_finished.connect ( [gr]
+  {
+    delete gr;
+  });
+  gr->plot (2, 12);
+}
+
+void
 MainWindow::downloadMenu ()
 {
   Gtk::MessageDialog *dialog = new Gtk::MessageDialog (
       *this, gettext ("<span foreground='#EFFF00' size='large'>"
-		      "Wait, share's list is downloading..."
+		      "Wait, share list is downloading..."
 		      "</span>"),
       true, Gtk::MessageType::INFO, Gtk::ButtonsType::NONE, true);
   dialog->set_decorated (false);
