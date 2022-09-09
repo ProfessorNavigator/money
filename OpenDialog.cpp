@@ -73,7 +73,14 @@ OpenDialog::OpenDialog (Glib::RefPtr<Gtk::Application> app, Gtk::Window *mwin)
       selectedboard = std::distance (boards.begin (), iter);
     }
   af.homePath (&filename);
-  filename = filename + "/Money/" + boards[selectedboard].first;
+  if (boards.size () > selectedboard)
+    {
+      filename = filename + "/Money/" + boards[selectedboard].first;
+    }
+  else
+    {
+      filename = "";
+    }
   filepath = std::filesystem::u8path (filename);
   if (std::filesystem::exists (filepath))
     {

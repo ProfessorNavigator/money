@@ -79,6 +79,8 @@ private:
   fileNames (std::string adress, std::vector<std::string> &filenames);
   void
   toutf8 (std::string &line);
+  static size_t
+  curl_write_func (char *ptr, size_t size, size_t nmemb, std::fstream *f);
 };
 
 #endif /* AUXFUNC_H_ */

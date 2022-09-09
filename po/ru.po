@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Money\n"
-"POT-Creation-Date: 2022-08-28 01:16+0400\n"
-"PO-Revision-Date: 2022-08-28 01:17+0400\n"
+"POT-Creation-Date: 2022-09-09 19:02+0400\n"
+"PO-Revision-Date: 2022-09-09 19:03+0400\n"
 "Last-Translator: \n"
 "Language-Team: Юрий Бобылев\n"
 "Language: ru_RU\n"
@@ -96,7 +96,7 @@ msgstr "Загрузка..."
 
 #: DownloadMenu.cpp:993 DownloadMenu.cpp:1221 DownloadMenu.cpp:1332
 #: DownloadMenu.cpp:1544 DownloadMenu.cpp:1726 GraphicWidget.cpp:588
-#: MainWindow.cpp:459 OpenDialog.cpp:220 OpenDialogDeals.cpp:397
+#: MainWindow.cpp:459 OpenDialog.cpp:227 OpenDialogDeals.cpp:402
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -321,7 +321,7 @@ msgstr "Оборот денег по рынку"
 msgid "Download data"
 msgstr "Скачать данные"
 
-#: MainWindow.cpp:223 MainWindow.cpp:550 MainWindow.cpp:595
+#: MainWindow.cpp:223
 msgid "About"
 msgstr "О программе"
 
@@ -333,7 +333,7 @@ msgstr ""
 "<span foreground='#EFFF00' size='large'>Подождите, идёт загрузка списка "
 "инструментов...</span>"
 
-#: MainWindow.cpp:561
+#: MainWindow.cpp:590
 msgid ""
 "Money is a programm to collect statistics from moex.com\n"
 "Author Yury Bobylev <bobilev_yury@mail.ru>.\n"
@@ -341,7 +341,8 @@ msgid ""
 "GTK https://www.gtk.org\n"
 "Libcurl https://curl.se/libcurl/\n"
 "Libzip https://libzip.org\n"
-"GMP https://gmplib.org/ICU https://icu.unicode.org"
+"GMP https://gmplib.org/\n"
+"ICU https://icu.unicode.org"
 msgstr ""
 "Money - программа для сбора статистики с Московской биржи\n"
 "Автор Юрий Бобылев <bobilev_yury@mail.ru>\n"
@@ -349,45 +350,42 @@ msgstr ""
 "GTK https://www.gtk.org\n"
 "Libcurl https://curl.se/libcurl/\n"
 "Libzip https://libzip.org\n"
-"GMP https://gmplib.org/ICU https://icu.unicode.org"
+"GMP https://gmplib.org/\n"
+"ICU https://icu.unicode.org"
 
-#: MainWindow.cpp:642
-msgid "Licence"
-msgstr "Лицензия"
-
-#: OpenDialog.cpp:112 OpenDialogDeals.cpp:211
+#: OpenDialog.cpp:119 OpenDialogDeals.cpp:216
 msgid "Instrument selection"
 msgstr "Выбор инструмента"
 
-#: OpenDialog.cpp:124 OpenDialogDeals.cpp:261
+#: OpenDialog.cpp:131 OpenDialogDeals.cpp:266
 msgid "Mode:"
 msgstr "Режим:"
 
-#: OpenDialog.cpp:164 OpenDialogDeals.cpp:340
+#: OpenDialog.cpp:171 OpenDialogDeals.cpp:345
 msgid "Instrument:"
 msgstr "Инструмент:"
 
-#: OpenDialog.cpp:207 OpenDialogDeals.cpp:384
+#: OpenDialog.cpp:214 OpenDialogDeals.cpp:389
 msgid "Confirm"
 msgstr "Подтвердить"
 
-#: OpenDialogDeals.cpp:222
+#: OpenDialogDeals.cpp:227
 msgid "Date:"
 msgstr "Дата:"
 
-#: OpenDialogDeals.cpp:303
+#: OpenDialogDeals.cpp:308
 msgid "Sort by:"
 msgstr "Сортировка:"
 
-#: OpenDialogDeals.cpp:312 OpenDialogDeals.cpp:433 OpenDialogDeals.cpp:706
+#: OpenDialogDeals.cpp:317 OpenDialogDeals.cpp:438 OpenDialogDeals.cpp:711
 msgid "Size"
 msgstr "Размер"
 
-#: OpenDialogDeals.cpp:436
+#: OpenDialogDeals.cpp:441
 msgid "Name"
 msgstr "Имя"
 
-#: OpenDialogDeals.cpp:439
+#: OpenDialogDeals.cpp:444
 msgid "Codename"
 msgstr "Имя (по коду)"
 
@@ -487,6 +485,9 @@ msgstr "Количество акций"
 #: PlotVolumeDeals.cpp:247
 msgid "Average share turnover"
 msgstr "Средний оборот акций"
+
+#~ msgid "Licence"
+#~ msgstr "Лицензия"
 
 #~ msgid "Shares turnover"
 #~ msgstr "Оборот акций"

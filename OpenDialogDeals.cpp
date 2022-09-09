@@ -124,78 +124,83 @@ OpenDialogDeals::OpenDialogDeals (Glib::RefPtr<Gtk::Application> app,
       std::vector<std::string> folders;
       std::string line, archnm;
       af.fileNames (filename, names);
-      for (size_t i = 0; i < names.size (); i++)
+      if (names.size () > 0)
 	{
+	  for (size_t i = 0; i < names.size (); i++)
+	    {
 
-	  line = std::get<2> (names[i]);
-	  if (std::get<1> (names[i]) == 0)
-	    {
-	      folders.push_back (line);
-	    }
-	  else
-	    {
-	      filelist.push_back (names[i]);
-	    }
-	}
-      for (size_t i = 0; i < boards.size (); i++)
-	{
-	  line = boards[i].first;
-	  auto iter = std::find_if (folders.begin (), folders.end (), [&line]
-	  (auto &el)
-	    {
-	      std::string::size_type n;
-	      n = el.find (line, 0);
-	      if (n != std::string::npos)
+	      line = std::get<2> (names[i]);
+	      if (std::get<1> (names[i]) == 0)
 		{
-		  return true;
+		  folders.push_back (line);
 		}
 	      else
 		{
-		  return false;
+		  filelist.push_back (names[i]);
 		}
+	    }
+	  for (size_t i = 0; i < boards.size (); i++)
+	    {
+	      line = boards[i].first;
+	      auto iter = std::find_if (folders.begin (), folders.end (),
+					[&line]
+					(auto &el)
+					  {
+					    std::string::size_type n;
+					    n = el.find (line, 0);
+					    if (n != std::string::npos)
+					      {
+						return true;
+					      }
+					    else
+					      {
+						return false;
+					      }
+					  });
+	      if (iter != folders.end ())
+		{
+		  boardstosh.push_back (boards[i]);
+		}
+	    }
+	  auto iter = std::find_if (boardstosh.begin (), boardstosh.end (), []
+	  (auto &e)
+	    { return e.first == "TQBR";});
+	  if (iter != boardstosh.end ())
+	    {
+	      selectedboard = std::distance (boardstosh.begin (), iter);
+	    }
+	  filelist.erase (
+	      std::remove_if (filelist.begin (), filelist.end (), [this]
+	      (auto &el)
+		{ std::string l = this->boardstosh[this->selectedboard].first;
+		  std::string::size_type n;
+		  n = (std::get<2>(el)).find(l, 0);
+		  if(n!=std::string::npos)
+		    {
+		      return false;
+		    }
+		  else
+		    {
+		      return true;
+		    }}),
+	      filelist.end ());
+	  std::sort (filelist.begin (), filelist.end (), []
+	  (auto &el1, auto &el2)
+	    {
+	      return std::get<1>(el1) > std::get<1>(el2);
 	    });
-	  if (iter != folders.end ())
+	  for (size_t i = 0; i < filelist.size (); i++)
 	    {
-	      boardstosh.push_back (boards[i]);
+	      std::filesystem::path p = std::filesystem::u8path (
+		  std::get<2> (filelist[i]));
+	      line = p.filename ().u8string ();
+	      int one, two;
+	      one = std::get<0> (filelist[i]);
+	      two = std::get<1> (filelist[i]);
+	      filelist[i] = std::make_tuple (one, two, line);
 	    }
+	  createDialog ();
 	}
-      auto iter = std::find_if (boardstosh.begin (), boardstosh.end (), []
-      (auto &e)
-	{ return e.first == "TQBR";});
-      if (iter != boardstosh.end ())
-	{
-	  selectedboard = std::distance (boardstosh.begin (), iter);
-	}
-      filelist.erase (std::remove_if (filelist.begin (), filelist.end (), [this]
-      (auto &el)
-	{ std::string l = this->boardstosh[this->selectedboard].first;
-	  std::string::size_type n;
-	  n = (std::get<2>(el)).find(l, 0);
-	  if(n!=std::string::npos)
-	    {
-	      return false;
-	    }
-	  else
-	    {
-	      return true;
-	    }}),
-		      filelist.end ());
-      std::sort (filelist.begin (), filelist.end (), []
-      (auto &el1, auto &el2)
-	{
-	  return std::get<1>(el1) > std::get<1>(el2);
-	});
-      for (size_t i = 0; i < filelist.size (); i++)
-	{
-	  std::filesystem::path p = std::filesystem::u8path (
-	      std::get<2> (filelist[i]));
-	  line = p.filename ().u8string ();
-	  int one, two;
-	  one = std::get<0> (filelist[i]);
-	  two = std::get<1> (filelist[i]);
-	  filelist[i] = std::make_tuple (one, two, line);
-	}
-      createDialog ();
     }
 }
 

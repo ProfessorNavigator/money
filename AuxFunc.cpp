@@ -117,7 +117,6 @@ void
 AuxFunc::callNetwork (std::string urli, std::string filename, int *check)
 {
   CURL *curl;
-  FILE *fp;
   CURLcode res;
   curl = curl_easy_init ();
 #ifdef _WIN32
@@ -130,12 +129,18 @@ AuxFunc::callNetwork (std::string urli, std::string filename, int *check)
   if (curl)
     {
       std::filesystem::path p = std::filesystem::u8path (filename);
-      fp = fopen (p.string ().c_str (), "wb");
+      std::fstream f;
+      f.open (p, std::ios_base::out | std::ios_base::binary);
       curl_easy_setopt(curl, CURLOPT_URL, urli.c_str ());
-      curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, &f);
+      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_func);
       curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
 #ifdef _WIN32
-      curl_easy_setopt(curl, CURLOPT_CAINFO, certstr.c_str ());
+      certp = std::filesystem::u8path (certstr);
+      if (std::filesystem::exists (certp))
+	{
+	  curl_easy_setopt(curl, CURLOPT_CAINFO, certstr.c_str ());
+	}
 #endif
       res = curl_easy_perform (curl);
       if (res != CURLE_OK)
@@ -143,16 +148,21 @@ AuxFunc::callNetwork (std::string urli, std::string filename, int *check)
 	  *check = 0;
 	  std::cerr << "curl_easy_perform() failed: "
 	      << curl_easy_strerror (res) << std::endl;
-	  fclose (fp);
 	}
       else
 	{
 	  *check = 1;
-	  fclose (fp);
 	}
       curl_easy_cleanup (curl);
-
+      f.close ();
     }
+}
+
+size_t
+AuxFunc::curl_write_func (char *ptr, size_t size, size_t nmemb, std::fstream *f)
+{
+  f->write (ptr, size * nmemb);
+  return size * nmemb;
 }
 
 void
