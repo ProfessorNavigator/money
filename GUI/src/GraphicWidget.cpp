@@ -810,6 +810,19 @@ GraphicWidget::rightClick (int n_press, double x, double y,
 	      labdif->set_text (
 		  gettext ("PPTm/PPm ") + Glib::ustring (strm.str ()) + "%");
 	      grid->attach (*labdif, 0, 3, 1, 1);
+
+	      Gtk::Label *labavvol = Gtk::make_managed<Gtk::Label> ();
+	      labavvol->set_margin (5);
+	      labavvol->set_halign (Gtk::Align::START);
+	      tmpd = std::get<4> (dateplot[index]);
+	      strm.clear ();
+	      strm.str ("");
+	      strm.imbue (loc);
+	      strm << std::fixed << tmpd;
+	      labavvol->set_text (
+		  gettext ("Average shares volume ")
+		      + Glib::ustring (strm.str ()));
+	      grid->attach (*labavvol, 0, 4, 1, 1);
 	    }
 	  if (gr->GetSplId (x, Height - y) == 32)
 	    {

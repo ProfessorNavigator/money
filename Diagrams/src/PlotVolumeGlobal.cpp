@@ -130,7 +130,7 @@ PlotVolumeGlobal::Draw (mglGraph *gr)
   gr->SetObjId (12);
   gr->SetSize (width, height);
   AuxFunc af;
-  gr->Title (af.utf8to (gettext ("Share turnover")).c_str (), "", 5);
+  gr->Title (af.utf8to (gettext ("Shares turnover")).c_str (), "", 5);
   gr->SetQuality (3);
   gr->SetRange ('x', x);
   gr->SetRange ('y', y);
@@ -177,12 +177,12 @@ PlotVolumeGlobal::Draw (mglGraph *gr)
   gr->Axis ("y", "k");
   gr->Axis ("!f0x", "k");
   gr->Label ('x', af.utf8to (gettext ("Days")).c_str (), 0);
-  gr->Label ('y', af.utf8to (gettext ("Share quantity")).c_str (), 0);
+  gr->Label ('y', af.utf8to (gettext ("Shares quantity")).c_str (), 0);
 
   gr->Plot (x, y, "g");
   gr->Plot (x, y2, "r");
   gr->AddLegend (af.utf8to (gettext ("Turnover")).c_str (), "g");
-  gr->AddLegend (af.utf8to (gettext ("Average turnover")).c_str (), "r");
+  gr->AddLegend (af.utf8to (gettext ("Average shares turnover")).c_str (), "r");
   gr->Legend (1.0, 1.3);
   datebeg = af.utf8to (datebeg);
   dateend = af.utf8to (dateend);

@@ -15,9 +15,9 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#include "PlotAllCommon.h"
+#include "PlotDealsCommon.h"
 
-PlotAllCommon::PlotAllCommon (
+PlotDealsCommon::PlotDealsCommon (
     std::string file,
     int Height,
     int Width,
@@ -29,20 +29,23 @@ PlotAllCommon::PlotAllCommon (
   plotdate = Plotdate;
 }
 
-PlotAllCommon::~PlotAllCommon ()
+PlotDealsCommon::~PlotDealsCommon ()
 {
   // TODO Auto-generated destructor stub
 }
 
 void
-PlotAllCommon::calcForDraw ()
+PlotDealsCommon::calcForDraw () //График покупательной способности
 {
   plotdate->clear ();
   mpf_set_default_prec (512);
+  mpf_class quan (0), mon (0), summa (0), summm (0);
+  std::vector<mpf_class> Quan;
+  std::vector<mpf_class> Mon;
   std::fstream f;
-  int count = 0;
   std::string line, midd, temp;
-  std::vector<double> volume;
+  int count = 0;
+
   std::filesystem::path p;
   AuxFunc af;
   af.homePath (&line);
@@ -83,27 +86,75 @@ PlotAllCommon::calcForDraw ()
   line = "";
   temp = "";
   count = 0;
+
   if (!std::filesystem::exists (filename))
     {
-      std::cout << "File to plot common graphics (All) not opened" << std::endl;
+      std::cout << "File to plot common (Deals) not opened" << std::endl;
     }
   else
     {
+      std::tuple<int, int, int> temptup;
       f.open (filename, std::ios_base::in);
       while (!f.eof ())
 	{
 	  getline (f, line);
-
-	  if (count > 1 && line != "")
+	  if (count == 2)
 	    {
 	      midd = line;
+	      int countch = 0;
+	      while (midd.size () > 0)
+		{
+		  temp = midd.substr (0, midd.find (";"));
+		  std::string::size_type n;
+		  if (temp == "TRADETIME")
+		    {
+		      std::get<0> (temptup) = countch;
+		    }
+		  if (temp == "VALUE")
+		    {
+		      std::get<1> (temptup) = countch;
+		    }
+		  if (temp == "PRICE")
+		    {
+		      std::get<2> (temptup) = countch;
+		    }
+		  n = midd.find (";");
+		  if (n != std::string::npos)
+		    {
+		      midd.erase (0, n + std::string (";").size ());
+		    }
+		  else
+		    {
+		      break;
+		    }
+		  countch++;
+		}
+	    }
+	  if (count > 2 && line != "")
+	    {
+	      if (count == 3)
+		{
+		  yname = line;
+		  yname.erase (0, yname.find (";") + std::string (";").size ());
+		  yname.erase (0, yname.find (";") + std::string (";").size ());
+		  yname = yname.substr (0, yname.find (";"));
+		}
+
+	      midd = line;
+	      temp = line;
+	      for (int i = 0; i < std::get<0> (temptup); i++)
+		{
+		  temp = midd.substr (0, midd.find (";"));
+		  midd = midd.erase (0,
+				     temp.size () + std::string (";").size ());
+		}
 	      midd = midd.substr (0, midd.find (";"));
 	      std::tuple<std::string, double, double, double, double> ttup;
 	      std::get<0> (ttup) = midd;
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 7; i++)
+	      for (int i = 0; i < std::get<1> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,
@@ -113,15 +164,13 @@ PlotAllCommon::calcForDraw ()
 	      std::stringstream strm;
 	      std::locale loc ("C");
 	      strm.imbue (loc);
-	      double tmpd;
 	      strm << midd;
-	      strm >> tmpd;
-	      Tc.push_back (tmpd);
-	      std::get<1> (ttup) = tmpd;
+	      strm >> mon;
+	      Mon.push_back (mon);
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 6; i++)
+	      for (int i = 0; i < std::get<2> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
 		  midd = midd.erase (0,
@@ -132,37 +181,30 @@ PlotAllCommon::calcForDraw ()
 	      strm.clear ();
 	      strm.imbue (loc);
 	      strm << midd;
-	      strm >> tmpd;
-	      Dc.push_back (tmpd);
-	      std::get<2> (ttup) = tmpd;
-
-	      midd = line;
-	      temp = line;
-	      for (int i = 0; i < 4; i++)
-		{
-		  temp = midd.substr (0, midd.find (";"));
-		  midd = midd.erase (0,
-				     temp.size () + std::string (";").size ());
-		}
-	      midd = midd.substr (0, midd.find (";"));
-	      strm.str ("");
-	      strm.clear ();
-	      strm.imbue (loc);
-	      strm << midd;
-	      strm >> tmpd;
-	      volume.push_back (tmpd);
+	      strm >> quan;
+	      Quan.push_back (mon / quan);
 	      plotdate->push_back (ttup);
 	    }
-
 	  count = count + 1;
 	}
       f.close ();
     }
-
-  for (size_t i = 0; i < Tc.size (); i++)
+  std::vector<mpf_class> TC;
+  std::vector<mpf_class> DC;
+  for (size_t i = 0; i < Quan.size (); i++)
     {
-      Ot.push_back ((Dc[i] / Tc[i] - 1) * 100);
-      std::get<3> (plotdate->at (i)) = Ot[i];
+      DC.push_back (Quan[i] / Mon[i]);
+      summa = summa + Quan[i];
+      summm = summm + Mon[i];
+      TC.push_back (summa / summm);
+    }
+
+  for (size_t i = 0; i < TC.size (); i++)
+    {
+      Tc.push_back (TC[i].get_d ());
+      Dc.push_back (DC[i].get_d ());
+      std::get<1> (plotdate->at (i)) = Tc[i];
+      std::get<2> (plotdate->at (i)) = Dc[i];
     }
 
   if (plotdate->size () > 0)
@@ -170,31 +212,32 @@ PlotAllCommon::calcForDraw ()
       datebeg = std::get<0> (plotdate->at (0));
       dateend = std::get<0> (plotdate->at (plotdate->size () - 1));
     }
-  midd = filename.filename ().u8string ();
-  std::string::size_type n;
-  n = midd.find (".csv", 0);
-  if (n != std::string::npos)
+  for (size_t i = 0; i < Tc.size (); i++)
     {
-      midd.erase (n, std::string (".csv").size ());
+      MRSP.push_back ((Dc[i] / Tc[i] - 1) * 100);
+      std::get<3> (plotdate->at (i)) = MRSP[i];
+    }
+  mpf_class summ (0);
+  for (size_t i = 0; i < Quan.size (); i++)
+    {
+      summ = summ + Quan[i];
+      mpf_class dn = static_cast<double> (i + 1);
+      mpf_class res = summ / dn;
+      sharesvol.push_back (res.get_d ());
+      std::get<4> (plotdate->at (i)) = res.get_d ();
     }
 }
 
 int
-PlotAllCommon::Draw (mglGraph *gr)
+PlotDealsCommon::Draw (mglGraph *gr)
 {
-  calcForDraw ();
   std::vector<int> X;
-  for (size_t i = 0; i < Tc.size (); i++)
+  calcForDraw ();
+
+  for (size_t i = 0; i < MRSP.size (); i++)
     {
       X.push_back (i);
     }
-  mglData x (X), y (Tc), y1 (Dc);
-
-  //Координаты подписей оси х
-  mglPoint p1 (x.Minimal (),
-	       y1.Maximal () + ((y1.Maximal () - y1.Minimal ()) * 0.02));
-  mglPoint p5 (x.Maximal (),
-	       y1.Maximal () + ((y1.Maximal () - y1.Minimal ()) * 0.02));
 
   int d = 6;
   int number = X.size ();
@@ -204,39 +247,50 @@ PlotAllCommon::Draw (mglGraph *gr)
     }
   d = number / d;
 
-  std::vector<mglPoint> Coord;
-  std::vector<std::string> dates;
-  for (size_t i = 0; i < X.size (); i = i + d)
+  mglData x (X), y (MRSP);
+
+  std::vector<int> X1;
+  std::vector<double> DC;
+  for (size_t i = 0; i < Tc.size (); i++)
     {
-      if (i > 0)
-	{
-	  mglPoint p (i,
-		      y1.Maximal () + ((y1.Maximal () - y1.Minimal ()) * 0.02));
-	  Coord.push_back (p);
-	  dates.push_back (std::get<0> (plotdate->at (i)));
-	}
+      X1.push_back (i);
+      DC.push_back (Dc[0]);
     }
-  std::string grnm = gettext ("Purchasing power of money");
+  mglData x1 (X1), y1 (Tc), y11 (Dc), ydc (DC);
+
+  std::vector<int> X2;
+  std::vector<double> Y2;
+
+  for (size_t i = 0; i < MRSP.size (); i++)
+    {
+      X2.push_back (i);
+      Y2.push_back (0);
+    }
+  mglData x2 (X2), y2 (Y2);
+
+  mglData x3 (X2), y3 (sharesvol);
+
   AuxFunc af;
+  std::string grnm = gettext ("Purchasing power of money");
   grnm = af.utf8to (grnm);
 
   //Общие настройки графика
   gr->SetSize (width, height);
   gr->SetObjId (21);
-  gr->SubPlot (1, 2, 0, ">^_");
+  gr->SubPlot (1, 3, 0, ">^_");
   gr->Title (grnm.c_str (), "", 5);
   gr->SetQuality (3);
-  gr->SetRanges (x, y1);
+  gr->SetRanges (x1, y11);
   gr->SetFontSize (3);
   gr->SetOriginTick (false);
 
   std::vector<double> ticks;
-  double tickstep = (y1.Maximal () - y1.Minimal ()) / 3;
+  double tickstep = (y11.Maximal () - y11.Minimal ()) / 3;
   if (tickstep < 0)
     {
       tickstep = -tickstep;
     }
-  double tickval = y1.Minimal ();
+  double tickval = y11.Minimal ();
   std::stringstream strm;
   std::locale loc ("C");
   std::string tickstr, tick;
@@ -262,14 +316,14 @@ PlotAllCommon::Draw (mglGraph *gr)
     }
   mglData fortick (ticks);
   tickstr = af.utf8to (tickstr);
+
   gr->SetTicksVal ('y', fortick, tickstr.c_str ());
   gr->SetTicks ('x', d);
+
   gr->SetTickSkip (true);
-  gr->Grid ("xy", "{xA0A136}");
   gr->Axis ("y", "k");
   gr->Axis ("!f0x", "k");
-  std::string yname;
-  yname = filename.parent_path ().filename ().u8string ();
+
   auto itusd = std::find (usdv.begin (), usdv.end (), yname);
   if (itusd != usdv.end ())
     {
@@ -284,74 +338,50 @@ PlotAllCommon::Draw (mglGraph *gr)
     {
       yname = gettext ("Shares/Ruble");
     }
-  gr->Label ('x', af.utf8to (gettext ("Days")).c_str (), 0);
+  gr->Label ('x', af.utf8to (gettext ("Transactions")).c_str (), 0);
   gr->Label ('y', af.utf8to (yname).c_str (), 0);
 
+  //Отображение графика
+  gr->Grid ("xy", "{xA0A136}");
+  gr->Plot (x1, y1, "r");
+  gr->Plot (x1, y11, "g");
+  gr->Plot (x1, ydc, "b");
+  gr->AddLegend (af.utf8to (gettext ("PPm")).c_str (), "r");
+  gr->AddLegend (af.utf8to (gettext ("PPTm")).c_str (), "g");
+  gr->AddLegend (af.utf8to (gettext ("PPTm(0)")).c_str (), "b");
+  gr->SetFontSize (3);
+  gr->Legend (1.1, 1.4);
+  gr->ClearLegend ();
+
   //Подписи оси х
+  mglPoint p1 (x1.Minimal (),
+	       y11.Maximal () + ((y11.Maximal () - y11.Minimal ()) * 0.02));
+  mglPoint p5 (x1.Maximal (),
+	       y11.Maximal () + ((y11.Maximal () - y11.Minimal ()) * 0.02));
   datebeg = af.utf8to (datebeg);
   dateend = af.utf8to (dateend);
   gr->Puts (p1, datebeg.c_str (), "k", 3);
   gr->Puts (p5, dateend.c_str (), "k", 3);
-
-  for (size_t i = 0; i < dates.size (); i++)
-    {
-      std::string tl = dates[i];
-      gr->Puts (Coord[i], tl.c_str (), "k", 3);
-    }
-
-  //Отображение графика
-  gr->Plot (x, y, "r");
-  gr->Plot (x, y1, "g");
-  gr->AddLegend (af.utf8to (gettext ("PPm")).c_str (), "r");
-  gr->AddLegend (af.utf8to (gettext ("PPTm")).c_str (), "g");
-  gr->SetFontSize (3);
-  gr->Legend (1.1, 1.3);
-  gr->ClearLegend ();
-
-  std::vector<int> X1;
-  std::vector<int> Zer;
-  for (size_t i = 0; i < Ot.size (); i++)
-    {
-      X1.push_back (i);
-      Zer.push_back (0);
-    }
-  mglData x1 (X1), y11 (Ot), y12 (Zer);
-
-  //Координаты подписей оси х
-  mglPoint p11 (x1.Minimal (),
-		y11.Maximal () + ((y11.Maximal () - y11.Minimal ()) * 0.02));
-  mglPoint p51 (x.Maximal (),
-		y11.Maximal () + ((y11.Maximal () - y11.Minimal ()) * 0.02));
-  Coord.clear ();
-  for (size_t i = 0; i < X1.size (); i = i + d)
-    {
-      if (i > 0)
-	{
-	  mglPoint p (
-	      i, y11.Maximal () + ((y11.Maximal () - y11.Minimal ()) * 0.02));
-	  Coord.push_back (p);
-	}
-    }
 
   grnm = gettext ("PPTm/PPm in %");
   grnm = af.utf8to (grnm);
 
   //Общие настройки графика
   gr->SetObjId (21);
-  gr->SubPlot (1, 2, 1, ">^_");
+  gr->SubPlot (1, 3, 1, ">^_");
   gr->Title (grnm.c_str (), "", 5);
   gr->SetQuality (3);
-  gr->SetRanges (x1, y11);
+  gr->SetRanges (x, y);
   gr->SetFontSize (3);
   gr->SetOriginTick (false);
 
   ticks.clear ();
-  tickstep = (y11.Maximal () - y11.Minimal ()) / 3;
+  tickstep = (y.Maximal () - y.Minimal ()) / 3;
   if (tickstep < 0)
     {
       tickstep = -tickstep;
     }
-  tickval = y11.Minimal ();
+  tickval = y.Minimal ();
   tickstr = "";
   for (int i = 0; i < 2; i++)
     {
@@ -377,30 +407,97 @@ PlotAllCommon::Draw (mglGraph *gr)
   tickstr = af.utf8to (tickstr);
   gr->SetTicksVal ('y', fortick2, tickstr.c_str ());
   gr->SetTicks ('x', d);
-  gr->SetTickSkip (true);
-  gr->Grid ("xy", "{xA0A136}");
   gr->Axis ("y", "k");
   gr->Axis ("!f0x", "k");
-  gr->Label ('x', af.utf8to (gettext ("Days")).c_str (), 0);
+  gr->SetTickSkip (true);
+  gr->Label ('x', af.utf8to (gettext ("Transactions")).c_str (), 0);
   gr->Label ('y', af.utf8to (gettext ("PPTm/PPm (%)")).c_str (), 0);
 
-  //Подписи оси х
-  gr->Puts (p11, datebeg.c_str (), "k", 3);
-  gr->Puts (p51, dateend.c_str (), "k", 3);
-
-  for (size_t i = 0; i < dates.size (); i++)
-    {
-      std::string tl = dates[i];
-      gr->Puts (Coord[i], tl.c_str (), "k", 3);
-    }
-
   //Отображение графика
-  gr->Plot (x1, y12, "b");
-  gr->Plot (x1, y11, "r");
+  gr->Grid ("xy", "{xA0A136}");
+  gr->Plot (x, y, "r");
+  gr->Plot (x, y2, "b");
   gr->SetFontSize (3);
   gr->AddLegend (af.utf8to (gettext ("PPTm/PPm (%)")).c_str (), "r");
   gr->Legend (1.1, 1.3);
   gr->ClearLegend ();
 
+  //Подписи оси х
+  mglPoint p11 (x.Minimal (),
+		y.Maximal () + ((y.Maximal () - y.Minimal ()) * 0.02));
+  mglPoint p51 (x.Maximal (),
+		y.Maximal () + ((y.Maximal () - y.Minimal ()) * 0.02));
+
+  gr->Puts (p11, datebeg.c_str (), "k", 3);
+  gr->Puts (p51, dateend.c_str (), "k", 3);
+
+  grnm = gettext ("Average shares volume per deal");
+  grnm = af.utf8to (grnm);
+
+  //Общие настройки графика
+  gr->SetObjId (21);
+  gr->SubPlot (1, 3, 2, ">^_");
+  gr->Title (grnm.c_str (), "", 5);
+  gr->SetQuality (3);
+  gr->SetRanges (x3, y3);
+  gr->SetFontSize (3);
+  gr->SetOriginTick (false);
+
+  ticks.clear ();
+  tickstep = (y3.Maximal () - y3.Minimal ()) / 3;
+  if (tickstep < 0)
+    {
+      tickstep = -tickstep;
+    }
+  tickval = y.Minimal ();
+  tickstr = "";
+  for (int i = 0; i < 2; i++)
+    {
+      strm.str ("");
+      strm.clear ();
+      strm.imbue (loc);
+      strm << std::fixed;
+      strm << std::setprecision (5);
+      tickval = tickval + tickstep;
+      strm << tickval;
+      tick = strm.str ();
+      ticks.push_back (tickval);
+      if (tickstr != "")
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
+      else
+	{
+	  tickstr = tick;
+	}
+    }
+  mglData fortick3 (ticks);
+  tickstr = af.utf8to (tickstr);
+  gr->SetTicksVal ('y', fortick3, tickstr.c_str ());
+  gr->SetTicks ('x', d);
+  gr->Axis ("y", "k");
+  gr->Axis ("!f0x", "k");
+  gr->SetTickSkip (true);
+  gr->Label ('x', af.utf8to (gettext ("Transactions")).c_str (), 0);
+  gr->Label ('y', af.utf8to (gettext ("Shares quantity")).c_str (), 0);
+
+  //Отображение графика
+  gr->Grid ("xy", "{xA0A136}");
+  gr->Plot (x3, y3, "r");
+  gr->SetFontSize (3);
+  gr->AddLegend (af.utf8to (gettext ("Shares quantity")).c_str (), "r");
+  gr->Legend (1.1, 1.3);
+  gr->ClearLegend ();
+
+  //Подписи оси х
+  mglPoint p31 (x3.Minimal (),
+		y3.Maximal () + ((y3.Maximal () - y3.Minimal ()) * 0.02));
+  mglPoint p32 (x3.Maximal (),
+		y3.Maximal () + ((y3.Maximal () - y3.Minimal ()) * 0.02));
+
+  gr->Puts (p31, datebeg.c_str (), "k", 3);
+  gr->Puts (p32, dateend.c_str (), "k", 3);
+
   return 0;
 }
+

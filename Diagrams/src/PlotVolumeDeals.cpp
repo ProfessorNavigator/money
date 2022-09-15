@@ -15,80 +15,144 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#include "PlotVolumeAll.h"
+#include "PlotVolumeDeals.h"
 
-PlotVolumeAll::PlotVolumeAll (
+PlotVolumeDeals::PlotVolumeDeals (
     std::string file,
     int Height,
     int Width,
     std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
 {
   filename = std::filesystem::u8path (file);
-  width = Width;
   height = Height;
+  width = Width;
   plotdate = Plotdate;
 }
 
-PlotVolumeAll::~PlotVolumeAll ()
+PlotVolumeDeals::~PlotVolumeDeals ()
 {
   // TODO Auto-generated destructor stub
 }
 
 void
-PlotVolumeAll::calcForDraw ()
+PlotVolumeDeals::calcForDraw ()
 {
   plotdate->clear ();
   mpf_set_default_prec (512);
-  int count = 0;
+  mpf_class quan (0), mon (0);
+  std::vector<mpf_class> Quan;
+  std::vector<mpf_class> Mon;
   std::fstream f;
   std::string line, midd, temp;
+  int count = 0;
   if (!std::filesystem::exists (filename))
     {
-      std::cout << "File for plot volume (All) not opened" << std::endl;
+      std::cout << "File to plot daily volume not opened" << std::endl;
     }
   else
     {
+      std::tuple<int, int, int> temptup;
       f.open (filename, std::ios_base::in);
       while (!f.eof ())
 	{
 	  getline (f, line);
-
-	  if (count > 1 && line != "")
+	  if (count == 2)
 	    {
 	      midd = line;
+	      int countch = 0;
+	      while (midd.size () > 0)
+		{
+		  temp = midd.substr (0, midd.find (";"));
+		  std::string::size_type n;
+		  if (temp == "TRADETIME")
+		    {
+		      std::get<0> (temptup) = countch;
+		    }
+		  if (temp == "VALUE")
+		    {
+		      std::get<1> (temptup) = countch;
+		    }
+		  if (temp == "PRICE")
+		    {
+		      std::get<2> (temptup) = countch;
+		    }
+		  n = midd.find (";");
+		  if (n != std::string::npos)
+		    {
+		      midd.erase (0, n + std::string (";").size ());
+		    }
+		  else
+		    {
+		      break;
+		    }
+		  countch++;
+		}
+	    }
+	  if (count > 2 && line != "")
+	    {
+	      midd = line;
+	      temp = line;
+	      for (int i = 0; i < std::get<0> (temptup); i++)
+		{
+		  temp = midd.substr (0, midd.find (";"));
+		  midd = midd.erase (0,
+				     temp.size () + std::string (";").size ());
+		}
 	      midd = midd.substr (0, midd.find (";"));
 	      std::tuple<std::string, double, double, double, double> ttup;
 	      std::get<0> (ttup) = midd;
 
 	      midd = line;
 	      temp = line;
-	      for (int i = 0; i < 4; i++)
+	      for (int i = 0; i < std::get<1> (temptup); i++)
 		{
 		  temp = midd.substr (0, midd.find (";"));
-		  midd.erase (0, temp.size () + std::string (";").size ());
+		  midd = midd.erase (0,
+				     temp.size () + std::string (";").size ());
 		}
 	      midd = midd.substr (0, midd.find (";"));
 	      std::stringstream strm;
 	      std::locale loc ("C");
-	      double tmpdouble;
 	      strm.imbue (loc);
 	      strm << midd;
-	      strm >> tmpdouble;
-	      Vol.push_back (tmpdouble);
-	      std::get<1> (ttup) = tmpdouble;
+	      strm >> mon;
+	      Mon.push_back (mon);
+
+	      midd = line;
+	      temp = line;
+	      for (int i = 0; i < std::get<2> (temptup); i++)
+		{
+		  temp = midd.substr (0, midd.find (";"));
+		  midd = midd.erase (0,
+				     temp.size () + std::string (";").size ());
+		}
+	      midd = midd.substr (0, midd.find (";"));
+	      strm.str ("");
+	      strm.clear ();
+	      strm.imbue (loc);
+	      strm << midd;
+	      strm >> quan;
+	      Quan.push_back (mon / quan);
 	      plotdate->push_back (ttup);
 	    }
 	  count = count + 1;
 	}
       f.close ();
     }
+  mpf_class temp2;
+  for (size_t i = 0; i < Quan.size (); i++)
+    {
+      temp2 = Quan[i];
+      Volume.push_back (temp2.get_d ());
+      std::get<1> (plotdate->at (i)) = Volume[i];
+    }
   mpf_class summ (0);
   mpf_class vols (0);
   mpf_class res (0);
-  for (size_t i = 0; i < Vol.size (); i++)
+  for (size_t i = 0; i < Volume.size (); i++)
     {
       summ = summ + 1;
-      vols = vols + Vol[i];
+      vols = vols + Volume[i];
       res = vols / summ;
       Volmid.push_back (res.get_d ());
       std::get<2> (plotdate->at (i)) = Volmid[i];
@@ -102,21 +166,15 @@ PlotVolumeAll::calcForDraw ()
 }
 
 int
-PlotVolumeAll::Draw (mglGraph *gr)
+PlotVolumeDeals::Draw (mglGraph *gr)
 {
-  calcForDraw ();
   std::vector<int> X;
-  for (size_t i = 0; i < Vol.size (); i++)
+  calcForDraw ();
+  for (size_t i = 0; i < Volume.size (); i++)
     {
       X.push_back (i);
     }
-  mglData x (X), y (Vol), y2 (Volmid);
-
-  //Координаты подписей оси х
-  mglPoint p1 (x.Minimal (),
-	       y.Maximal () + ((y.Maximal () - y.Minimal ()) * 0.02));
-  mglPoint p5 (x.Maximal (),
-	       y.Maximal () + ((y.Maximal () - y.Minimal ()) * 0.02));
+  mglData x (X), y (Volume), y2 (Volmid);
 
   int d = 6;
   int number = X.size ();
@@ -126,20 +184,8 @@ PlotVolumeAll::Draw (mglGraph *gr)
     }
   d = number / d;
 
-  std::vector<mglPoint> Coord;
-  std::vector<std::string> dates;
-  for (size_t i = 0; i < X.size (); i = i + d)
-    {
-      if (i > 0)
-	{
-	  mglPoint p (i, y.Maximal () + ((y.Maximal () - y.Minimal ()) * 0.02));
-	  Coord.push_back (p);
-	  dates.push_back (std::get<0> (plotdate->at (i)));
-	}
-    }
-
   AuxFunc af;
-  std::string grnm = gettext ("Share turnover");
+  std::string grnm = gettext ("Shares turnover");
   grnm = af.utf8to (grnm);
 
   //Общие настройки графика
@@ -149,6 +195,7 @@ PlotVolumeAll::Draw (mglGraph *gr)
   gr->SetQuality (3);
   gr->SetRanges (x, y);
   gr->SetFontSize (3);
+  gr->SetOriginTick (false);
 
   std::vector<double> ticks;
   double tickstep = (y.Maximal () - y.Minimal ()) / 3;
@@ -181,38 +228,35 @@ PlotVolumeAll::Draw (mglGraph *gr)
 	}
     }
   mglData fortick (ticks);
+
   tickstr = af.utf8to (tickstr);
 
   gr->SetTicksVal ('y', fortick, tickstr.c_str ());
   gr->SetTicks ('x', d);
-  gr->Grid ("xy", "{xA0A136}");
-  gr->SetTickSkip (true);
-  gr->SetOriginTick (false);
   gr->Axis ("y", "k");
-  gr->Axis ("x!f0", "k");
-  gr->Label ('x', af.utf8to (gettext ("Days")).c_str (), 0);
-  gr->Label ('y', af.utf8to (gettext ("Share quantity")).c_str (), 0);
+  gr->Axis ("!fx", "k");
+  gr->SetTickSkip (true);
+  gr->Label ('x', af.utf8to (gettext ("Transactions")).c_str (), 0);
+  gr->Label ('y', af.utf8to (gettext ("Shares quantity")).c_str (), 0);
+
+  //Отображение графика
+  gr->Grid ("xy", "{xA0A136}");
+  gr->Plot (x, y, "g");
+  gr->Plot (x, y2, "r");
+  gr->AddLegend (af.utf8to (gettext ("Shares turnover")).c_str (), "g");
+  gr->AddLegend (af.utf8to (gettext ("Average shares turnover")).c_str (), "r");
+  gr->SetFontSize (3);
+  gr->Legend (1.1, 1.3);
 
   //Подписи оси х
+  mglPoint p1 (x.Minimal (),
+	       y.Maximal () + ((y.Maximal () - y.Minimal ()) * 0.02));
+  mglPoint p5 (x.Maximal (),
+	       y.Maximal () + ((y.Maximal () - y.Minimal ()) * 0.02));
   datebeg = af.utf8to (datebeg);
   dateend = af.utf8to (dateend);
   gr->Puts (p1, datebeg.c_str (), "k", 3);
   gr->Puts (p5, dateend.c_str (), "k", 3);
 
-  for (size_t i = 0; i < dates.size (); i++)
-    {
-      std::string tmp = dates[i];
-      tmp = af.utf8to (tmp);
-      gr->Puts (Coord[i], tmp.c_str (), "k", 3);
-    }
-
-  //Отображение графика
-  gr->Plot (x, y, "g");
-  gr->Plot (x, y2, "r");
-  gr->AddLegend (af.utf8to (gettext ("Daily turnover")).c_str (), "g");
-  gr->AddLegend (af.utf8to (gettext ("Average turnover")).c_str (), "r");
-  gr->SetFontSize (3);
-  gr->Legend (1.1, 1.3);
   return 0;
 }
-

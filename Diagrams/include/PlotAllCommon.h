@@ -1,5 +1,5 @@
 /*
-Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -15,8 +15,8 @@ Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTDEALSCOMMON_H_
-#define PLOTDEALSCOMMON_H_
+#ifndef PLOTALLCOMMON_H_
+#define PLOTALLCOMMON_H_
 
 #include <mgl2/wnd.h>
 #include <string>
@@ -29,13 +29,16 @@ Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
 #include <libintl.h>
 #include "AuxFunc.h"
 
-class PlotDealsCommon : public mglDraw
+class PlotAllCommon : public mglDraw
 {
 public:
-  PlotDealsCommon (std::string file, int Height, int Width,
-		   std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
+  PlotAllCommon (
+      std::string file,
+      int Height,
+      int Width,
+      std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
   virtual
-  ~PlotDealsCommon ();
+  ~PlotAllCommon ();
   int
   Draw (mglGraph *gr);
 private:
@@ -43,18 +46,15 @@ private:
   calcForDraw ();
   std::filesystem::path filename;
   int height, width;
-  std::string datebeg;
-  std::string dateend;
-  std::string date1;
-  std::string datehalf;
-  std::string date2;
-  std::vector<double> MRSP;
   std::vector<double> Tc;
   std::vector<double> Dc;
+  std::vector<double> Ot;
+  std::string datebeg;
+  std::string dateend;
   std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
   std::vector<std::string> usdv;
   std::vector<std::string> eurv;
-  std::string yname;
+  std::vector<double> sharesvol;
 };
 
-#endif /* PLOTDEALSCOMMON_H_ */
+#endif /* PLOTALLCOMMON_H_ */

@@ -1,0 +1,1 @@
+srcdiagrams = files(['PlotAllCommon.cpp', 'PlotDealsCommon.cpp', 'PlotMoneyGlobal.cpp', 'PlotMoneyVolumeAll.cpp', 'PlotMoneyVolumeDeals.cpp', 'PlotPriceAll.cpp', 'PlotPriceDeals.cpp', 'PlotPSDGlobal.cpp', 'PlotVolumeAll.cpp', 'PlotVolumeDeals.cpp', 'PlotVolumeGlobal.cpp', 'PSD.cpp', 'PSDDeals.cpp'])

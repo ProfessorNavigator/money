@@ -102,7 +102,7 @@ MainWindow::windowFunc ()
   grid->attach (*moneyprice, 0, 1);
 
   Gtk::Button *moneyvolume = Gtk::make_managed<Gtk::Button> (
-      gettext ("Share turnover"));
+      gettext ("Shares turnover"));
   moneyvolume->set_name ("allButton");
   moneyvolume->set_margin (5);
   moneyvolume->get_style_context ()->add_provider (
@@ -142,7 +142,7 @@ MainWindow::windowFunc ()
   grid->attach (*dealsmoneypr, 0, 5);
 
   Gtk::Button *dealsvolume = Gtk::make_managed<Gtk::Button> (
-      gettext ("Share turnover for transactions"));
+      gettext ("Shares turnover for transactions"));
   dealsvolume->set_name ("dealsvolumeButton");
   dealsvolume->set_margin (5);
   dealsvolume->get_style_context ()->add_provider (
@@ -191,7 +191,7 @@ MainWindow::windowFunc ()
   grid->attach (*psd, 0, 10);
 
   Gtk::Button *volumetotal = Gtk::make_managed<Gtk::Button> (
-      gettext ("Share turnover global"));
+      gettext ("Shares turnover global"));
   volumetotal->set_name ("volumetotalButton");
   volumetotal->set_margin (5);
   volumetotal->get_style_context ()->add_provider (
@@ -447,7 +447,7 @@ MainWindow::downloadMenu ()
 {
   Gtk::MessageDialog *dialog = new Gtk::MessageDialog (
       *this, gettext ("<span foreground='#EFFF00' size='large'>"
-		      "Wait, share list is downloading..."
+		      "Wait, shares list is downloading..."
 		      "</span>"),
       true, Gtk::MessageType::INFO, Gtk::ButtonsType::NONE, true);
   dialog->set_decorated (false);
@@ -550,7 +550,7 @@ MainWindow::aboutProg ()
   aboutd->set_application (this->get_application ());
 
   aboutd->set_program_name ("Money");
-  aboutd->set_version ("2.0.1");
+  aboutd->set_version ("2.1");
   aboutd->set_copyright (
       "Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>");
   AuxFunc af;
