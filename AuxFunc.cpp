@@ -470,18 +470,25 @@ AuxFunc::unpacking (std::string archadress, std::string outfolder)
 	      file = zip_fopen (z, line.c_str (), ZIP_FL_ENC_UTF_8);
 	      zip_stat (z, line.c_str (), ZIP_STAT_NAME | ZIP_FL_ENC_UTF_8,
 			&st);
-	      std::vector<char> content;
+	      char content;
 	      std::filesystem::path path;
 	      line = outfolder + "/" + line;
 	      path = std::filesystem::u8path (line);
 	      std::fstream f;
-	      f.open (path, std::ios_base::out);
-	      for (zip_uint64_t i = 0; i < st.size; i++)
+	      f.open (path, std::ios_base::out | std::ios_base::binary);
+	      for (;;)
 		{
-		  content.clear ();
-		  content.resize (1);
-		  zip_fread (file, content.data (), 1);
-		  f.write (content.data (), content.size ());
+		  zip_uint64_t ch = zip_fread (file, &content, sizeof(content));
+		  if (ch <= 0)
+		    {
+		      if (ch < 0)
+			{
+			  std::cerr << "unpacking file reading error"
+			      << std::endl;
+			}
+		      break;
+		    }
+		  f.write (&content, sizeof(content));
 		}
 	      f.close ();
 	      zip_fclose (file);
@@ -515,7 +522,7 @@ AuxFunc::unpackByIndex (std::string archadress, std::string outfolder,
 	}
       file = zip_fopen_index (z, index, ZIP_FL_ENC_UTF_8);
       zip_stat_index (z, index, ZIP_STAT_NAME, &st);
-      std::vector<char> content;
+      char content;
       std::fstream f;
       std::string fname = path.u8string ();
       fname = fname + "/";
@@ -524,13 +531,19 @@ AuxFunc::unpackByIndex (std::string archadress, std::string outfolder,
       auxstr = path.filename ().u8string ();
       fname = fname + auxstr;
       path = std::filesystem::u8path (fname);
-      f.open (path, std::ios_base::out);
-      for (zip_uint64_t i = 0; i < st.size; i++)
+      f.open (path, std::ios_base::out | std::ios_base::binary);
+      for (;;)
 	{
-	  content.clear ();
-	  content.resize (1);
-	  zip_fread (file, content.data (), 1);
-	  f.write (content.data (), content.size ());
+	  zip_uint64_t ch = zip_fread (file, &content, sizeof(content));
+	  if (ch <= 0)
+	    {
+	      if (ch < 0)
+		{
+		  std::cerr << "unpackByIndex file  reading error" << std::endl;
+		}
+	      break;
+	    }
+	  f.write (&content, sizeof(content));
 	}
       f.close ();
       zip_fclose (file);

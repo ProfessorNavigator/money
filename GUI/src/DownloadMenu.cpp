@@ -149,7 +149,7 @@ DownloadMenu::downloadTechnical ()
 	{
 	  tv2.push_back (tv[i]);
 	}
-      f.open (p, std::ios_base::out);
+      f.open (p, std::ios_base::out | std::ios_base::binary);
       for (size_t i = 0; i < tv2.size (); i++)
 	{
 	  std::string line = tv2[i];
@@ -1187,7 +1187,7 @@ DownloadMenu::saveDate (int dt)
   strm << std::setprecision (0);
   strm << dt;
   line = strm.str ();
-  f.open (pathdb, std::ios_base::out);
+  f.open (pathdb, std::ios_base::out | std::ios_base::binary);
   f.write (line.c_str (), line.size ());
   f.close ();
 }

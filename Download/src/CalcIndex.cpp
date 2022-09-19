@@ -41,11 +41,39 @@ CalcIndex::mainCalc ()
   std::filesystem::path dir = std::filesystem::u8path (dirline);
   std::fstream f;
   std::vector<std::string> excludevect;
+  std::tuple<int, int, int> temptup;
+  std::string temp;
+  int linecount = 0;
   f.open (dir, std::ios_base::in);
   while (!f.eof ())
     {
       std::string line;
       getline (f, line);
+      if (linecount == 2 && line != "")
+	{
+	  std::string tmp = line;
+	  af.cp1251toutf8 (tmp);
+	  int countch = 0;
+	  while (tmp.size () > 0)
+	    {
+	      temp = tmp.substr (0, tmp.find (";"));
+	      std::string::size_type n;
+	      if (temp == "boardid")
+		{
+		  std::get<0> (temptup) = countch;
+		}
+	      n = tmp.find (";");
+	      if (n != std::string::npos)
+		{
+		  tmp.erase (0, n + std::string (";").size ());
+		}
+	      else
+		{
+		  break;
+		}
+	      countch++;
+	    }
+	}
       if (line != "")
 	{
 	  af.cp1251toutf8 (line);
@@ -54,8 +82,11 @@ CalcIndex::mainCalc ()
 	  if (n != std::string::npos)
 	    {
 	      std::string tmp = line;
-	      tmp.erase (0, tmp.find (";") + std::string (";").size ());
-	      tmp.erase (0, tmp.find (";") + std::string (";").size ());
+	      for (int i = 0; i < std::get<0> (temptup); i++)
+		{
+		  temp = tmp.substr (0, tmp.find (";"));
+		  tmp = tmp.erase (0, temp.size () + std::string (";").size ());
+		}
 	      tmp = tmp.substr (0, tmp.find (";"));
 	      excludevect.push_back (tmp);
 	    }
@@ -63,12 +94,16 @@ CalcIndex::mainCalc ()
 	  if (n != std::string::npos)
 	    {
 	      std::string tmp = line;
-	      tmp.erase (0, tmp.find (";") + std::string (";").size ());
-	      tmp.erase (0, tmp.find (";") + std::string (";").size ());
+	      for (int i = 0; i < std::get<0> (temptup); i++)
+		{
+		  temp = tmp.substr (0, tmp.find (";"));
+		  tmp = tmp.erase (0, temp.size () + std::string (";").size ());
+		}
 	      tmp = tmp.substr (0, tmp.find (";"));
 	      excludevect.push_back (tmp);
 	    }
 	}
+      linecount++;
     }
   f.close ();
   excludevect.push_back ("Deals");
@@ -123,33 +158,68 @@ CalcIndex::mainCalc ()
       while (!f.eof ())
 	{
 	  getline (f, line);
+	  if (linecount == 1 && line != "")
+	    {
+	      std::string tmp = line;
+	      int countch = 0;
+	      while (tmp.size () > 0)
+		{
+		  temp = tmp.substr (0, tmp.find (";"));
+		  std::string::size_type n;
+		  if (temp == "Дата")
+		    {
+		      std::get<0> (temptup) = countch;
+		    }
+		  if (temp == "Объем, шт.")
+		    {
+		      std::get<1> (temptup) = countch;
+		    }
+		  if (temp == "Объем оборота денег")
+		    {
+		      std::get<2> (temptup) = countch;
+		    }
+		  n = tmp.find (";");
+		  if (n != std::string::npos)
+		    {
+		      tmp.erase (0, n + std::string (";").size ());
+		    }
+		  else
+		    {
+		      break;
+		    }
+		  countch++;
+		}
+	    }
 	  if (linecount > 1 && line != "")
 	    {
 	      std::string datestr, volumestr, moneystr;
 	      datestr = line;
+	      for (int i = 0; i < std::get<0> (temptup); i++)
+		{
+		  temp = datestr.substr (0, datestr.find (";"));
+		  datestr = datestr.erase (
+		      0, temp.size () + std::string (";").size ());
+		}
 	      datestr = datestr.substr (0, datestr.find (";"));
+
 	      volumestr = line;
-	      volumestr = volumestr.erase (
-		  0, volumestr.find (";") + std::string (";").size ());
-	      volumestr = volumestr.erase (
-		  0, volumestr.find (";") + std::string (";").size ());
-	      volumestr = volumestr.erase (
-		  0, volumestr.find (";") + std::string (";").size ());
-	      volumestr = volumestr.erase (
-		  0, volumestr.find (";") + std::string (";").size ());
+	      for (int i = 0; i < std::get<1> (temptup); i++)
+		{
+		  temp = volumestr.substr (0, volumestr.find (";"));
+		  volumestr = volumestr.erase (
+		      0, temp.size () + std::string (";").size ());
+		}
 	      volumestr = volumestr.substr (0, volumestr.find (";"));
+
 	      moneystr = line;
-	      moneystr = moneystr.erase (
-		  0, moneystr.find (";") + std::string (";").size ());
-	      moneystr = moneystr.erase (
-		  0, moneystr.find (";") + std::string (";").size ());
-	      moneystr = moneystr.erase (
-		  0, moneystr.find (";") + std::string (";").size ());
-	      moneystr = moneystr.erase (
-		  0, moneystr.find (";") + std::string (";").size ());
-	      moneystr = moneystr.erase (
-		  0, moneystr.find (";") + std::string (";").size ());
+	      for (int i = 0; i < std::get<2> (temptup); i++)
+		{
+		  temp = moneystr.substr (0, moneystr.find (";"));
+		  moneystr = moneystr.erase (
+		      0, temp.size () + std::string (";").size ());
+		}
 	      moneystr = moneystr.substr (0, moneystr.find (";"));
+
 	      int date;
 	      mpf_class volume, money;
 	      int day, month, year;
@@ -269,7 +339,7 @@ CalcIndex::mainCalc ()
   af.homePath (&dirline);
   dirline = dirline + "/Money/PPm/PPm.csv";
   dir = std::filesystem::u8path (dirline);
-  f.open (dir, std::ios_base::out);
+  f.open (dir, std::ios_base::out | std::ios_base::binary);
   std::string line = "Дата;Объём акций;Объем денег;ПСОд;ПСд\n";
   f.write (line.c_str (), line.size ());
   mpf_class Volume (0), Money (0), previospsd (0);
@@ -380,7 +450,7 @@ CalcIndex::mainCalc ()
   af.homePath (&dirline);
   dirline = dirline + "/Money/PPm/Inflation.csv";
   dir = std::filesystem::u8path (dirline);
-  f.open (dir, std::ios_base::out);
+  f.open (dir, std::ios_base::out | std::ios_base::binary);
   for (size_t i = 0; i < inflation.size (); i++)
     {
       std::string writeline = inflation[i];

@@ -138,16 +138,13 @@ DownloadDeals::downloadAll ()
 		}
 	      std::filesystem::create_directories (dir);
 	      count = 0;
+	      std::vector<std::string> fileheader;
 	      for (size_t j = 0; j < boardvect.size (); j++)
 		{
 		  boardvect[j].clear ();
-		  boardvect[j].push_back ("trades\n");
-		  boardvect[j].push_back ("\n");
-		  boardvect[j].push_back (
-		      "RADENO;TRADETIME;BOARDID;SECID;PRICE;QUANTITY;"
-		      "VALUE;PERIOD;TRADETIME_GRP;SYSTIME;BUYSELL;DECIMALS\n");
+		  line = "";
+		  fileheader.push_back (line);
 		}
-
 	      for (;;)
 		{
 		  pulse.emit ();
@@ -182,7 +179,6 @@ DownloadDeals::downloadAll ()
 		  filename = filename + "/Money/Deals/"
 		      + Instruments.at (i).first + "-"
 		      + Instruments.at (i).second + std::to_string (count);
-		  filepath = filename;
 #endif
 #ifdef _WIN32
 		  filename = filename + "Money/Deals/"
@@ -264,12 +260,17 @@ DownloadDeals::downloadAll ()
 		    {
 		      break;
 		    }
+		  std::string filehline = "";
 		  std::fstream f;
 		  f.open (filepath, std::ios_base::in);
 		  while (!f.eof ())
 		    {
 		      getline (f, line);
 		      af.cp1251toutf8 (line);
+		      if (linecount <= 2)
+			{
+			  filehline = filehline + line + "\n";
+			}
 		      if (linecount > 2)
 			{
 			  if (line != "")
@@ -291,6 +292,10 @@ DownloadDeals::downloadAll ()
 			      size_t index = std::distance (Boards.begin (),
 							    iter);
 			      boardvect[index].push_back (line);
+			      if (fileheader[index].size () == 0)
+				{
+				  fileheader[index] = filehline;
+				}
 			    }
 			  else
 			    {
@@ -323,7 +328,9 @@ DownloadDeals::downloadAll ()
 		      filepath = std::filesystem::u8path (filename);
 
 		      std::fstream f;
-		      f.open (filepath, std::ios_base::out);
+		      f.open (filepath, std::ios_base::out | std::ios_base::binary);
+		      line = fileheader[k];
+		      f.write (line.c_str (), line.size ());
 		      for (size_t m = 0; m < boardvect[k].size (); m++)
 			{
 			  line = boardvect[k].at (m);
@@ -653,28 +660,51 @@ DownloadDeals::checkTurnovers ()
   else
     {
       f.open (path, std::ios_base::in);
+      int findstr = 0;
       while (!f.eof ())
 	{
 	  getline (f, line);
 	  af.cp1251toutf8 (line);
+	  if (count == 2)
+	    {
+	      std::string tmp = line;
+	      af.cp1251toutf8 (tmp);
+	      int countch = 0;
+	      while (tmp.size () > 0)
+		{
+		  temp = tmp.substr (0, tmp.find (";"));
+		  std::string::size_type n;
+		  if (temp == "UPDATETIME")
+		    {
+		      findstr = countch;
+		    }
+		  n = tmp.find (";");
+		  if (n != std::string::npos)
+		    {
+		      tmp.erase (0, n + std::string (";").size ());
+		    }
+		  else
+		    {
+		      break;
+		    }
+		  countch++;
+		}
+	    }
 	  if (count > 2 && line == "")
 	    {
 	      break;
 	    }
 	  if (count > 2)
 	    {
-	      temp = line;
-	      temp = temp.erase (0,
-				 temp.find (";") + std::string (";").size ());
-	      temp = temp.erase (0,
-				 temp.find (";") + std::string (";").size ());
-	      temp = temp.erase (0,
-				 temp.find (";") + std::string (";").size ());
-	      temp = temp.erase (0,
-				 temp.find (";") + std::string (";").size ());
-	      temp = temp.erase (0,
-				 temp.find (";") + std::string (";").size ());
-	      temp = temp.substr (0, temp.find (";"));
+	      std::string tmp = line;
+	      for (int i = 0; i < findstr; i++)
+		{
+		  temp = tmp.substr (0, tmp.find (";"));
+		  tmp = tmp.erase (0, temp.size () + std::string (";").size ());
+		}
+	      tmp = tmp.substr (0, tmp.find (";"));
+	      temp = tmp;
+
 	      temp = temp.substr (0, temp.find (" "));
 	      int day, month, year;
 	      temp2 = temp;

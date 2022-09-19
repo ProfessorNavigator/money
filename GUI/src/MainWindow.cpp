@@ -54,7 +54,7 @@ MainWindow::windowFunc ()
   if (!std::filesystem::exists (path))
     {
       std::fstream file;
-      file.open (path, std::ios_base::out);
+      file.open (path, std::ios_base::out | std::ios_base::binary);
       std::string date = std::to_string (af.grigtojulian (23, 3, 1997));
       file.write (date.c_str (), date.size ());
       file.close ();
@@ -550,7 +550,7 @@ MainWindow::aboutProg ()
   aboutd->set_application (this->get_application ());
 
   aboutd->set_program_name ("Money");
-  aboutd->set_version ("2.1");
+  aboutd->set_version ("2.2");
   aboutd->set_copyright (
       "Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>");
   AuxFunc af;

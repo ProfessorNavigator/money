@@ -58,7 +58,7 @@ public:
 private:
   void
   saveRes (std::vector<std::string> &source, Glib::ustring instrname,
-	   Glib::ustring boardid);
+	   Glib::ustring boardid, std::tuple<int, int, int, int, int> tupforsave);
   int *Cancel;
   int Db;
   std::vector<std::pair<Glib::ustring, Glib::ustring>> Instruments;

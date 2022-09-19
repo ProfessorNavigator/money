@@ -141,6 +141,7 @@ DownloadAll::downloadAll ()
       progress.emit (0);
       for (size_t i = 0; i < Instruments.size (); i++)
 	{
+	  std::tuple<int, int, int, int, int> tupforsave;
 	  pulse.emit ();
 	  if (*Cancel == 1)
 	    {
@@ -258,30 +259,85 @@ DownloadAll::downloadAll ()
 
 	      if (std::filesystem::exists (dir))
 		{
+		  std::tuple<int, int> temptup;
 		  f.open (dir, std::ios_base::in);
 		  while (!f.eof ())
 		    {
 		      getline (f, line);
 		      af.cp1251toutf8 (line);
+		      std::string temp;
+		      if (linecount == 2)
+			{
+			  tmp = line;
+			  int countch = 0;
+			  while (tmp.size () > 0)
+			    {
+			      temp = tmp.substr (0, tmp.find (";"));
+			      std::string::size_type n;
+			      if (temp == "BOARDID")
+				{
+				  std::get<0> (temptup) = countch;
+				}
+			      if (temp == "VOLUME")
+				{
+				  std::get<1> (temptup) = countch;
+				  std::get<2> (tupforsave) = countch;
+				}
+			      if (temp == "TRADEDATE")
+				{
+				  std::get<0> (tupforsave) = countch;
+				}
+			      if (temp == "VALUE")
+				{
+				  std::get<1> (tupforsave) = countch;
+				}
+			      if (temp == "OPEN")
+				{
+				  std::get<3> (tupforsave) = countch;
+				}
+			      if (temp == "CLOSE")
+				{
+				  std::get<4> (tupforsave) = countch;
+				}
+			      n = tmp.find (";");
+			      if (n != std::string::npos)
+				{
+				  tmp.erase (0, n + std::string (";").size ());
+				}
+			      else
+				{
+				  break;
+				}
+			      countch++;
+			    }
+			}
+
 		      if (linecount > 2 && line != "")
 			{
 			  tmp = line;
+			  for (int i = 0; i < std::get<0> (temptup); i++)
+			    {
+			      temp = tmp.substr (0, tmp.find (";"));
+			      tmp = tmp.erase (
+				  0, temp.size () + std::string (";").size ());
+			    }
 			  tmp = tmp.substr (0, tmp.find (";"));
+
 			  tmp2 = line;
-			  tmp2.erase (
-			      0, tmp2.find (";") + std::string (";").size ());
-			  tmp2.erase (
-			      0, tmp2.find (";") + std::string (";").size ());
-			  tmp2.erase (
-			      0, tmp2.find (";") + std::string (";").size ());
-			  tmp2.erase (
-			      0, tmp2.find (";") + std::string (";").size ());
+			  for (int i = 0; i < std::get<1> (temptup); i++)
+			    {
+			      temp = tmp2.substr (0, tmp2.find (";"));
+			      tmp2 = tmp2.erase (
+				  0, temp.size () + std::string (";").size ());
+			    }
 			  tmp2 = tmp2.substr (0, tmp2.find (";"));
 			  Glib::ustring searchstr (tmp);
 			  auto it = std::find_if (
 			      Boards.begin (), Boards.end (), [searchstr]
 			      (auto &element)
-				{ return element.first == searchstr;});
+				{
+				  return element.first == searchstr;
+				});
 			  if (it != Boards.end () && tmp2 != "0")
 			    {
 			      int index = std::distance (Boards.begin (), it);
@@ -306,7 +362,7 @@ DownloadAll::downloadAll ()
 		      boardsvect[j],
 		      Instruments.at (i).second + "-"
 			  + Instruments.at (i).first,
-		      Boards.at (j).first);
+		      Boards.at (j).first, tupforsave);
 		}
 	    }
 	  progress.emit ((double) i / (double) Instruments.size ());
@@ -328,7 +384,8 @@ DownloadAll::downloadAll ()
 
 void
 DownloadAll::saveRes (std::vector<std::string> &source, Glib::ustring instrname,
-		      Glib::ustring boardid)
+		      Glib::ustring boardid,
+		      std::tuple<int, int, int, int, int> tupforsave)
 {
   std::string dirstr;
   AuxFunc af;
@@ -361,10 +418,40 @@ DownloadAll::saveRes (std::vector<std::string> &source, Glib::ustring instrname,
     }
   else
     {
+      std::tuple<int, int> temptup;
+      std::string temp;
       f.open (finalpath, std::ios_base::in);
       while (!f.eof ())
 	{
 	  getline (f, line);
+	  if (linecount == 1)
+	    {
+	      std::string tmp = line;
+	      int countch = 0;
+	      while (tmp.size () > 0)
+		{
+		  temp = tmp.substr (0, tmp.find (";"));
+		  std::string::size_type n;
+		  if (temp == "Объем, шт.")
+		    {
+		      std::get<0> (temptup) = countch;
+		    }
+		  if (temp == "Объем оборота денег")
+		    {
+		      std::get<1> (temptup) = countch;
+		    }
+		  n = tmp.find (";");
+		  if (n != std::string::npos)
+		    {
+		      tmp.erase (0, n + std::string (";").size ());
+		    }
+		  else
+		    {
+		      break;
+		    }
+		  countch++;
+		}
+	    }
 	  if (line != "")
 	    {
 	      line = line + "\n";
@@ -373,14 +460,12 @@ DownloadAll::saveRes (std::vector<std::string> &source, Glib::ustring instrname,
 		{
 		  std::string tmp;
 		  tmp = line;
-		  tmp = tmp.erase (0,
-				   tmp.find (";") + std::string (";").size ());
-		  tmp = tmp.erase (0,
-				   tmp.find (";") + std::string (";").size ());
-		  tmp = tmp.erase (0,
-				   tmp.find (";") + std::string (";").size ());
-		  tmp = tmp.erase (0,
-				   tmp.find (";") + std::string (";").size ());
+		  for (int i = 0; i < std::get<0> (temptup); i++)
+		    {
+		      temp = tmp.substr (0, tmp.find (";"));
+		      tmp = tmp.erase (
+			  0, temp.size () + std::string (";").size ());
+		    }
 		  tmp = tmp.substr (0, tmp.find (";"));
 		  mpf_class tmpvol, tmpmon;
 		  std::stringstream strm;
@@ -388,17 +473,14 @@ DownloadAll::saveRes (std::vector<std::string> &source, Glib::ustring instrname,
 		  strm.imbue (loc);
 		  strm << tmp;
 		  strm >> tmpvol;
+
 		  tmp = line;
-		  tmp = tmp.erase (0,
-				   tmp.find (";") + std::string (";").size ());
-		  tmp = tmp.erase (0,
-				   tmp.find (";") + std::string (";").size ());
-		  tmp = tmp.erase (0,
-				   tmp.find (";") + std::string (";").size ());
-		  tmp = tmp.erase (0,
-				   tmp.find (";") + std::string (";").size ());
-		  tmp = tmp.erase (0,
-				   tmp.find (";") + std::string (";").size ());
+		  for (int i = 0; i < std::get<1> (temptup); i++)
+		    {
+		      temp = tmp.substr (0, tmp.find (";"));
+		      tmp = tmp.erase (
+			  0, temp.size () + std::string (";").size ());
+		    }
 		  tmp = tmp.substr (0, tmp.find (";"));
 		  strm.str ("");
 		  strm.clear ();
@@ -413,18 +495,19 @@ DownloadAll::saveRes (std::vector<std::string> &source, Glib::ustring instrname,
 	}
       f.close ();
     }
+  std::string temp;
   for (size_t i = 0; i < source.size (); i++)
     {
       line = source[i];
-      line = line.erase (0, line.find (";") + std::string (";").size ());
-      line = line.erase (0, line.find (";") + std::string (";").size ());
-      line = line.erase (0, line.find (";") + std::string (";").size ());
-      line = line.erase (0, line.find (";") + std::string (";").size ());
+      for (int j = 0; j < std::get<2> (tupforsave); j++)
+	{
+	  temp = line.substr (0, line.find (";"));
+	  line = line.erase (0, temp.size () + std::string (";").size ());
+	}
       line = line.substr (0, line.find (";"));
       std::stringstream strm;
       std::locale loc ("C");
       strm.imbue (loc);
-
       strm << line;
       int checkl;
       strm >> checkl;
@@ -432,7 +515,11 @@ DownloadAll::saveRes (std::vector<std::string> &source, Glib::ustring instrname,
       if (checkl > 0)
 	{
 	  line = source[i];
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
+	  for (int j = 0; j < std::get<0> (tupforsave); j++)
+	    {
+	      temp = line.substr (0, line.find (";"));
+	      line = line.erase (0, temp.size () + std::string (";").size ());
+	    }
 	  line = line.substr (0, line.find (";"));
 	  std::string year, month, day;
 	  std::string datestr;
@@ -461,11 +548,11 @@ DownloadAll::saveRes (std::vector<std::string> &source, Glib::ustring instrname,
 	      + af.togrigyear (td) + ";";
 
 	  line = source[i];
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
+	  for (int j = 0; j < std::get<1> (tupforsave); j++)
+	    {
+	      temp = line.substr (0, line.find (";"));
+	      line = line.erase (0, temp.size () + std::string (";").size ());
+	    }
 	  line = line.substr (0, line.find (";"));
 	  strm.str ("");
 	  strm.clear ();
@@ -475,20 +562,12 @@ DownloadAll::saveRes (std::vector<std::string> &source, Glib::ustring instrname,
 	  Money = Money + money;
 
 	  line = source[i];
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
+	  for (int j = 0; j < std::get<2> (tupforsave); j++)
+	    {
+	      temp = line.substr (0, line.find (";"));
+	      line = line.erase (0, temp.size () + std::string (";").size ());
+	    }
 	  line = line.substr (0, line.find (";"));
-
 	  strm.str ("");
 	  strm.clear ();
 	  strm.imbue (loc);
@@ -507,27 +586,20 @@ DownloadAll::saveRes (std::vector<std::string> &source, Glib::ustring instrname,
 	  writevalue = writevalue + line + ";";
 
 	  line = source[i];
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
+	  for (int j = 0; j < std::get<3> (tupforsave); j++)
+	    {
+	      temp = line.substr (0, line.find (";"));
+	      line = line.erase (0, temp.size () + std::string (";").size ());
+	    }
 	  line = line.substr (0, line.find (";"));
 	  writevalue = writevalue + line + ";";
 
 	  line = source[i];
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
-	  line = line.erase (0, line.find (";") + std::string (";").size ());
+	  for (int j = 0; j < std::get<4> (tupforsave); j++)
+	    {
+	      temp = line.substr (0, line.find (";"));
+	      line = line.erase (0, temp.size () + std::string (";").size ());
+	    }
 	  line = line.substr (0, line.find (";"));
 	  writevalue = writevalue + line + ";";
 
@@ -575,7 +647,7 @@ DownloadAll::saveRes (std::vector<std::string> &source, Glib::ustring instrname,
 	    }
 	}
     }
-  f.open (finalpath, std::ios_base::out);
+  f.open (finalpath, std::ios_base::out | std::ios_base::binary);
   for (size_t i = 0; i < finalv.size (); i++)
     {
       f.write (finalv[i].c_str (), finalv[i].size ());

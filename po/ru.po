@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Money\n"
-"POT-Creation-Date: 2022-09-14 20:49+0400\n"
-"PO-Revision-Date: 2022-09-15 17:39+0400\n"
+"POT-Creation-Date: 2022-09-19 16:08+0400\n"
+"PO-Revision-Date: 2022-09-19 16:08+0400\n"
 "Last-Translator: Юрий Бобылев\n"
 "Language-Team: Юрий Бобылев\n"
 "Language: ru_RU\n"
@@ -176,15 +176,15 @@ msgstr "Оборот акций"
 msgid "Average shares turnover"
 msgstr "Средний оборот акций"
 
-#: Download/src/CalcIndex.cpp:79
+#: Download/src/CalcIndex.cpp:114
 msgid "File list creation:"
 msgstr "Создание списка файлов:"
 
-#: Download/src/CalcIndex.cpp:111
+#: Download/src/CalcIndex.cpp:146
 msgid "Data collection:"
 msgstr "Сбор данных:"
 
-#: Download/src/CalcIndex.cpp:276
+#: Download/src/CalcIndex.cpp:346
 msgid "Result saving:"
 msgstr "Сохранение результата:"
 
