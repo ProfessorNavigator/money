@@ -32,55 +32,60 @@
 #include <tuple>
 #include <unistd.h>
 #include <cstring>
+#include <cmath>
 
 #ifdef __WIN32
-#include <Windows.h>
+  #include <Windows.h>
 #endif
 
 class AuxFunc
 {
-public:
-  AuxFunc ();
-  virtual
-  ~AuxFunc ();
-  int
-  grigtojulian (int day, int month, int year);
-  std::string
-  togrigday (int JDN);
-  std::string
-  togrigmonth (int JDN);
-  std::string
-  togrigyear (int JDN);
-  void
-  callNetwork (std::string urli, std::string filename, int *check);
-  void
-  cp1251toutf8 (std::string &line);
-  void
-  stringToLower (std::string &line);
-  void
-  homePath (std::string *filename);
-  int
-  addYears (int JulianDay, int numyears);
-  void
-  packing (std::string source, std::string out);
-  void
-  unpacking (std::string archadress, std::string outfolder);
-  int
-  fileNames (std::string adress,
-	     std::vector<std::tuple<int, int, std::string>> &filenames);
-  void
-  unpackByIndex (std::string archadress, std::string outfolder, int index);
-  std::string
-  get_selfpath ();
-  std::string
-  utf8to (std::string line);
-private:
-  int
-  fileNames (std::string adress, std::vector<std::string> &filenames);
-  void
-  toutf8 (std::string &line);
-  static size_t
-  curl_write_func (char *ptr, size_t size, size_t nmemb, std::fstream *f);
+  public:
+    AuxFunc();
+    virtual
+    ~AuxFunc();
+    double
+    grigtojulian(int day, int month, int year, int hour, int minut,
+                 double sec);
+    void
+    dateJulian(double JDN, int *day, int *month, int *year, int *hour,
+               int *minut, double *second);
+    std::string
+    togrigday(double JDN);
+    std::string
+    togrigmonth(double JDN);
+    std::string
+    togrigyear(double JDN);
+    void
+    callNetwork(std::string urli, std::string filename, int *check);
+    void
+    cp1251toutf8(std::string &line);
+    void
+    stringToLower(std::string &line);
+    void
+    homePath(std::string *filename);
+    int
+    addYears(double JulianDay, int numyears);
+    void
+    packing(std::string source, std::string out);
+    void
+    unpacking(std::string archadress, std::string outfolder);
+    int
+    fileNames(std::string adress,
+              std::vector<std::tuple<int, int, std::string>> &filenames);
+    void
+    unpackByIndex(std::string archadress, std::string outfolder, int index);
+    std::string
+    get_selfpath();
+    std::string
+    utf8to(std::string line);
+  private:
+    int
+    fileNames(std::string adress, std::vector<std::string> &filenames);
+    void
+    toutf8(std::string &line);
+    static size_t
+    curl_write_func(char *ptr, size_t size, size_t nmemb, std::fstream *f);
 };
 
 #endif /* AUXFUNC_H_ */
