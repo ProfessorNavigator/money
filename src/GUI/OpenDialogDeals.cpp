@@ -17,15 +17,17 @@
 
 #include "OpenDialogDeals.h"
 
-OpenDialogDeals::OpenDialogDeals(Glib::RefPtr<Gtk::Application> app,
-                                 Gtk::Window *mwin, std::string *opendate)
+OpenDialogDeals::OpenDialogDeals(
+  Glib::RefPtr<Gtk::Application> app,
+  Gtk::Window *mwin, std::string *opendate)
 {
   App = app;
   Mwin = mwin;
   Opendate = opendate;
   css_provider = Gtk::CssProvider::create();
   AuxFunc af;
-  std::filesystem::path p = std::filesystem::u8path(af.get_selfpath());
+  std::filesystem::path p = std::filesystem::u8path(
+                              af.get_selfpath());
   css_provider->load_from_path(
     Glib::ustring(
       std::string(p.parent_path().u8string())
@@ -33,7 +35,8 @@ OpenDialogDeals::OpenDialogDeals(Glib::RefPtr<Gtk::Application> app,
   std::string filename;
   af.homePath(&filename);
   filename = filename + "/.Money/BoardsList";
-  std::filesystem::path filepath = std::filesystem::u8path(filename);
+  std::filesystem::path filepath = std::filesystem::u8path(
+                                     filename);
   std::fstream f;
   f.open(filepath, std::ios_base::in);
   int count = 0;
@@ -72,7 +75,8 @@ OpenDialogDeals::OpenDialogDeals(Glib::RefPtr<Gtk::Application> app,
   filepath = std::filesystem::u8path(filename);
   if(std::filesystem::exists(filepath))
     {
-      for(auto &it : std::filesystem::recursive_directory_iterator(filepath))
+      for(auto &it :
+          std::filesystem::recursive_directory_iterator(filepath))
         {
           std::filesystem::path pp = it.path();
           if(!std::filesystem::is_directory(pp))
@@ -119,7 +123,8 @@ OpenDialogDeals::OpenDialogDeals(Glib::RefPtr<Gtk::Application> app,
       af.homePath(&filename);
       if(dates.size() > 0)
         {
-          filename = filename + "/Money/Deals/" + dates[selecteddate] + ".zip";
+          filename = filename + "/Money/Deals/" + dates[selecteddate]
+                     + ".zip";
         }
 
       std::vector<std::tuple<int, int, std::string>> names;
@@ -164,7 +169,8 @@ OpenDialogDeals::OpenDialogDeals(Glib::RefPtr<Gtk::Application> app,
                   boardstosh.push_back(boards[i]);
                 }
             }
-          auto iter = std::find_if(boardstosh.begin(), boardstosh.end(), []
+          auto iter = std::find_if(boardstosh.begin(),
+                                   boardstosh.end(), []
                                    (auto & e)
           {
             return e.first == "TQBR";
@@ -235,7 +241,8 @@ OpenDialogDeals::createDialog()
   label->set_margin(5);
   grid->attach(*label, 0, 0, 1, 1);
 
-  Gtk::Expander *datesexp = Gtk::make_managed<Gtk::Expander> ();
+  Gtk::Expander *datesexp =
+    Gtk::make_managed<Gtk::Expander> ();
   if(dates.size() > 0)
     {
       datesexp->set_label(Glib::ustring(dates[0]));
@@ -248,9 +255,11 @@ OpenDialogDeals::createDialog()
     css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   datesexp->set_valign(Gtk::Align::CENTER);
 
-  Gtk::ScrolledWindow *scrdate = Gtk::make_managed<Gtk::ScrolledWindow> ();
+  Gtk::ScrolledWindow *scrdate =
+    Gtk::make_managed<Gtk::ScrolledWindow> ();
   scrdate->set_expand();
-  scrdate->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
+  scrdate->set_policy(Gtk::PolicyType::AUTOMATIC,
+                      Gtk::PolicyType::AUTOMATIC);
   datesexp->set_child(*scrdate);
 
   Gtk::TreeModel::ColumnRecord recordd;
@@ -259,8 +268,10 @@ OpenDialogDeals::createDialog()
   recordd.add(idd);
   recordd.add(datecol);
 
-  Glib::RefPtr<Gtk::ListStore> modeld = Gtk::ListStore::create(recordd);
-  Gtk::TreeView *dateview = Gtk::make_managed<Gtk::TreeView> ();
+  Glib::RefPtr<Gtk::ListStore> modeld =
+    Gtk::ListStore::create(recordd);
+  Gtk::TreeView *dateview =
+    Gtk::make_managed<Gtk::TreeView> ();
   dateview->set_name("View");
   dateview->get_style_context()->add_provider(
     css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
@@ -274,7 +285,8 @@ OpenDialogDeals::createDialog()
   label2->set_margin(5);
   grid->attach(*label2, 0, 2, 1, 1);
 
-  Gtk::Expander *boardexp = Gtk::make_managed<Gtk::Expander> ();
+  Gtk::Expander *boardexp =
+    Gtk::make_managed<Gtk::Expander> ();
   boardexp->set_name("Exp");
   boardexp->get_style_context()->add_provider(
     css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
@@ -290,9 +302,11 @@ OpenDialogDeals::createDialog()
   boardexp->set_margin(5);
   boardexp->set_valign(Gtk::Align::CENTER);
 
-  Gtk::ScrolledWindow *scrboard = Gtk::make_managed<Gtk::ScrolledWindow> ();
+  Gtk::ScrolledWindow *scrboard =
+    Gtk::make_managed<Gtk::ScrolledWindow> ();
   scrboard->set_expand();
-  scrboard->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
+  scrboard->set_policy(Gtk::PolicyType::AUTOMATIC,
+                       Gtk::PolicyType::AUTOMATIC);
   boardexp->set_child(*scrboard);
 
   Gtk::TreeModel::ColumnRecord recordb;
@@ -301,8 +315,10 @@ OpenDialogDeals::createDialog()
   recordb.add(idb);
   recordb.add(boardcol);
 
-  Glib::RefPtr<Gtk::ListStore> modelb = Gtk::ListStore::create(recordb);
-  Gtk::TreeView *boardview = Gtk::make_managed<Gtk::TreeView> ();
+  Glib::RefPtr<Gtk::ListStore> modelb =
+    Gtk::ListStore::create(recordb);
+  Gtk::TreeView *boardview =
+    Gtk::make_managed<Gtk::TreeView> ();
   boardview->set_name("View");
   boardview->get_style_context()->add_provider(
     css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
@@ -316,7 +332,8 @@ OpenDialogDeals::createDialog()
   label3->set_margin(5);
   grid->attach(*label3, 0, 4, 1, 1);
 
-  Gtk::Expander *sortexp = Gtk::make_managed<Gtk::Expander> ();
+  Gtk::Expander *sortexp =
+    Gtk::make_managed<Gtk::Expander> ();
   sortexp->set_name("Exp");
   sortexp->get_style_context()->add_provider(
     css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
@@ -326,9 +343,11 @@ OpenDialogDeals::createDialog()
   sortexp->set_margin(5);
   sortexp->set_valign(Gtk::Align::CENTER);
 
-  Gtk::ScrolledWindow *scrsort = Gtk::make_managed<Gtk::ScrolledWindow> ();
+  Gtk::ScrolledWindow *scrsort =
+    Gtk::make_managed<Gtk::ScrolledWindow> ();
   scrsort->set_expand();
-  scrsort->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
+  scrsort->set_policy(Gtk::PolicyType::AUTOMATIC,
+                      Gtk::PolicyType::AUTOMATIC);
   sortexp->set_child(*scrsort);
 
   Gtk::TreeModel::ColumnRecord records;
@@ -337,8 +356,10 @@ OpenDialogDeals::createDialog()
   records.add(ids);
   records.add(sortcol);
 
-  Glib::RefPtr<Gtk::ListStore> models = Gtk::ListStore::create(records);
-  Gtk::TreeView *sortview = Gtk::make_managed<Gtk::TreeView> ();
+  Glib::RefPtr<Gtk::ListStore> models =
+    Gtk::ListStore::create(records);
+  Gtk::TreeView *sortview =
+    Gtk::make_managed<Gtk::TreeView> ();
   sortview->set_name("View");
   sortview->get_style_context()->add_provider(
     css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
@@ -353,7 +374,8 @@ OpenDialogDeals::createDialog()
   label4->set_margin(5);
   grid->attach(*label4, 0, 6, 1, 1);
 
-  Gtk::Expander *instrexp = Gtk::make_managed<Gtk::Expander> ();
+  Gtk::Expander *instrexp =
+    Gtk::make_managed<Gtk::Expander> ();
   instrexp->set_name("Exp");
   instrexp->get_style_context()->add_provider(
     css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
@@ -370,9 +392,11 @@ OpenDialogDeals::createDialog()
   instrexp->set_margin(5);
   instrexp->set_valign(Gtk::Align::CENTER);
 
-  Gtk::ScrolledWindow *scrinstr = Gtk::make_managed<Gtk::ScrolledWindow> ();
+  Gtk::ScrolledWindow *scrinstr =
+    Gtk::make_managed<Gtk::ScrolledWindow> ();
   scrinstr->set_expand();
-  scrinstr->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
+  scrinstr->set_policy(Gtk::PolicyType::AUTOMATIC,
+                       Gtk::PolicyType::AUTOMATIC);
   instrexp->set_child(*scrinstr);
 
   Gtk::TreeModel::ColumnRecord recordi;
@@ -381,7 +405,8 @@ OpenDialogDeals::createDialog()
   recordi.add(idi);
   recordi.add(icol);
 
-  Glib::RefPtr<Gtk::ListStore> modeli = Gtk::ListStore::create(recordi);
+  Glib::RefPtr<Gtk::ListStore> modeli =
+    Gtk::ListStore::create(recordi);
   Gtk::TreeView *iview = Gtk::make_managed<Gtk::TreeView> ();
   iview->set_name("View");
   iview->get_style_context()->add_provider(css_provider,
@@ -434,7 +459,8 @@ OpenDialogDeals::createDialog()
     {
       auto row = *(modelb->append());
       row[idb] = i;
-      row[boardcol] = boardstosh[i].second + "-" + boardstosh[i].first;
+      row[boardcol] = boardstosh[i].second + "-" +
+                      boardstosh[i].first;
     }
   idbb = idb;
   boardcolb = boardcol;
@@ -463,65 +489,80 @@ OpenDialogDeals::createDialog()
   idii = idi;
   icoli = icol;
 
-  Gtk::TreeViewColumn *columndat = Gtk::make_managed<Gtk::TreeViewColumn> ();
+  Gtk::TreeViewColumn *columndat =
+    Gtk::make_managed<Gtk::TreeViewColumn> ();
   dateview->set_model(modeld);
   columndat->pack_start(datecol);
   dateview->append_column(*columndat);
   dateview->set_headers_visible(false);
   dateview->set_activate_on_single_click(true);
   datesexp->property_expanded().signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::expandScroll),
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::expandScroll),
                datesexp, window, grid));
 
-  Gtk::TreeViewColumn *columnboard = Gtk::make_managed<Gtk::TreeViewColumn> ();
+  Gtk::TreeViewColumn *columnboard =
+    Gtk::make_managed<Gtk::TreeViewColumn> ();
   boardview->set_model(modelb);
   columnboard->pack_start(boardcol);
   boardview->append_column(*columnboard);
   boardview->set_headers_visible(false);
   boardview->set_activate_on_single_click(true);
   boardexp->property_expanded().signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::expandScroll),
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::expandScroll),
                boardexp, window, grid));
 
-  Gtk::TreeViewColumn *columnsort = Gtk::make_managed<Gtk::TreeViewColumn> ();
+  Gtk::TreeViewColumn *columnsort =
+    Gtk::make_managed<Gtk::TreeViewColumn> ();
   sortview->set_model(models);
   columnsort->pack_start(sortcol);
   sortview->append_column(*columnsort);
   sortview->set_headers_visible(false);
   sortview->set_activate_on_single_click(true);
   sortexp->property_expanded().signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::expandScroll),
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::expandScroll),
                sortexp, window, grid));
 
-  Gtk::TreeViewColumn *columni = Gtk::make_managed<Gtk::TreeViewColumn> ();
+  Gtk::TreeViewColumn *columni =
+    Gtk::make_managed<Gtk::TreeViewColumn> ();
   iview->set_model(modeli);
   columni->pack_start(icol);
   iview->append_column(*columni);
   iview->set_headers_visible(false);
   iview->set_activate_on_single_click(true);
   instrexp->property_expanded().signal_changed().connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::expandScroll),
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::expandScroll),
                instrexp, window, grid));
   dateview->signal_row_activated().connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::dateSelection),
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::dateSelection),
                modeld, idd, datesexp));
   boardview->signal_row_activated().connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::boardsSelection),
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::boardsSelection),
                boardexp, boardview));
   this->refreshboards.connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::refreshBoards),
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::refreshBoards),
                boardview, columnboard, boardexp));
   this->refreshsort.connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::refreshSort),
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::refreshSort),
                sortexp));
   sortview->signal_row_activated().connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::sortSelection),
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::sortSelection),
                sortexp, sortview));
   iview->signal_row_activated().connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::instrSelection),
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::instrSelection),
                instrexp, iview));
   this->refreshinstr.connect(
-    sigc::bind(sigc::mem_fun(*this, &OpenDialogDeals::refreshInstr), iview,
+    sigc::bind(sigc::mem_fun(*this,
+                             &OpenDialogDeals::refreshInstr), iview,
                columni, instrexp));
 
   int x, y, h, w;
@@ -571,7 +612,8 @@ OpenDialogDeals::createDialog()
 }
 
 void
-OpenDialogDeals::expandScroll(Gtk::Expander *exp, Gtk::Window *window,
+OpenDialogDeals::expandScroll(Gtk::Expander *exp,
+                              Gtk::Window *window,
                               Gtk::Grid *grid)
 {
   if(!exp->property_expanded().get_value())
@@ -583,7 +625,8 @@ OpenDialogDeals::expandScroll(Gtk::Expander *exp, Gtk::Window *window,
 }
 
 void
-OpenDialogDeals::dateSelection(const Gtk::TreeModel::Path &path,
+OpenDialogDeals::dateSelection(const Gtk::TreeModel::Path
+                               &path,
                                Gtk::TreeViewColumn *column,
                                Glib::RefPtr<Gtk::ListStore> model,
                                Gtk::TreeModelColumn<unsigned int> id,
@@ -605,7 +648,8 @@ OpenDialogDeals::dateSelection(const Gtk::TreeModel::Path &path,
 }
 
 void
-OpenDialogDeals::boardsSelection(const Gtk::TreeModel::Path &path,
+OpenDialogDeals::boardsSelection(const Gtk::TreeModel::Path
+                                 &path,
                                  Gtk::TreeViewColumn *column,
                                  Gtk::Expander *exp, Gtk::TreeView *view)
 {
@@ -634,7 +678,8 @@ OpenDialogDeals::refreshBoards(Gtk::TreeView *view,
   af.homePath(&filename);
   if(dates.size() > 0)
     {
-      filename = filename + "/Money/Deals/" + dates[selecteddate] + ".zip";
+      filename = filename + "/Money/Deals/" + dates[selecteddate]
+                 + ".zip";
     }
 
   std::vector<std::tuple<int, int, std::string>> names;
@@ -653,7 +698,8 @@ OpenDialogDeals::refreshBoards(Gtk::TreeView *view,
   for(size_t i = 0; i < boards.size(); i++)
     {
       line = boards[i].first;
-      auto iter = std::find_if(folders.begin(), folders.end(), [&line]
+      auto iter = std::find_if(folders.begin(),
+                               folders.end(), [&line]
                                (auto & el)
       {
         std::string::size_type n;
@@ -672,7 +718,8 @@ OpenDialogDeals::refreshBoards(Gtk::TreeView *view,
           boardstosh.push_back(boards[i]);
         }
     }
-  auto iter = std::find_if(boardstosh.begin(), boardstosh.end(), []
+  auto iter = std::find_if(boardstosh.begin(),
+                           boardstosh.end(), []
                            (auto & e)
   {
     return e.first == "TQBR";
@@ -688,13 +735,15 @@ OpenDialogDeals::refreshBoards(Gtk::TreeView *view,
   Gtk::TreeModelColumn<Glib::ustring> instrument;
   record.add(id);
   record.add(instrument);
-  Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(record);
+  Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(
+                                         record);
 
   for(size_t i = 0; i < boardstosh.size(); i++)
     {
       auto row = *(model->append());
       row[id] = i;
-      row[instrument] = boardstosh[i].second + "-" + boardstosh[i].first;
+      row[instrument] = boardstosh[i].second + "-" +
+                        boardstosh[i].first;
     }
   idbb = id;
   boardcolb = instrument;
@@ -725,7 +774,8 @@ OpenDialogDeals::refreshSort(Gtk::Expander *exp)
 }
 
 void
-OpenDialogDeals::sortSelection(const Gtk::TreeModel::Path &path,
+OpenDialogDeals::sortSelection(const Gtk::TreeModel::Path
+                               &path,
                                Gtk::TreeViewColumn *column, Gtk::Expander *exp,
                                Gtk::TreeView *view)
 {
@@ -744,7 +794,8 @@ OpenDialogDeals::sortSelection(const Gtk::TreeModel::Path &path,
 }
 
 void
-OpenDialogDeals::instrSelection(const Gtk::TreeModel::Path &path,
+OpenDialogDeals::instrSelection(const Gtk::TreeModel::Path
+                                &path,
                                 Gtk::TreeViewColumn *column,
                                 Gtk::Expander *exp, Gtk::TreeView *view)
 {
@@ -762,7 +813,8 @@ OpenDialogDeals::instrSelection(const Gtk::TreeModel::Path &path,
 }
 
 void
-OpenDialogDeals::refreshInstr(Gtk::TreeView *view, Gtk::TreeViewColumn *column,
+OpenDialogDeals::refreshInstr(Gtk::TreeView *view,
+                              Gtk::TreeViewColumn *column,
                               Gtk::Expander *exp)
 {
   filelist.clear();
@@ -771,7 +823,8 @@ OpenDialogDeals::refreshInstr(Gtk::TreeView *view, Gtk::TreeViewColumn *column,
   af.homePath(&filename);
   if(dates.size() > 0)
     {
-      filename = filename + "/Money/Deals/" + dates[selecteddate] + ".zip";
+      filename = filename + "/Money/Deals/" + dates[selecteddate]
+                 + ".zip";
     }
 
   std::vector<std::tuple<int, int, std::string>> names;
@@ -786,7 +839,8 @@ OpenDialogDeals::refreshInstr(Gtk::TreeView *view, Gtk::TreeViewColumn *column,
           filelist.push_back(names[i]);
         }
     }
-  filelist.erase(std::remove_if(filelist.begin(), filelist.end(), [this]
+  filelist.erase(std::remove_if(filelist.begin(),
+                                filelist.end(), [this]
                                 (auto & el)
   {
     std::string l = this->boardstosh[this->selectedboard].first;
@@ -802,6 +856,16 @@ OpenDialogDeals::refreshInstr(Gtk::TreeView *view, Gtk::TreeViewColumn *column,
       }
   }),
   filelist.end());
+  for(size_t i = 0; i < filelist.size(); i++)
+    {
+      std::filesystem::path p = std::filesystem::u8path(
+                                  std::get<2> (filelist[i]));
+      line = p.filename().u8string();
+      int one, two;
+      one = std::get<0> (filelist[i]);
+      two = std::get<1> (filelist[i]);
+      filelist[i] = std::make_tuple(one, two, line);
+    }
   if(sorting == 0)
     {
       std::sort(filelist.begin(), filelist.end(), []
@@ -820,6 +884,7 @@ OpenDialogDeals::refreshInstr(Gtk::TreeView *view, Gtk::TreeViewColumn *column,
         l1.erase(0, l1.find("-") + 1);
         af.stringToLower(l1);
         l2 = std::get<2>(el2);
+        std::cout << " " << l2 << std::endl;
         l2.erase(0, l2.find("-") + 1);
         af.stringToLower(l2);
         return l1 < l2;
@@ -838,16 +903,6 @@ OpenDialogDeals::refreshInstr(Gtk::TreeView *view, Gtk::TreeViewColumn *column,
         return l1 < l2;
       });
     }
-  for(size_t i = 0; i < filelist.size(); i++)
-    {
-      std::filesystem::path p = std::filesystem::u8path(
-                                  std::get<2> (filelist[i]));
-      line = p.filename().u8string();
-      int one, two;
-      one = std::get<0> (filelist[i]);
-      two = std::get<1> (filelist[i]);
-      filelist[i] = std::make_tuple(one, two, line);
-    }
   view->unset_model();
   column->clear();
   Gtk::TreeModel::ColumnRecord record;
@@ -855,7 +910,8 @@ OpenDialogDeals::refreshInstr(Gtk::TreeView *view, Gtk::TreeViewColumn *column,
   Gtk::TreeModelColumn<Glib::ustring> instrument;
   record.add(id);
   record.add(instrument);
-  Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(record);
+  Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(
+                                         record);
 
   for(size_t i = 0; i < filelist.size(); i++)
     {
@@ -893,22 +949,27 @@ OpenDialogDeals::openFile()
   AuxFunc af;
   std::string openfile, outfolder;
   af.homePath(&openfile);
-  openfile = openfile + "/Money/Deals/" + dates[selecteddate] + ".zip";
+  openfile = openfile + "/Money/Deals/" + dates[selecteddate]
+             + ".zip";
   *Opendate = dates[selecteddate];
-  outfolder = std::filesystem::temp_directory_path().u8string();
-  #ifdef __linux
+  outfolder =
+    std::filesystem::temp_directory_path().u8string();
+#ifdef __linux
   outfolder = outfolder + "/Money/DealsToShow";
-  #endif
-  #ifdef _WIN32
+#endif
+#ifdef _WIN32
   outfolder = outfolder + "Money/DealsToShow";
-  #endif
-  std::filesystem::path out = std::filesystem::u8path(outfolder);
+#endif
+  std::filesystem::path out = std::filesystem::u8path(
+                                outfolder);
 
   if(std::filesystem::exists(out))
     {
       std::filesystem::remove_all(out);
     }
-  af.unpackByIndex(openfile, outfolder, std::get<0> (filelist[selectedfile]));
-  outfolder = outfolder + "/" + std::get<2> (filelist[selectedfile]);
+  af.unpackByIndex(openfile, outfolder,
+                   std::get<0> (filelist[selectedfile]));
+  outfolder = outfolder + "/" + std::get<2>
+              (filelist[selectedfile]);
   dealsfilepath.emit(outfolder);
 }
