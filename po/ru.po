@@ -1,458 +1,460 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Money\n"
-"POT-Creation-Date: 2022-10-24 22:34+0400\n"
-"PO-Revision-Date: 2022-10-24 22:35+0400\n"
+"POT-Creation-Date: 2022-12-02 01:41+0400\n"
+"PO-Revision-Date: 2022-12-02 01:41+0400\n"
 "Last-Translator: Юрий Бобылев\n"
 "Language-Team: Юрий Бобылев\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.2\n"
-"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.2.1\n"
+"X-Poedit-Basepath: ../src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-SearchPath-0: AuxFunc.cpp\n"
-"X-Poedit-SearchPath-1: main.cpp\n"
-"X-Poedit-SearchPath-2: src/Diagrams/PlotAllCommon.cpp\n"
-"X-Poedit-SearchPath-3: src/Diagrams/PlotDealsCommon.cpp\n"
-"X-Poedit-SearchPath-4: src/Diagrams/PlotMoneyGlobal.cpp\n"
-"X-Poedit-SearchPath-5: src/Diagrams/PlotMoneyVolumeAll.cpp\n"
-"X-Poedit-SearchPath-6: src/Diagrams/PlotMoneyVolumeDeals.cpp\n"
-"X-Poedit-SearchPath-7: src/Diagrams/PlotPriceAll.cpp\n"
-"X-Poedit-SearchPath-8: src/Diagrams/PlotPriceDeals.cpp\n"
-"X-Poedit-SearchPath-9: src/Diagrams/PlotPSDGlobal.cpp\n"
-"X-Poedit-SearchPath-10: src/Diagrams/PlotVolumeAll.cpp\n"
-"X-Poedit-SearchPath-11: src/Diagrams/PlotVolumeDeals.cpp\n"
-"X-Poedit-SearchPath-12: src/Diagrams/PlotVolumeGlobal.cpp\n"
-"X-Poedit-SearchPath-13: src/Diagrams/PSD.cpp\n"
-"X-Poedit-SearchPath-14: src/Diagrams/PSDDeals.cpp\n"
-"X-Poedit-SearchPath-15: src/Download/CalcIndex.cpp\n"
-"X-Poedit-SearchPath-16: src/Download/DownloadAll.cpp\n"
-"X-Poedit-SearchPath-17: src/Download/DownloadDeals.cpp\n"
-"X-Poedit-SearchPath-18: src/GUI/DownloadMenu.cpp\n"
-"X-Poedit-SearchPath-19: src/GUI/GraphicWidget.cpp\n"
-"X-Poedit-SearchPath-20: src/GUI/MainWindow.cpp\n"
-"X-Poedit-SearchPath-21: src/GUI/MoneyApplication.cpp\n"
-"X-Poedit-SearchPath-22: src/GUI/OpenDialog.cpp\n"
-"X-Poedit-SearchPath-23: src/GUI/OpenDialogDeals.cpp\n"
+"X-Poedit-SearchPath-0: Diagrams/PlotAllCommon.cpp\n"
+"X-Poedit-SearchPath-1: Diagrams/PlotDealsCommon.cpp\n"
+"X-Poedit-SearchPath-2: Diagrams/PlotMoneyGlobal.cpp\n"
+"X-Poedit-SearchPath-3: Diagrams/PlotMoneyVolumeAll.cpp\n"
+"X-Poedit-SearchPath-4: Diagrams/PlotMoneyVolumeDeals.cpp\n"
+"X-Poedit-SearchPath-5: Diagrams/PlotPriceAll.cpp\n"
+"X-Poedit-SearchPath-6: Diagrams/PlotPriceDeals.cpp\n"
+"X-Poedit-SearchPath-7: Diagrams/PlotPSDGlobal.cpp\n"
+"X-Poedit-SearchPath-8: Diagrams/PlotVolumeAll.cpp\n"
+"X-Poedit-SearchPath-9: Diagrams/PlotVolumeDeals.cpp\n"
+"X-Poedit-SearchPath-10: Diagrams/PlotVolumeGlobal.cpp\n"
+"X-Poedit-SearchPath-11: Diagrams/PSD.cpp\n"
+"X-Poedit-SearchPath-12: Diagrams/PSDDeals.cpp\n"
+"X-Poedit-SearchPath-13: Download/CalcIndex.cpp\n"
+"X-Poedit-SearchPath-14: Download/DownloadAll.cpp\n"
+"X-Poedit-SearchPath-15: Download/DownloadDeals.cpp\n"
+"X-Poedit-SearchPath-16: GUI/DownloadMenu.cpp\n"
+"X-Poedit-SearchPath-17: GUI/GraphicWidget.cpp\n"
+"X-Poedit-SearchPath-18: GUI/MainWindow.cpp\n"
+"X-Poedit-SearchPath-19: GUI/MoneyApplication.cpp\n"
+"X-Poedit-SearchPath-20: GUI/OpenDialog.cpp\n"
+"X-Poedit-SearchPath-21: GUI/OpenDialogDeals.cpp\n"
+"X-Poedit-SearchPath-22: AuxFunc.cpp\n"
+"X-Poedit-SearchPath-23: main.cpp\n"
 
-#: src/Diagrams/PSD.cpp:173 src/Diagrams/PSDDeals.cpp:236
-#: src/Diagrams/PlotAllCommon.cpp:229 src/Diagrams/PlotDealsCommon.cpp:274
-#: src/Diagrams/PlotPSDGlobal.cpp:139 src/GUI/MainWindow.cpp:96
+#: Diagrams/PSD.cpp:173 Diagrams/PSDDeals.cpp:236
+#: Diagrams/PlotAllCommon.cpp:229 Diagrams/PlotDealsCommon.cpp:274
+#: Diagrams/PlotPSDGlobal.cpp:139 GUI/MainWindow.cpp:93
 msgid "Purchasing power of money"
 msgstr "Покупательная способность денег"
 
-#: src/Diagrams/PSD.cpp:250 src/Diagrams/PSDDeals.cpp:289
-#: src/Diagrams/PlotAllCommon.cpp:286 src/Diagrams/PlotDealsCommon.cpp:330
+#: Diagrams/PSD.cpp:250 Diagrams/PSDDeals.cpp:289
+#: Diagrams/PlotAllCommon.cpp:286 Diagrams/PlotDealsCommon.cpp:330
 msgid "Shares/USD"
 msgstr "Акций/USD"
 
-#: src/Diagrams/PSD.cpp:255 src/Diagrams/PSDDeals.cpp:294
-#: src/Diagrams/PlotAllCommon.cpp:291 src/Diagrams/PlotDealsCommon.cpp:335
+#: Diagrams/PSD.cpp:255 Diagrams/PSDDeals.cpp:294
+#: Diagrams/PlotAllCommon.cpp:291 Diagrams/PlotDealsCommon.cpp:335
 msgid "Shares/EUR"
 msgstr "Акций/EUR"
 
-#: src/Diagrams/PSD.cpp:259 src/Diagrams/PSDDeals.cpp:298
-#: src/Diagrams/PlotAllCommon.cpp:295 src/Diagrams/PlotDealsCommon.cpp:339
-#: src/Diagrams/PlotPSDGlobal.cpp:186
+#: Diagrams/PSD.cpp:259 Diagrams/PSDDeals.cpp:298
+#: Diagrams/PlotAllCommon.cpp:295 Diagrams/PlotDealsCommon.cpp:339
+#: Diagrams/PlotPSDGlobal.cpp:186
 msgid "Shares/Rouble"
 msgstr "Акций/Рубль"
 
-#: src/Diagrams/PSD.cpp:261 src/Diagrams/PlotAllCommon.cpp:297
-#: src/Diagrams/PlotAllCommon.cpp:394 src/Diagrams/PlotAllCommon.cpp:478
-#: src/Diagrams/PlotMoneyGlobal.cpp:181 src/Diagrams/PlotMoneyVolumeAll.cpp:251
-#: src/Diagrams/PlotPSDGlobal.cpp:185 src/Diagrams/PlotPriceAll.cpp:300
-#: src/Diagrams/PlotVolumeAll.cpp:193 src/Diagrams/PlotVolumeGlobal.cpp:180
+#: Diagrams/PSD.cpp:261 Diagrams/PlotAllCommon.cpp:297
+#: Diagrams/PlotAllCommon.cpp:394 Diagrams/PlotAllCommon.cpp:478
+#: Diagrams/PlotMoneyGlobal.cpp:181 Diagrams/PlotMoneyVolumeAll.cpp:251
+#: Diagrams/PlotPSDGlobal.cpp:185 Diagrams/PlotPriceAll.cpp:300
+#: Diagrams/PlotVolumeAll.cpp:193 Diagrams/PlotVolumeGlobal.cpp:180
 msgid "Days"
 msgstr "Дни"
 
-#: src/Diagrams/PSD.cpp:279 src/Diagrams/PSDDeals.cpp:307
-#: src/Diagrams/PlotAllCommon.cpp:315 src/Diagrams/PlotDealsCommon.cpp:349
-#: src/Diagrams/PlotPSDGlobal.cpp:191
+#: Diagrams/PSD.cpp:279 Diagrams/PSDDeals.cpp:307
+#: Diagrams/PlotAllCommon.cpp:315 Diagrams/PlotDealsCommon.cpp:349
+#: Diagrams/PlotPSDGlobal.cpp:191
 msgid "PPm"
 msgstr "ПСд"
 
-#: src/Diagrams/PSD.cpp:280 src/Diagrams/PSDDeals.cpp:308
-#: src/Diagrams/PlotAllCommon.cpp:316 src/Diagrams/PlotDealsCommon.cpp:350
-#: src/Diagrams/PlotPSDGlobal.cpp:190
+#: Diagrams/PSD.cpp:280 Diagrams/PSDDeals.cpp:308
+#: Diagrams/PlotAllCommon.cpp:316 Diagrams/PlotDealsCommon.cpp:350
+#: Diagrams/PlotPSDGlobal.cpp:190
 msgid "PPTm"
 msgstr "ПСОд"
 
-#: src/Diagrams/PSDDeals.cpp:300 src/Diagrams/PlotDealsCommon.cpp:341
-#: src/Diagrams/PlotDealsCommon.cpp:413 src/Diagrams/PlotDealsCommon.cpp:481
-#: src/Diagrams/PlotMoneyVolumeDeals.cpp:281
-#: src/Diagrams/PlotPriceDeals.cpp:320 src/Diagrams/PlotVolumeDeals.cpp:239
+#: Diagrams/PSDDeals.cpp:300 Diagrams/PlotDealsCommon.cpp:341
+#: Diagrams/PlotDealsCommon.cpp:413 Diagrams/PlotDealsCommon.cpp:481
+#: Diagrams/PlotMoneyVolumeDeals.cpp:281 Diagrams/PlotPriceDeals.cpp:320
+#: Diagrams/PlotVolumeDeals.cpp:239
 msgid "Transactions"
 msgstr "Сделки"
 
-#: src/Diagrams/PlotAllCommon.cpp:346 src/Diagrams/PlotDealsCommon.cpp:366
+#: Diagrams/PlotAllCommon.cpp:346 Diagrams/PlotDealsCommon.cpp:366
 msgid "PPTm/PPm in %"
 msgstr "ПСОд/ПСд в %"
 
-#: src/Diagrams/PlotAllCommon.cpp:395 src/Diagrams/PlotAllCommon.cpp:411
-#: src/Diagrams/PlotDealsCommon.cpp:414 src/Diagrams/PlotDealsCommon.cpp:421
+#: Diagrams/PlotAllCommon.cpp:395 Diagrams/PlotAllCommon.cpp:411
+#: Diagrams/PlotDealsCommon.cpp:414 Diagrams/PlotDealsCommon.cpp:421
 msgid "PPTm/PPm (%)"
 msgstr "ПСОд/ПСд  (%)"
 
-#: src/Diagrams/PlotAllCommon.cpp:430
+#: Diagrams/PlotAllCommon.cpp:430
 msgid "Average shares volume per day"
 msgstr "Средний объём акций в день"
 
-#: src/Diagrams/PlotAllCommon.cpp:479 src/Diagrams/PlotAllCommon.cpp:494
-#: src/Diagrams/PlotDealsCommon.cpp:482 src/Diagrams/PlotDealsCommon.cpp:488
-#: src/Diagrams/PlotVolumeAll.cpp:194 src/Diagrams/PlotVolumeDeals.cpp:240
-#: src/Diagrams/PlotVolumeGlobal.cpp:181
+#: Diagrams/PlotAllCommon.cpp:479 Diagrams/PlotAllCommon.cpp:494
+#: Diagrams/PlotDealsCommon.cpp:482 Diagrams/PlotDealsCommon.cpp:488
+#: Diagrams/PlotVolumeAll.cpp:194 Diagrams/PlotVolumeDeals.cpp:240
+#: Diagrams/PlotVolumeGlobal.cpp:181
 msgid "Shares quantity"
 msgstr "Количество акций"
 
-#: src/Diagrams/PlotDealsCommon.cpp:351
+#: Diagrams/PlotDealsCommon.cpp:351
 msgid "PPTm(0)"
 msgstr "ПСОд(0)"
 
-#: src/Diagrams/PlotDealsCommon.cpp:434
+#: Diagrams/PlotDealsCommon.cpp:434
 msgid "Average shares volume per deal"
 msgstr "Средний объём акций на сделку"
 
-#: src/Diagrams/PlotMoneyGlobal.cpp:135 src/Diagrams/PlotMoneyVolumeAll.cpp:186
-#: src/Diagrams/PlotMoneyVolumeDeals.cpp:216
-#: src/Diagrams/PlotMoneyVolumeDeals.cpp:288 src/GUI/MainWindow.cpp:116
+#: Diagrams/PlotMoneyGlobal.cpp:135 Diagrams/PlotMoneyVolumeAll.cpp:186
+#: Diagrams/PlotMoneyVolumeDeals.cpp:216 Diagrams/PlotMoneyVolumeDeals.cpp:288
+#: GUI/MainWindow.cpp:113
 msgid "Money turnover"
 msgstr "Оборот денег"
 
-#: src/Diagrams/PlotMoneyGlobal.cpp:182 src/Diagrams/PlotMoneyVolumeAll.cpp:249
-#: src/Diagrams/PlotMoneyVolumeDeals.cpp:279 src/Diagrams/PlotPriceAll.cpp:298
-#: src/Diagrams/PlotPriceDeals.cpp:318
+#: Diagrams/PlotMoneyGlobal.cpp:182 Diagrams/PlotMoneyVolumeAll.cpp:249
+#: Diagrams/PlotMoneyVolumeDeals.cpp:279 Diagrams/PlotPriceAll.cpp:298
+#: Diagrams/PlotPriceDeals.cpp:318
 msgid "Roubles"
 msgstr "Рубли"
 
-#: src/Diagrams/PlotMoneyGlobal.cpp:185 src/Diagrams/PlotVolumeGlobal.cpp:185
+#: Diagrams/PlotMoneyGlobal.cpp:185 Diagrams/PlotVolumeGlobal.cpp:185
 msgid "Turnover"
 msgstr "Оборот"
 
-#: src/Diagrams/PlotMoneyGlobal.cpp:186 src/Diagrams/PlotMoneyVolumeAll.cpp:271
-#: src/Diagrams/PlotVolumeAll.cpp:213
+#: Diagrams/PlotMoneyGlobal.cpp:186 Diagrams/PlotMoneyVolumeAll.cpp:271
+#: Diagrams/PlotVolumeAll.cpp:213
 msgid "Average turnover"
 msgstr "Средний оборот"
 
-#: src/Diagrams/PlotMoneyVolumeAll.cpp:270 src/Diagrams/PlotVolumeAll.cpp:212
+#: Diagrams/PlotMoneyVolumeAll.cpp:270 Diagrams/PlotVolumeAll.cpp:212
 msgid "Daily turnover"
 msgstr "Суточный оборот"
 
-#: src/Diagrams/PlotMoneyVolumeDeals.cpp:289
+#: Diagrams/PlotMoneyVolumeDeals.cpp:289
 msgid "Average money turnover"
 msgstr "Средний оборот денег"
 
-#: src/Diagrams/PlotPriceAll.cpp:231 src/Diagrams/PlotPriceDeals.cpp:256
-#: src/Diagrams/PlotPriceDeals.cpp:327 src/GUI/MainWindow.cpp:86
+#: Diagrams/PlotPriceAll.cpp:231 Diagrams/PlotPriceDeals.cpp:256
+#: Diagrams/PlotPriceDeals.cpp:327 GUI/MainWindow.cpp:83
 msgid "Price"
 msgstr "Цена"
 
-#: src/Diagrams/PlotPriceAll.cpp:319
+#: Diagrams/PlotPriceAll.cpp:319
 msgid "Weighted average price"
 msgstr "Средневзвешенная цена"
 
-#: src/Diagrams/PlotPriceAll.cpp:320
+#: Diagrams/PlotPriceAll.cpp:320
 msgid "First"
 msgstr "Первая"
 
-#: src/Diagrams/PlotPriceAll.cpp:321
+#: Diagrams/PlotPriceAll.cpp:321
 msgid "Last"
 msgstr "Последняя"
 
-#: src/Diagrams/PlotPriceAll.cpp:322 src/Diagrams/PlotPriceDeals.cpp:328
+#: Diagrams/PlotPriceAll.cpp:322 Diagrams/PlotPriceDeals.cpp:328
 msgid "ECg"
 msgstr "ОСт"
 
-#: src/Diagrams/PlotVolumeAll.cpp:142 src/Diagrams/PlotVolumeDeals.cpp:188
-#: src/Diagrams/PlotVolumeDeals.cpp:246 src/Diagrams/PlotVolumeGlobal.cpp:134
-#: src/GUI/MainWindow.cpp:106
+#: Diagrams/PlotVolumeAll.cpp:142 Diagrams/PlotVolumeDeals.cpp:188
+#: Diagrams/PlotVolumeDeals.cpp:246 Diagrams/PlotVolumeGlobal.cpp:134
+#: GUI/MainWindow.cpp:103
 msgid "Shares turnover"
 msgstr "Оборот акций"
 
-#: src/Diagrams/PlotVolumeDeals.cpp:247 src/Diagrams/PlotVolumeGlobal.cpp:186
+#: Diagrams/PlotVolumeDeals.cpp:247 Diagrams/PlotVolumeGlobal.cpp:186
 msgid "Average shares turnover"
 msgstr "Средний оборот акций"
 
-#: src/Download/CalcIndex.cpp:114
+#: Download/CalcIndex.cpp:114
 msgid "File list creation:"
 msgstr "Создание списка файлов:"
 
-#: src/Download/CalcIndex.cpp:146
+#: Download/CalcIndex.cpp:146
 msgid "Data collection:"
 msgstr "Сбор данных:"
 
-#: src/Download/CalcIndex.cpp:357
+#: Download/CalcIndex.cpp:357
 msgid "Result saving:"
 msgstr "Сохранение результата:"
 
-#: src/GUI/DownloadMenu.cpp:428
+#: GUI/DownloadMenu.cpp:428
 msgid "Download menu"
 msgstr "Меню загрузки"
 
-#: src/GUI/DownloadMenu.cpp:490
+#: GUI/DownloadMenu.cpp:490
 msgid "Transactions for instrument"
 msgstr "Сделки по инструменту"
 
-#: src/GUI/DownloadMenu.cpp:500
+#: GUI/DownloadMenu.cpp:500
 msgid "Daily results for instrument"
 msgstr "Итоги по инструменту"
 
-#: src/GUI/DownloadMenu.cpp:510
+#: GUI/DownloadMenu.cpp:510
 msgid "Last available date on server: "
 msgstr "Данные, последняя дата на сервере: "
 
-#: src/GUI/DownloadMenu.cpp:521
+#: GUI/DownloadMenu.cpp:521
 msgid "Last downloaded data, date: "
 msgstr "Последние сохранённые данные, дата: "
 
-#: src/GUI/DownloadMenu.cpp:532
+#: GUI/DownloadMenu.cpp:532
 msgid "All transactions for current date"
 msgstr "Все сделки за текущую дату"
 
-#: src/GUI/DownloadMenu.cpp:542
+#: GUI/DownloadMenu.cpp:542
 msgid "All results"
 msgstr "Все итоги торгов"
 
-#: src/GUI/DownloadMenu.cpp:970 src/GUI/DownloadMenu.cpp:1528
-#: src/GUI/DownloadMenu.cpp:1713
+#: GUI/DownloadMenu.cpp:970 GUI/DownloadMenu.cpp:1528 GUI/DownloadMenu.cpp:1713
 msgid "Downloading..."
 msgstr "Загрузка..."
 
-#: src/GUI/DownloadMenu.cpp:981 src/GUI/DownloadMenu.cpp:1538
-#: src/GUI/DownloadMenu.cpp:1723
+#: GUI/DownloadMenu.cpp:981 GUI/DownloadMenu.cpp:1538 GUI/DownloadMenu.cpp:1723
 msgid "Downloading in progress..."
 msgstr "Загрузка..."
 
-#: src/GUI/DownloadMenu.cpp:993 src/GUI/DownloadMenu.cpp:1221
-#: src/GUI/DownloadMenu.cpp:1338 src/GUI/DownloadMenu.cpp:1553
-#: src/GUI/DownloadMenu.cpp:1735 src/GUI/GraphicWidget.cpp:591
-#: src/GUI/MainWindow.cpp:460 src/GUI/OpenDialog.cpp:233
-#: src/GUI/OpenDialogDeals.cpp:408
+#: GUI/DownloadMenu.cpp:993 GUI/DownloadMenu.cpp:1221 GUI/DownloadMenu.cpp:1338
+#: GUI/DownloadMenu.cpp:1553 GUI/DownloadMenu.cpp:1735
+#: GUI/GraphicWidget.cpp:590 GUI/MainWindow.cpp:457 GUI/OpenDialog.cpp:233
+#: GUI/OpenDialogDeals.cpp:433
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/GUI/DownloadMenu.cpp:1134 src/GUI/DownloadMenu.cpp:1487
-#: src/GUI/MainWindow.cpp:516
+#: GUI/DownloadMenu.cpp:1134 GUI/DownloadMenu.cpp:1487 GUI/MainWindow.cpp:511
 msgid "Network error"
 msgstr "Ошибка сети"
 
-#: src/GUI/DownloadMenu.cpp:1144
+#: GUI/DownloadMenu.cpp:1144
 msgid "Network error!"
 msgstr "Ошибка сети!"
 
-#: src/GUI/DownloadMenu.cpp:1150 src/GUI/DownloadMenu.cpp:1497
-#: src/GUI/GraphicWidget.cpp:282 src/GUI/MainWindow.cpp:517
+#: GUI/DownloadMenu.cpp:1150 GUI/DownloadMenu.cpp:1497
+#: GUI/GraphicWidget.cpp:284 GUI/MainWindow.cpp:512
 msgid "Close"
 msgstr "Закрыть"
 
-#: src/GUI/DownloadMenu.cpp:1200
+#: GUI/DownloadMenu.cpp:1200
 msgid "PPm calculation"
 msgstr "Расчёт ПСд"
 
-#: src/GUI/DownloadMenu.cpp:1314
+#: GUI/DownloadMenu.cpp:1314
 msgid "Transactions downloading"
 msgstr "Загрузка сделок"
 
-#: src/GUI/DownloadMenu.cpp:1325
+#: GUI/DownloadMenu.cpp:1325
 msgid "Transaction downloading progress:"
 msgstr "Прогресс загрузки сделок:"
 
-#: src/GUI/DownloadMenu.cpp:1481
+#: GUI/DownloadMenu.cpp:1481
 msgid "No transactions today"
 msgstr "Торги не проводились"
 
-#: src/GUI/DownloadMenu.cpp:1483
+#: GUI/DownloadMenu.cpp:1483
 msgid "Message"
 msgstr "Сообщение"
 
-#: src/GUI/DownloadMenu.cpp:1488
+#: GUI/DownloadMenu.cpp:1488
 msgid "Error!"
 msgstr "Ошибка!"
 
-#: src/GUI/DownloadMenu.cpp:1667
+#: GUI/DownloadMenu.cpp:1667
 msgid "Downloading completed"
 msgstr "Загрузка завершена"
 
-#: src/GUI/DownloadMenu.cpp:1677
+#: GUI/DownloadMenu.cpp:1677
 msgid "Downloading completed!"
 msgstr "Загрузка завершена!"
 
-#: src/GUI/GraphicWidget.cpp:88
+#: GUI/GraphicWidget.cpp:90
 msgid "Diagram"
 msgstr "График"
 
-#: src/GUI/GraphicWidget.cpp:144
+#: GUI/GraphicWidget.cpp:146
 msgid "Instrument: "
 msgstr "Инструмент: "
 
-#: src/GUI/GraphicWidget.cpp:155
+#: GUI/GraphicWidget.cpp:157
 msgid "Date: "
 msgstr "Дата: "
 
-#: src/GUI/GraphicWidget.cpp:163
+#: GUI/GraphicWidget.cpp:165
 msgid "Increase"
 msgstr "Увеличить"
 
-#: src/GUI/GraphicWidget.cpp:175
+#: GUI/GraphicWidget.cpp:177
 msgid "Decrease"
 msgstr "Уменьшить"
 
-#: src/GUI/GraphicWidget.cpp:187
+#: GUI/GraphicWidget.cpp:189
 msgid "Move up"
 msgstr "Сдвинуть вверх"
 
-#: src/GUI/GraphicWidget.cpp:199
+#: GUI/GraphicWidget.cpp:201
 msgid "Move down"
 msgstr "Сдвинуть вниз"
 
-#: src/GUI/GraphicWidget.cpp:211
+#: GUI/GraphicWidget.cpp:213
 msgid "Move left"
 msgstr "Сдвинуть влево"
 
-#: src/GUI/GraphicWidget.cpp:223
+#: GUI/GraphicWidget.cpp:225
 msgid "Move right"
 msgstr "Сдвинуть вправо"
 
-#: src/GUI/GraphicWidget.cpp:235
+#: GUI/GraphicWidget.cpp:237
 msgid "Recover"
 msgstr "Восстановить"
 
-#: src/GUI/GraphicWidget.cpp:247
+#: GUI/GraphicWidget.cpp:249
 msgid "Save as jpg"
 msgstr "Сохранить в jpg"
 
-#: src/GUI/GraphicWidget.cpp:258
+#: GUI/GraphicWidget.cpp:260
 msgid "Save as png"
 msgstr "Сохранить в png"
 
-#: src/GUI/GraphicWidget.cpp:269
+#: GUI/GraphicWidget.cpp:271
 msgid "Minimize"
 msgstr "Свернуть"
 
-#: src/GUI/GraphicWidget.cpp:337
+#: GUI/GraphicWidget.cpp:339
 msgid "Date"
 msgstr "Дата"
 
-#: src/GUI/GraphicWidget.cpp:345
+#: GUI/GraphicWidget.cpp:347
 msgid "CPP"
 msgstr "ИПС"
 
-#: src/GUI/GraphicWidget.cpp:573
+#: GUI/GraphicWidget.cpp:572
 msgid "File name"
 msgstr "Имя файла"
 
-#: src/GUI/GraphicWidget.cpp:582
+#: GUI/GraphicWidget.cpp:581
 msgid "/Images"
 msgstr "/Изображения"
 
-#: src/GUI/GraphicWidget.cpp:599
+#: GUI/GraphicWidget.cpp:598
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/GUI/GraphicWidget.cpp:645
+#: GUI/GraphicWidget.cpp:644
 msgid "File already exists. Replace?"
 msgstr "Файл уже существует. Заменить?"
 
-#: src/GUI/GraphicWidget.cpp:647
+#: GUI/GraphicWidget.cpp:646
 msgid "Yes"
 msgstr "Да"
 
-#: src/GUI/GraphicWidget.cpp:650
+#: GUI/GraphicWidget.cpp:649
 msgid "No"
 msgstr "Нет"
 
-#: src/GUI/GraphicWidget.cpp:783 src/GUI/GraphicWidget.cpp:933
+#: GUI/GraphicWidget.cpp:782 GUI/GraphicWidget.cpp:932
 msgid "PPm "
 msgstr "ПСд "
 
-#: src/GUI/GraphicWidget.cpp:795 src/GUI/GraphicWidget.cpp:945
+#: GUI/GraphicWidget.cpp:794 GUI/GraphicWidget.cpp:944
 msgid "PPTm "
 msgstr "ПСОд "
 
-#: src/GUI/GraphicWidget.cpp:807
+#: GUI/GraphicWidget.cpp:806
 msgid "PPTm/PPm "
 msgstr "ПСОд/ПСд "
 
-#: src/GUI/GraphicWidget.cpp:819
+#: GUI/GraphicWidget.cpp:818
 msgid "Average shares volume "
 msgstr "Средний объём акций "
 
-#: src/GUI/GraphicWidget.cpp:834
+#: GUI/GraphicWidget.cpp:833
 msgid "Money turnover "
 msgstr "Оборот денег "
 
-#: src/GUI/GraphicWidget.cpp:846 src/GUI/GraphicWidget.cpp:971
+#: GUI/GraphicWidget.cpp:845 GUI/GraphicWidget.cpp:970
 msgid "Average turnover "
 msgstr "Средний оборот "
 
-#: src/GUI/GraphicWidget.cpp:860
+#: GUI/GraphicWidget.cpp:859
 msgid "Weighted average price "
 msgstr "Средневзвешенная цена "
 
-#: src/GUI/GraphicWidget.cpp:873
+#: GUI/GraphicWidget.cpp:872
 msgid "First price "
 msgstr "Первая цена "
 
-#: src/GUI/GraphicWidget.cpp:885
+#: GUI/GraphicWidget.cpp:884
 msgid "Last price "
 msgstr "Последняя цена "
 
-#: src/GUI/GraphicWidget.cpp:959
+#: GUI/GraphicWidget.cpp:958
 msgid "Turnover "
 msgstr "Оборот "
 
-#: src/GUI/MainWindow.cpp:126
+#: GUI/MainWindow.cpp:123
 msgid "Prices for transactions"
 msgstr "Цена по сделкам"
 
-#: src/GUI/MainWindow.cpp:136
+#: GUI/MainWindow.cpp:133
 msgid "PPm for transactions"
 msgstr "ПСд по сделкам"
 
-#: src/GUI/MainWindow.cpp:146
+#: GUI/MainWindow.cpp:143
 msgid "Shares turnover for transactions"
 msgstr "Оборот акций по сделкам"
 
-#: src/GUI/MainWindow.cpp:156
+#: GUI/MainWindow.cpp:153
 msgid "Money turnover for transactions"
 msgstr "Оборот денег по сделкам"
 
-#: src/GUI/MainWindow.cpp:166
+#: GUI/MainWindow.cpp:163
 msgid "Prediction plots (common)"
 msgstr "Графики для прогнозов (общие)"
 
-#: src/GUI/MainWindow.cpp:176
+#: GUI/MainWindow.cpp:173
 msgid "Prediction plots (daily)"
 msgstr "Графики для прогнозов (дневные)"
 
-#: src/GUI/MainWindow.cpp:185
+#: GUI/MainWindow.cpp:182
 msgid "PPm global"
 msgstr "ПСд по рынку"
 
-#: src/GUI/MainWindow.cpp:195
+#: GUI/MainWindow.cpp:192
 msgid "Shares turnover global"
 msgstr "Оборот акций по рынку"
 
-#: src/GUI/MainWindow.cpp:205
+#: GUI/MainWindow.cpp:202
 msgid "Money turnover global"
 msgstr "Оборот денег по рынку"
 
-#: src/GUI/MainWindow.cpp:215
+#: GUI/MainWindow.cpp:212
 msgid "Download data"
 msgstr "Скачать данные"
 
-#: src/GUI/MainWindow.cpp:224
+#: GUI/MainWindow.cpp:221
 msgid "About"
 msgstr "О программе"
 
-#: src/GUI/MainWindow.cpp:450
-msgid "<span foreground='#EFFF00' size='large'>Wait, shares list is downloading...</span>"
-msgstr "<span foreground='#EFFF00' size='large'>Подождите, идёт загрузка списка инструментов...</span>"
+#: GUI/MainWindow.cpp:447
+msgid ""
+"<span foreground='#EFFF00' size='large'>Wait, shares list is downloading...</"
+"span>"
+msgstr ""
+"<span foreground='#EFFF00' size='large'>Подождите, идёт загрузка списка "
+"инструментов...</span>"
 
-#: src/GUI/MainWindow.cpp:591
-msgid "Money is a programm to collect statistics from moex.com\n"
+#: GUI/MainWindow.cpp:586
+msgid ""
+"Money is a programm to collect statistics from moex.com\n"
 "Author Yury Bobylev <bobilev_yury@mail.ru>.\n"
 "Program uses next libraries:\n"
 "GTK https://www.gtk.org\n"
@@ -460,7 +462,8 @@ msgid "Money is a programm to collect statistics from moex.com\n"
 "Libzip https://libzip.org\n"
 "GMP https://gmplib.org/\n"
 "ICU https://icu.unicode.org"
-msgstr "Money - программа для сбора статистики с Московской биржи\n"
+msgstr ""
+"Money - программа для сбора статистики с Московской биржи\n"
 "Автор Юрий Бобылев <bobilev_yury@mail.ru>\n"
 "В программе используются следующие библиотеки:\n"
 "GTK https://www.gtk.org\n"
@@ -469,40 +472,40 @@ msgstr "Money - программа для сбора статистики с М�
 "GMP https://gmplib.org/\n"
 "ICU https://icu.unicode.org"
 
-#: src/GUI/OpenDialog.cpp:123 src/GUI/OpenDialogDeals.cpp:222
+#: GUI/OpenDialog.cpp:123 GUI/OpenDialogDeals.cpp:228
 msgid "Instrument selection"
 msgstr "Выбор инструмента"
 
-#: src/GUI/OpenDialog.cpp:135 src/GUI/OpenDialogDeals.cpp:272
+#: GUI/OpenDialog.cpp:135 GUI/OpenDialogDeals.cpp:283
 msgid "Mode:"
 msgstr "Режим:"
 
-#: src/GUI/OpenDialog.cpp:177 src/GUI/OpenDialogDeals.cpp:351
+#: GUI/OpenDialog.cpp:177 GUI/OpenDialogDeals.cpp:372
 msgid "Instrument:"
 msgstr "Инструмент:"
 
-#: src/GUI/OpenDialog.cpp:220 src/GUI/OpenDialogDeals.cpp:395
+#: GUI/OpenDialog.cpp:220 GUI/OpenDialogDeals.cpp:420
 msgid "Confirm"
 msgstr "Подтвердить"
 
-#: src/GUI/OpenDialogDeals.cpp:233
+#: GUI/OpenDialogDeals.cpp:239
 msgid "Date:"
 msgstr "Дата:"
 
-#: src/GUI/OpenDialogDeals.cpp:314
+#: GUI/OpenDialogDeals.cpp:330
 msgid "Sort by:"
 msgstr "Сортировка:"
 
-#: src/GUI/OpenDialogDeals.cpp:323 src/GUI/OpenDialogDeals.cpp:444
-#: src/GUI/OpenDialogDeals.cpp:721
+#: GUI/OpenDialogDeals.cpp:340 GUI/OpenDialogDeals.cpp:470
+#: GUI/OpenDialogDeals.cpp:770
 msgid "Size"
 msgstr "Размер"
 
-#: src/GUI/OpenDialogDeals.cpp:447
+#: GUI/OpenDialogDeals.cpp:473
 msgid "Name"
 msgstr "Имя"
 
-#: src/GUI/OpenDialogDeals.cpp:450
+#: GUI/OpenDialogDeals.cpp:476
 msgid "Codename"
 msgstr "Имя (по коду)"
 

@@ -29,28 +29,27 @@ AuxFunc::~AuxFunc()
 
 double
 AuxFunc::grigtojulian(int day, int month, int year, int hour, int minut,
-                      double sec)
+		      double sec)
 {
   double a1, m1, c1, a2;
   a1 = std::floor(static_cast<double>(month - 3) / 12.0);
   m1 = static_cast<double>(month) - 3.0 - 12.0 * a1;
   c1 = std::floor(static_cast<double>(year + a1) / 100.0);
   a2 = static_cast<double>(year) + a1 - 100.0 * c1;
-  int J = static_cast<int>(std::floor(146097.0 * c1 / 4.0)) + static_cast<int>
-          (std::floor(
-             36525.0 * a2 / 100.0)) + static_cast<int>(std::floor((
-                   153.0 * m1 + 2.0) / 5.0)) + day + 1721119;
+  int J = static_cast<int>(std::floor(146097.0 * c1 / 4.0))
+      + static_cast<int>(std::floor(36525.0 * a2 / 100.0))
+      + static_cast<int>(std::floor((153.0 * m1 + 2.0) / 5.0)) + day + 1721119;
   double JD;
   if(J >= 0)
     {
 
-      JD = static_cast<double>(J) + static_cast<double>(hour) / 24.0 +
-           static_cast<double>(minut) / 1440.0 + sec / 86400.0;
+      JD = static_cast<double>(J) + static_cast<double>(hour) / 24.0
+	  + static_cast<double>(minut) / 1440.0 + sec / 86400.0;
     }
   else
     {
-      double k = static_cast<double>(hour) / 24.0 + static_cast<double>
-                 (minut) / 1440.0 + sec / 86400.0;
+      double k = static_cast<double>(hour) / 24.0
+	  + static_cast<double>(minut) / 1440.0 + sec / 86400.0;
       k = 1 - k;
       JD = static_cast<double>(J) - k;
     }
@@ -119,22 +118,22 @@ AuxFunc::togrigyear(double JDN)
 
 void
 AuxFunc::dateJulian(double JDN, int *day, int *month, int *year, int *hour,
-                    int *minut, double *second)
+		    int *minut, double *second)
 {
   int J = static_cast<int>(JDN);
-  int c1 = static_cast<int>(std::floor((4.0 * static_cast<double>
-                                        (J) - 6884477.0) / 146097.0));
+  int c1 = static_cast<int>(std::floor(
+      (4.0 * static_cast<double>(J) - 6884477.0) / 146097.0));
   int e1 = 4 * J - 6884477 - 146097 * c1;
 
-  int a1 = (100 * static_cast<int>(std::floor(static_cast<double>
-                                   (e1) / 4.0)) + 99) / 36525;
-  int e2 = 100 * static_cast<int>(std::floor(static_cast<double>
-                                  (e1) / 4.0)) + 99 - 36525 * a1;
+  int a1 = (100 * static_cast<int>(std::floor(static_cast<double>(e1) / 4.0))
+      + 99) / 36525;
+  int e2 = 100 * static_cast<int>(std::floor(static_cast<double>(e1) / 4.0))
+      + 99 - 36525 * a1;
 
-  int m1 = (5 * static_cast<int>(std::floor(static_cast<double>
-                                 (e2) / 100.0)) + 2) / 153;
-  int e3 = 5 * static_cast<int>(std::floor(static_cast<double>
-                                (e2) / 100.0)) + 2 - 153 * m1;
+  int m1 = (5 * static_cast<int>(std::floor(static_cast<double>(e2) / 100.0))
+      + 2) / 153;
+  int e3 = 5 * static_cast<int>(std::floor(static_cast<double>(e2) / 100.0)) + 2
+      - 153 * m1;
   int a2 = static_cast<int>(std::floor(static_cast<double>(m1 + 2) / 12.0));
   int m2 = m1 + 2 - 12 * a2;
   *year = 100 * c1 + a1 + a2;
@@ -148,8 +147,8 @@ AuxFunc::dateJulian(double JDN, int *day, int *month, int *year, int *hour,
     }
   *hour = static_cast<int>(F * 24.0);
   *minut = static_cast<int>((F * 24.0 - static_cast<double>(*hour)) * 60.0);
-  *second = ((F * 24.0 - static_cast<double>(*hour)) * 60.0 - static_cast<double>
-             (*minut)) * 60.0;
+  *second = ((F * 24.0 - static_cast<double>(*hour)) * 60.0
+      - static_cast<double>(*minut)) * 60.0;
 }
 
 void
@@ -158,7 +157,7 @@ AuxFunc::callNetwork(std::string urli, std::string filename, int *check)
   CURL *curl;
   CURLcode res;
   curl = curl_easy_init();
-  #ifdef _WIN32
+#ifdef _WIN32
   std::filesystem::path certp = std::filesystem::u8path(get_selfpath());
   certp = certp.parent_path();
   std::string certstr = certp.u8string();
@@ -174,7 +173,7 @@ AuxFunc::callNetwork(std::string urli, std::string filename, int *check)
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, &f);
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_func);
       curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
-      #ifdef _WIN32
+#ifdef _WIN32
       certp = std::filesystem::u8path(certstr);
       if(std::filesystem::exists(certp))
         {
@@ -183,15 +182,15 @@ AuxFunc::callNetwork(std::string urli, std::string filename, int *check)
       #endif
       res = curl_easy_perform(curl);
       if(res != CURLE_OK)
-        {
-          *check = 0;
-          std::cerr << "curl_easy_perform() failed: "
-                    << curl_easy_strerror(res) << std::endl;
-        }
+	{
+	  *check = 0;
+	  std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res)
+	      << std::endl;
+	}
       else
-        {
-          *check = 1;
-        }
+	{
+	  *check = 1;
+	}
       curl_easy_cleanup(curl);
       f.close();
     }
@@ -211,8 +210,8 @@ AuxFunc::cp1251toutf8(std::string &line)
   std::vector<UChar> target(srclen);
   UErrorCode status = U_ZERO_ERROR;
   UConverter *conv = ucnv_open("cp1251", &status);
-  int32_t len = ucnv_toUChars(conv, target.data(), srclen, line.c_str(),
-                              srclen, &status);
+  int32_t len = ucnv_toUChars(conv, target.data(), srclen, line.c_str(), srclen,
+			      &status);
   ucnv_close(conv);
   if(!U_SUCCESS(status))
     {
@@ -245,38 +244,38 @@ AuxFunc::homePath(std::string *filename)
     {
       fnm = getenv("HOMEDRIVE");
       if(fnm)
-        {
-          *filename = std::string(getenv("HOMEDRIVE"));
-        }
+	{
+	  *filename = std::string(getenv("HOMEDRIVE"));
+	}
       else
-        {
-          fnm = getenv("HOMEPATH");
-          if(fnm)
-            {
-              *filename = std::string(getenv("HOMEPATH"));
-            }
-          else
-            {
-              fnm = getenv("HOME");
-              if(fnm)
-                {
-                  *filename = std::string(getenv("HOME"));
-                }
-              else
-                {
-                  fnm = getenv("SystemDrive");
-                  if(fnm)
-                    {
-                      *filename = std::string(getenv("SystemDrive"));
-                    }
-                  else
-                    {
-                      std::cerr << "Cannot find user home folder" << std::endl;
-                      exit(1);
-                    }
-                }
-            }
-        }
+	{
+	  fnm = getenv("HOMEPATH");
+	  if(fnm)
+	    {
+	      *filename = std::string(getenv("HOMEPATH"));
+	    }
+	  else
+	    {
+	      fnm = getenv("HOME");
+	      if(fnm)
+		{
+		  *filename = std::string(getenv("HOME"));
+		}
+	      else
+		{
+		  fnm = getenv("SystemDrive");
+		  if(fnm)
+		    {
+		      *filename = std::string(getenv("SystemDrive"));
+		    }
+		  else
+		    {
+		      std::cerr << "Cannot find user home folder" << std::endl;
+		      exit(1);
+		    }
+		}
+	    }
+	}
     }
   toutf8(*filename);
 }
@@ -303,100 +302,100 @@ AuxFunc::packing(std::string source, std::string out)
   if(std::filesystem::exists(dir))
     {
       if(std::filesystem::is_directory(dir))
-        {
-          zip_t *z;
-          zip_error_t err;
-          z = zip_open(out.c_str(), ZIP_TRUNCATE | ZIP_CREATE, &er);
-          if(er < 1)
-            {
-              std::vector<std::filesystem::path> listf;
-              std::vector<std::filesystem::path> listd;
-              std::string line;
-              if(!std::filesystem::is_empty(dir))
-                {
-                  for(auto &iter : std::filesystem::recursive_directory_iterator(
-                        dir))
-                    {
-                      std::filesystem::path path = iter.path();
-                      path = std::filesystem::u8path(path.generic_u8string());
-                      if(std::filesystem::is_directory(path))
-                        {
-                          listd.push_back(path);
-                        }
-                      else
-                        {
-                          listf.push_back(path);
-                        }
-                    }
-                  std::sort(listd.begin(), listd.end(), []
-                            (auto & el1, auto & el2)
-                  {
-                    return el1.string().size() < el2.string().size();
-                  });
+	{
+	  zip_t *z;
+	  zip_error_t err;
+	  z = zip_open(out.c_str(), ZIP_TRUNCATE | ZIP_CREATE, &er);
+	  if(er < 1)
+	    {
+	      std::vector<std::filesystem::path> listf;
+	      std::vector<std::filesystem::path> listd;
+	      std::string line;
+	      if(!std::filesystem::is_empty(dir))
+		{
+		  for(auto &iter : std::filesystem::recursive_directory_iterator(
+		      dir))
+		    {
+		      std::filesystem::path path = iter.path();
+		      path = std::filesystem::u8path(path.generic_u8string());
+		      if(std::filesystem::is_directory(path))
+			{
+			  listd.push_back(path);
+			}
+		      else
+			{
+			  listf.push_back(path);
+			}
+		    }
+		  std::sort(listd.begin(), listd.end(), []
+		  (auto &el1, auto &el2)
+		    {
+		      return el1.string().size() < el2.string().size();
+		    });
 
-                  std::string pardir = dir.filename().u8string();
-                  zip_dir_add(z, pardir.c_str(), ZIP_FL_ENC_UTF_8);
+		  std::string pardir = dir.filename().u8string();
+		  zip_dir_add(z, pardir.c_str(), ZIP_FL_ENC_UTF_8);
 
-                  for(size_t i = 0; i < listd.size(); i++)
-                    {
-                      line = listd[i].u8string();
-                      std::string::size_type n;
-                      n = line.find(source, 0);
-                      line.erase(n, source.size());
-                      line = pardir + line;
-                      if(!std::filesystem::is_empty(listd[i]))
-                        {
-                          zip_dir_add(z, line.c_str(), ZIP_FL_ENC_UTF_8);
-                        }
-                    }
-                  for(size_t i = 0; i < listf.size(); i++)
-                    {
-                      line = listf[i].u8string();
-                      std::string::size_type n;
-                      n = line.find(source, 0);
-                      line.erase(n, source.size());
-                      zip_source_t *zsource;
-                      zsource = zip_source_file_create(
-                                  listf[i].u8string().c_str(), 0, 0, &err);
-                      line = pardir + line;
-                      zip_file_add(z, line.c_str(), zsource,
-                                   ZIP_FL_ENC_UTF_8);
-                    }
-                }
+		  for(size_t i = 0; i < listd.size(); i++)
+		    {
+		      line = listd[i].u8string();
+		      std::string::size_type n;
+		      n = line.find(source, 0);
+		      line.erase(n, source.size());
+		      line = pardir + line;
+		      if(!std::filesystem::is_empty(listd[i]))
+			{
+			  zip_dir_add(z, line.c_str(), ZIP_FL_ENC_UTF_8);
+			}
+		    }
+		  for(size_t i = 0; i < listf.size(); i++)
+		    {
+		      line = listf[i].u8string();
+		      std::string::size_type n;
+		      n = line.find(source, 0);
+		      line.erase(n, source.size());
+		      zip_source_t *zsource;
+		      zsource = zip_source_file_create(
+			  listf[i].u8string().c_str(), 0, 0, &err);
+		      line = pardir + line;
+		      zip_file_add(z, line.c_str(), zsource,
+		      ZIP_FL_ENC_UTF_8);
+		    }
+		}
 
-              zip_close(z);
-            }
-          else
-            {
-              std::cerr << "Error on packaing: " << strerror(er) << std::endl;
-            }
-        }
+	      zip_close(z);
+	    }
+	  else
+	    {
+	      std::cerr << "Error on packaing: " << strerror(er) << std::endl;
+	    }
+	}
       else
-        {
-          zip_t *z;
-          zip_error_t err;
-          std::string line = dir.filename().u8string();
-          z = zip_open(out.c_str(), ZIP_TRUNCATE | ZIP_CREATE, &er);
-          if(er >= 1)
-            {
-              std::cerr << "Packing (file) error: " << strerror(er)
-                        << std::endl;
-            }
-          else
-            {
-              zip_source_t *zsource;
-              zsource = zip_source_file_create(source.c_str(), 0, 0, &err);
-              if(zsource == nullptr)
-                {
-                  std::cerr << "Error on open file while packing" << std::endl;
-                }
-              else
-                {
-                  zip_file_add(z, line.c_str(), zsource, ZIP_FL_ENC_UTF_8);
-                }
-              zip_close(z);
-            }
-        }
+	{
+	  zip_t *z;
+	  zip_error_t err;
+	  std::string line = dir.filename().u8string();
+	  z = zip_open(out.c_str(), ZIP_TRUNCATE | ZIP_CREATE, &er);
+	  if(er >= 1)
+	    {
+	      std::cerr << "Packing (file) error: " << strerror(er)
+		  << std::endl;
+	    }
+	  else
+	    {
+	      zip_source_t *zsource;
+	      zsource = zip_source_file_create(source.c_str(), 0, 0, &err);
+	      if(zsource == nullptr)
+		{
+		  std::cerr << "Error on open file while packing" << std::endl;
+		}
+	      else
+		{
+		  zip_file_add(z, line.c_str(), zsource, ZIP_FL_ENC_UTF_8);
+		}
+	      zip_close(z);
+	    }
+	}
     }
 }
 
@@ -413,16 +412,16 @@ AuxFunc::fileNames(std::string adress, std::vector<std::string> &filenames)
       num = zip_get_num_files(z);
 
       for(int i = 0; i < num; i++)
-        {
-          flname = zip_get_name(z, i, ZIP_FL_ENC_UTF_8);
-          filenames.push_back(flname);
-        }
+	{
+	  flname = zip_get_name(z, i, ZIP_FL_ENC_UTF_8);
+	  filenames.push_back(flname);
+	}
       zip_close(z);
     }
   else
     {
       std::cerr << "Error on getting file names from archive: " << strerror(er)
-                << std::endl;
+	  << std::endl;
     }
 
   return er;
@@ -430,7 +429,7 @@ AuxFunc::fileNames(std::string adress, std::vector<std::string> &filenames)
 
 int
 AuxFunc::fileNames(std::string adress,
-                   std::vector<std::tuple<int, int, std::string>> &filenames)
+		   std::vector<std::tuple<int, int, std::string>> &filenames)
 {
   zip_t *z;
 
@@ -443,21 +442,21 @@ AuxFunc::fileNames(std::string adress,
       num = zip_get_num_files(z);
 
       for(int i = 0; i < num; i++)
-        {
-          flname = zip_get_name(z, i, ZIP_FL_ENC_UTF_8);
-          struct zip_stat st;
-          zip_stat_index(z, i, ZIP_FL_ENC_GUESS, &st);
-          int sz = st.size;
-          std::tuple<int, int, std::string> tuple;
-          tuple = std::make_tuple(i, sz, flname);
-          filenames.push_back(tuple);
-        }
+	{
+	  flname = zip_get_name(z, i, ZIP_FL_ENC_UTF_8);
+	  struct zip_stat st;
+	  zip_stat_index(z, i, ZIP_FL_ENC_GUESS, &st);
+	  int sz = st.size;
+	  std::tuple<int, int, std::string> tuple;
+	  tuple = std::make_tuple(i, sz, flname);
+	  filenames.push_back(tuple);
+	}
       zip_close(z);
     }
   else
     {
       std::cerr << "Error on getting file names from archive: " << strerror(er)
-                << std::endl;
+	  << std::endl;
     }
 
   return er;
@@ -474,11 +473,11 @@ AuxFunc::unpacking(std::string archadress, std::string outfolder)
       line = filenames[i];
       std::filesystem::path path;
       if(line.substr(line.size() - 1, line.size() - 1) == "/")
-        {
-          line = outfolder + "/" + line;
-          path = std::filesystem::u8path(line);
-          std::filesystem::create_directories(path);
-        }
+	{
+	  line = outfolder + "/" + line;
+	  path = std::filesystem::u8path(line);
+	  std::filesystem::create_directories(path);
+	}
     }
   zip_t *z;
   zip_file_t *file;
@@ -488,37 +487,45 @@ AuxFunc::unpacking(std::string archadress, std::string outfolder)
   if(er < 1)
     {
       for(size_t i = 0; i < filenames.size(); i++)
-        {
-          line = filenames[i];
-          if(line.substr(line.size() - 1, line.size() - 1) != "/")
-            {
-              file = zip_fopen(z, line.c_str(), ZIP_FL_ENC_UTF_8);
-              zip_stat(z, line.c_str(), ZIP_STAT_NAME | ZIP_FL_ENC_UTF_8,
-                       &st);
-              char content;
-              std::filesystem::path path;
-              line = outfolder + "/" + line;
-              path = std::filesystem::u8path(line);
-              std::fstream f;
-              f.open(path, std::ios_base::out | std::ios_base::binary);
-              for(;;)
-                {
-                  zip_uint64_t ch = zip_fread(file, &content, sizeof(content));
-                  if(ch <= 0)
-                    {
-                      if(ch < 0)
-                        {
-                          std::cerr << "unpacking file reading error"
-                                    << std::endl;
-                        }
-                      break;
-                    }
-                  f.write(&content, sizeof(content));
-                }
-              f.close();
-              zip_fclose(file);
-            }
-        }
+	{
+	  line = filenames[i];
+	  if(line.substr(line.size() - 1, line.size() - 1) != "/")
+	    {
+	      file = zip_fopen(z, line.c_str(), ZIP_FL_ENC_UTF_8);
+	      zip_stat(z, line.c_str(), ZIP_STAT_NAME | ZIP_FL_ENC_UTF_8, &st);
+	      std::vector<char> content;
+	      content.resize(100 * 1024 * 1024);
+	      std::filesystem::path path;
+	      line = outfolder + "/" + line;
+	      path = std::filesystem::u8path(line);
+	      std::fstream f;
+	      f.open(path, std::ios_base::out | std::ios_base::binary);
+	      for(;;)
+		{
+		  zip_uint64_t ch = zip_fread(file, &content[0],
+					      content.size());
+		  if(ch <= 0)
+		    {
+		      if(ch < 0)
+			{
+			  std::cerr << "unpacking file reading error"
+			      << std::endl;
+			}
+		      break;
+		    }
+		  else
+		    {
+		      if(ch < static_cast<uint64_t>(content.size()))
+			{
+			  content.resize(static_cast<size_t>(ch));
+			}
+		    }
+		  f.write(&content[0], content.size());
+		}
+	      f.close();
+	      zip_fclose(file);
+	    }
+	}
 
       zip_close(z);
     }
@@ -529,8 +536,7 @@ AuxFunc::unpacking(std::string archadress, std::string outfolder)
 }
 
 void
-AuxFunc::unpackByIndex(std::string archadress, std::string outfolder,
-                       int index)
+AuxFunc::unpackByIndex(std::string archadress, std::string outfolder, int index)
 {
   zip_t *z;
   zip_file_t *file;
@@ -542,12 +548,13 @@ AuxFunc::unpackByIndex(std::string archadress, std::string outfolder,
 
       std::filesystem::path path = std::filesystem::u8path(outfolder);
       if(!std::filesystem::exists(path))
-        {
-          std::filesystem::create_directories(path);
-        }
+	{
+	  std::filesystem::create_directories(path);
+	}
       file = zip_fopen_index(z, index, ZIP_FL_ENC_UTF_8);
       zip_stat_index(z, index, ZIP_STAT_NAME, &st);
-      char content;
+      std::vector<char> content;
+      content.resize(100 * 1024 * 1024);
       std::fstream f;
       std::string fname = path.u8string();
       fname = fname + "/";
@@ -558,18 +565,25 @@ AuxFunc::unpackByIndex(std::string archadress, std::string outfolder,
       path = std::filesystem::u8path(fname);
       f.open(path, std::ios_base::out | std::ios_base::binary);
       for(;;)
-        {
-          zip_uint64_t ch = zip_fread(file, &content, sizeof(content));
-          if(ch <= 0)
-            {
-              if(ch < 0)
-                {
-                  std::cerr << "unpackByIndex file  reading error" << std::endl;
-                }
-              break;
-            }
-          f.write(&content, sizeof(content));
-        }
+	{
+	  zip_uint64_t ch = zip_fread(file, &content[0], content.size());
+	  if(ch <= 0)
+	    {
+	      if(ch < 0)
+		{
+		  std::cerr << "unpackByIndex file  reading error" << std::endl;
+		}
+	      break;
+	    }
+	  else
+	    {
+	      if(ch < static_cast<uint64_t>(content.size()))
+		{
+		  content.resize(static_cast<size_t>(ch));
+		}
+	    }
+	  f.write(&content[0], content.size());
+	}
       f.close();
       zip_fclose(file);
       zip_close(z);
@@ -584,11 +598,11 @@ std::string
 AuxFunc::get_selfpath()
 {
   std::filesystem::path p;
-  #ifdef __linux
+#ifdef __linux
   p = std::filesystem::u8path("/proc/self/exe");
   return std::filesystem::read_symlink(p).u8string();
-  #endif
-  #ifdef __WIN32
+#endif
+#ifdef __WIN32
   char pth [MAX_PATH];
   GetModuleFileNameA(NULL, pth, MAX_PATH);
   p = std::filesystem::path(pth);
@@ -603,8 +617,8 @@ AuxFunc::toutf8(std::string &line)
   std::vector<UChar> target(srclen);
   UErrorCode status = U_ZERO_ERROR;
   UConverter *conv = ucnv_open(NULL, &status);
-  int32_t len = ucnv_toUChars(conv, target.data(), srclen, line.c_str(),
-                              srclen, &status);
+  int32_t len = ucnv_toUChars(conv, target.data(), srclen, line.c_str(), srclen,
+			      &status);
   ucnv_close(conv);
   if(!U_SUCCESS(status))
     {
@@ -636,24 +650,24 @@ AuxFunc::utf8to(std::string line)
       data[i] = ustr.charAt(i);
     }
   size_t cb = ucnv_fromUChars(c, target2.data(), ustr.length(), data,
-                              ustr.length(), &status);
+			      ustr.length(), &status);
   if(!U_SUCCESS(status))
     {
       if(status == U_BUFFER_OVERFLOW_ERROR)
-        {
-          status = U_ZERO_ERROR;
-          target2.clear();
-          target2.resize(cb);
-          ucnv_fromUChars(c, target2.data(), cb, data, ustr.length(), &status);
-          if(!U_SUCCESS(status))
-            {
-              std::cerr << u_errorName(status) << std::endl;
-            }
-        }
+	{
+	  status = U_ZERO_ERROR;
+	  target2.clear();
+	  target2.resize(cb);
+	  ucnv_fromUChars(c, target2.data(), cb, data, ustr.length(), &status);
+	  if(!U_SUCCESS(status))
+	    {
+	      std::cerr << u_errorName(status) << std::endl;
+	    }
+	}
       else
-        {
-          std::cerr << u_errorName(status) << std::endl;
-        }
+	{
+	  std::cerr << u_errorName(status) << std::endl;
+	}
     }
   line.clear();
   line = std::string(target2.begin(), target2.end());

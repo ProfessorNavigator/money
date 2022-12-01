@@ -546,7 +546,7 @@ MainWindow::aboutProg()
   aboutd->set_application(this->get_application());
 
   aboutd->set_program_name("Money");
-  aboutd->set_version("2.3.1");
+  aboutd->set_version("2.3.2");
   aboutd->set_copyright(
     "Copyright 2022 Yury Bobylev <bobilev_yury@mail.ru>");
   AuxFunc af;
