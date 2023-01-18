@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -19,66 +19,65 @@
 #define MAINWINDOW_H_
 
 #include <gtkmm.h>
-#include <glibmm/dispatcher.h>
-#include <sigc++/sigc++.h>
 #include <filesystem>
 #include <thread>
 #include <fstream>
 #include <iostream>
 #include <libintl.h>
 #include "AuxFunc.h"
+#include "OpenDialog.h"
+#include "OpenDialogDeals.h"
 #include "GraphicWidget.h"
+#include "DownloadTechnical.h"
 #include "DownloadMenu.h"
+#include "AnomalySearch.h"
 
 class MainWindow : public Gtk::ApplicationWindow
 {
-  public:
-    MainWindow();
-    virtual
-    ~MainWindow();
-  private:
-    void
-    windowFunc();
-    void
-    plotPriceall();
-    void
-    plotPSDall();
-    void
-    plotVolumeAll();
-    void
-    plotMoneyVolumeAll();
-    void
-    plotPriceDeals();
-    void
-    plotPSDDeals();
-    void
-    plotVolumeDeals();
-    void
-    plotMoneyVolDeals();
-    void
-    plotAllCommon();
-    void
-    plotDealsCommon();
-    void
-    plotPSDGlobal();
-    void
-    plotVolumeGlobal();
-    void
-    plotMoneyGlobal();
-    void
-    downloadMenu();
-    void
-    deleteDialog(int id, Gtk::MessageDialog *dl, DownloadMenu *menu,
-                 Gtk::Button *button);
-    void
-    ondwnldmenuCall(int Signid);
-    Gdk::Rectangle
-    screenRes();
-    void
-    aboutProg();
-    int signid;
-    Glib::RefPtr<Gtk::CssProvider> css_provider;
-    Glib::Dispatcher *dispv = nullptr;
+public:
+  MainWindow();
+  virtual
+  ~MainWindow();
+private:
+  void
+  windowFunc();
+  void
+  plotPriceall();
+  void
+  plotPSDall();
+  void
+  plotVolumeAll();
+  void
+  plotMoneyVolumeAll();
+  void
+  plotPriceDeals();
+  void
+  plotPSDDeals();
+  void
+  plotVolumeDeals();
+  void
+  plotMoneyVolDeals();
+  void
+  plotAllCommon();
+  void
+  plotDealsCommon();
+  void
+  plotPSDGlobal();
+  void
+  plotVolumeGlobal();
+  void
+  plotMoneyGlobal();
+  void
+  anomalySearch();
+  void
+  downloadMenu();
+  void
+  dtRespFunc(int *resp, Gtk::Window *window, Gtk::Grid *grid,
+	     Gtk::Button *cancel, Gtk::Label *msg);
+  Gdk::Rectangle
+  screenRes();
+  void
+  aboutProg();
 };
 
 #endif /* MAINWINDOW_H_ */

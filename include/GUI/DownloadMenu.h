@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -19,11 +19,6 @@
 #define DOWNLOADMENU_H_
 
 #include <gtkmm.h>
-#include <glibmm/ustring.h>
-#include <unicode/ucnv.h>
-#include <unicode/unistr.h>
-#include <sigc++/sigc++.h>
-#include <glibmm/dispatcher.h>
 #include <unistd.h>
 #include <vector>
 #include <iostream>
@@ -38,7 +33,7 @@
 #include "DownloadDeals.h"
 
 #ifdef __unix__
-  #include <X11/Xlib.h>
+#include <X11/Xlib.h>
 #endif
 #ifdef _WIN32
   #include <windows.h>
@@ -46,63 +41,43 @@
 
 class DownloadMenu
 {
-  public:
-    DownloadMenu(Glib::RefPtr<Gtk::Application> app, Gtk::Window *mwin);
-    virtual
-    ~DownloadMenu();
-    sigc::signal<void
-    (int)> techdwnld;
-    sigc::signal<void
-    ()> class_finished;
-    void
-    cancelTechnical();
-    void
-    downloadTechnical();
-    void
-    downloadMenu();
-  private:
-    int
-    availibaleDates();
-    int
-    availibaleDatesF();
-    void
-    formVector();
-    void
-    expandScroll(Gtk::Expander *exp, Gtk::Window *window, Gtk::Grid *grid);
-    void
-    instrSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
-                   Glib::RefPtr<Gtk::ListStore> model,
-                   Gtk::TreeModelColumn<unsigned int> id, Gtk::Expander *exp);
-    void
-    downloadAll();
-    void
-    errorMessage();
-    void
-    finishMessage();
-    void
-    saveDate(int dt);
-    void
-    calcIndex();
-    void
-    downloadDeals();
-    void
-    downlodSinglInstrAll();
-    void
-    downlodSinglInstrDeals();
-    void
-    noDeals(int sel);
-    int CancelTech = 0;
-    Gtk::Window *MainMenu = nullptr;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> boards;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> instruments;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> instrumentsF;
-    double dateserver;
-    int datehome;
-    int selectedinstr = 0;
-    int downloadcancel = 0;
-    Glib::RefPtr<Gtk::CssProvider> css_provider;
-    Glib::RefPtr<Gtk::Application> App;
-    Gtk::Window *Mwin;
+public:
+  DownloadMenu(Gtk::Window *mwin);
+  virtual
+  ~DownloadMenu();
+  void
+  downloadMenu();
+  std::vector<std::tuple<std::string, std::string>>
+  formVectorBoards();
+  std::vector<std::tuple<std::string, std::string, std::string>>
+  formVectorInstr(int variant);
+private:
+  void
+  instrSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
+		 Glib::RefPtr<Gtk::ListStore> model, Gtk::MenuButton *mb);
+  double
+  dateHome();
+  double
+  dateServer();
+  void
+  errorMessage();
+  void
+  finishMessage();
+  void
+  saveDate(int dt);
+  void
+  calcIndex();
+  void
+  downloadAll(Gtk::Window *win);
+  void
+  downloadDeals(Gtk::Window *win);
+  void
+  downlodSinglInstrAll(Gtk::Window *win, Gtk::TreeView *tv);
+  void
+  downlodSinglInstrDeals(Gtk::Window *win, Gtk::TreeView *tv);
+  void
+  noDeals(int sel);
+  Gtk::Window *Mwin = nullptr;
 };
 
 #endif /* DOWNLOADMENU_H_ */

@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -52,6 +52,7 @@ class PlotMoneyVolumeDeals
     std::vector<double> VolMmid;
     std::vector<std::string> usdv;
     std::vector<std::string> eurv;
+    std::vector<std::string> cnyv;
     std::string yname;
     std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
 };

@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -19,19 +19,33 @@
 
 MainWindow::MainWindow()
 {
-  css_provider = Gtk::CssProvider::create();
+  Glib::RefPtr<Gtk::CssProvider> css_provider = Gtk::CssProvider::create();
   AuxFunc af;
   std::filesystem::path p = std::filesystem::u8path(af.get_selfpath());
-  css_provider->load_from_path(
-    Glib::ustring(
-      std::string(p.parent_path().u8string())
-      + "/../share/Money/mainWindow.css"));
+
+  std::string css_styles;
+
+  std::string filename = p.parent_path().u8string()
+      + "/../share/Money/stylesMoney.css";
+  std::filesystem::path filepath = std::filesystem::u8path(filename);
+  std::fstream f;
+  f.open(filepath, std::ios_base::in | std::ios_base::binary);
+  if(f.is_open())
+    {
+      css_styles.resize(std::filesystem::file_size(filepath));
+      f.read(&css_styles[0], css_styles.size());
+      f.close();
+    }
+  css_provider->load_from_data(css_styles);
+  Glib::RefPtr<Gdk::Display> disp = this->get_display();
+  Gtk::StyleContext::add_provider_for_display(disp, css_provider,
+  GTK_STYLE_PROVIDER_PRIORITY_USER);
   windowFunc();
 }
 
 MainWindow::~MainWindow()
 {
-   delete dispv;
+
 }
 
 void
@@ -52,18 +66,14 @@ MainWindow::windowFunc()
     {
       std::fstream file;
       file.open(path, std::ios_base::out | std::ios_base::binary);
-      std::string date = std::to_string(static_cast<int>(af.grigtojulian(23, 3, 1997,
-                                        0, 0, 0.0)));
+      std::string date = std::to_string(
+	  static_cast<int>(af.grigtojulian(23, 3, 1997, 0, 0, 0.0)));
       file.write(date.c_str(), date.size());
       file.close();
     }
-  pathto = std::filesystem::temp_directory_path().u8string();
-  #ifdef __linux
+  pathto = af.tempPath();
   pathto = pathto + "/Money";
-  #endif
-  #ifdef _WIN32
-  pathto = pathto + "Money";
-  #endif
+
   path = std::filesystem::u8path(pathto);
   if(std::filesystem::exists(path))
     {
@@ -72,459 +82,405 @@ MainWindow::windowFunc()
 
   this->set_title("Money");
   this->set_name("mainWindow");
-  get_style_context()->add_provider(css_provider,
-                                    GTK_STYLE_PROVIDER_PRIORITY_USER);
+  this->set_default_size(1, 1);
 
-  auto grid = Gtk::make_managed<Gtk::Grid> ();
+  auto grid = Gtk::make_managed<Gtk::Grid>();
   grid->set_halign(Gtk::Align::CENTER);
-  grid->set_margin(10);
+  grid->set_valign(Gtk::Align::CENTER);
   this->set_child(*grid);
 
-  Gtk::Button *priceall = Gtk::make_managed<Gtk::Button> (gettext("Price"));
+  Gtk::Button *priceall = Gtk::make_managed<Gtk::Button>(gettext("Price"));
   priceall->set_name("allButton");
   priceall->set_margin(5);
-  priceall->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   priceall->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotPriceall));
+      sigc::mem_fun(*this, &MainWindow::plotPriceall));
   grid->attach(*priceall, 0, 0);
 
-  Gtk::Button *moneyprice = Gtk::make_managed<Gtk::Button> (
-                              gettext("Purchasing power of money"));
+  Gtk::Button *moneyprice = Gtk::make_managed<Gtk::Button>(
+      gettext("Purchasing power of money"));
   moneyprice->set_name("allButton");
   moneyprice->set_margin(5);
-  moneyprice->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   moneyprice->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotPSDall));
+      sigc::mem_fun(*this, &MainWindow::plotPSDall));
   grid->attach(*moneyprice, 0, 1);
 
-  Gtk::Button *moneyvolume = Gtk::make_managed<Gtk::Button> (
-                               gettext("Shares turnover"));
+  Gtk::Button *moneyvolume = Gtk::make_managed<Gtk::Button>(
+      gettext("Shares turnover"));
   moneyvolume->set_name("allButton");
   moneyvolume->set_margin(5);
-  moneyvolume->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   moneyvolume->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotVolumeAll));
+      sigc::mem_fun(*this, &MainWindow::plotVolumeAll));
   grid->attach(*moneyvolume, 0, 2);
 
-  Gtk::Button *moneyvolumev = Gtk::make_managed<Gtk::Button> (
-                                gettext("Money turnover"));
+  Gtk::Button *moneyvolumev = Gtk::make_managed<Gtk::Button>(
+      gettext("Money turnover"));
   moneyvolumev->set_name("allButton");
   moneyvolumev->set_margin(5);
-  moneyvolumev->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   moneyvolumev->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotMoneyVolumeAll));
+      sigc::mem_fun(*this, &MainWindow::plotMoneyVolumeAll));
   grid->attach(*moneyvolumev, 0, 3);
 
-  Gtk::Button *pricedeals = Gtk::make_managed<Gtk::Button> (
-                              gettext("Prices for transactions"));
+  Gtk::Button *pricedeals = Gtk::make_managed<Gtk::Button>(
+      gettext("Prices for transactions"));
   pricedeals->set_name("dealsButton");
   pricedeals->set_margin(5);
-  pricedeals->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   pricedeals->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotPriceDeals));
+      sigc::mem_fun(*this, &MainWindow::plotPriceDeals));
   grid->attach(*pricedeals, 0, 4);
 
-  Gtk::Button *dealsmoneypr = Gtk::make_managed<Gtk::Button> (
-                                gettext("PPm for transactions"));
-  dealsmoneypr->set_name("dealsmoneyprButton");
+  Gtk::Button *dealsmoneypr = Gtk::make_managed<Gtk::Button>(
+      gettext("PPm for transactions"));
+  dealsmoneypr->set_name("dealsButton");
   dealsmoneypr->set_margin(5);
-  dealsmoneypr->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   dealsmoneypr->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotPSDDeals));
+      sigc::mem_fun(*this, &MainWindow::plotPSDDeals));
   grid->attach(*dealsmoneypr, 0, 5);
 
-  Gtk::Button *dealsvolume = Gtk::make_managed<Gtk::Button> (
-                               gettext("Shares turnover for transactions"));
-  dealsvolume->set_name("dealsvolumeButton");
+  Gtk::Button *dealsvolume = Gtk::make_managed<Gtk::Button>(
+      gettext("Shares turnover for transactions"));
+  dealsvolume->set_name("dealsButton");
   dealsvolume->set_margin(5);
-  dealsvolume->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   dealsvolume->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotVolumeDeals));
+      sigc::mem_fun(*this, &MainWindow::plotVolumeDeals));
   grid->attach(*dealsvolume, 0, 6);
 
-  Gtk::Button *dealsmoneyvol = Gtk::make_managed<Gtk::Button> (
-                                 gettext("Money turnover for transactions"));
-  dealsmoneyvol->set_name("dealsvolumeButton");
+  Gtk::Button *dealsmoneyvol = Gtk::make_managed<Gtk::Button>(
+      gettext("Money turnover for transactions"));
+  dealsmoneyvol->set_name("dealsButton");
   dealsmoneyvol->set_margin(5);
-  dealsmoneyvol->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   dealsmoneyvol->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotMoneyVolDeals));
+      sigc::mem_fun(*this, &MainWindow::plotMoneyVolDeals));
   grid->attach(*dealsmoneyvol, 0, 7);
 
-  Gtk::Button *commongraphicall = Gtk::make_managed<Gtk::Button> (
-                                    gettext("Prediction plots (common)"));
+  Gtk::Button *commongraphicall = Gtk::make_managed<Gtk::Button>(
+      gettext("Prediction plots (common)"));
   commongraphicall->set_name("commongraphicallButton");
   commongraphicall->set_margin(5);
-  commongraphicall->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   commongraphicall->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotAllCommon));
+      sigc::mem_fun(*this, &MainWindow::plotAllCommon));
   grid->attach(*commongraphicall, 0, 8);
 
-  Gtk::Button *commongraphicdeals = Gtk::make_managed<Gtk::Button> (
-                                      gettext("Prediction plots (daily)"));
+  Gtk::Button *commongraphicdeals = Gtk::make_managed<Gtk::Button>(
+      gettext("Prediction plots (daily)"));
   commongraphicdeals->set_name("commongraphicdealsButton");
   commongraphicdeals->set_margin(5);
-  commongraphicdeals->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   commongraphicdeals->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotDealsCommon));
+      sigc::mem_fun(*this, &MainWindow::plotDealsCommon));
   grid->attach(*commongraphicdeals, 0, 9);
 
-  Gtk::Button *psd = Gtk::make_managed<Gtk::Button> (gettext("PPm global"));
-  psd->set_name("psdButton");
+  Gtk::Button *psd = Gtk::make_managed<Gtk::Button>(gettext("PPm global"));
+  psd->set_name("allButton");
   psd->set_margin(5);
-  psd->get_style_context()->add_provider(css_provider,
-                                         GTK_STYLE_PROVIDER_PRIORITY_USER);
   psd->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotPSDGlobal));
+      sigc::mem_fun(*this, &MainWindow::plotPSDGlobal));
   grid->attach(*psd, 0, 10);
 
-  Gtk::Button *volumetotal = Gtk::make_managed<Gtk::Button> (
-                               gettext("Shares turnover global"));
-  volumetotal->set_name("volumetotalButton");
+  Gtk::Button *volumetotal = Gtk::make_managed<Gtk::Button>(
+      gettext("Shares turnover global"));
+  volumetotal->set_name("allButton");
   volumetotal->set_margin(5);
-  volumetotal->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   volumetotal->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotVolumeGlobal));
+      sigc::mem_fun(*this, &MainWindow::plotVolumeGlobal));
   grid->attach(*volumetotal, 0, 11);
 
-  Gtk::Button *moneytotal = Gtk::make_managed<Gtk::Button> (
-                              gettext("Money turnover global"));
-  moneytotal->set_name("moneytotalButton");
+  Gtk::Button *moneytotal = Gtk::make_managed<Gtk::Button>(
+      gettext("Money turnover global"));
+  moneytotal->set_name("allButton");
   moneytotal->set_margin(5);
-  moneytotal->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   moneytotal->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::plotMoneyGlobal));
+      sigc::mem_fun(*this, &MainWindow::plotMoneyGlobal));
   grid->attach(*moneytotal, 0, 12);
 
-  Gtk::Button *download = Gtk::make_managed<Gtk::Button> (
-                            gettext("Download data"));
+  Gtk::Button *anomalysearch = Gtk::make_managed<Gtk::Button>(
+      gettext("Search anomaly"));
+  anomalysearch->set_name("anomalyButton");
+  anomalysearch->set_margin(5);
+  anomalysearch->signal_clicked().connect(
+      sigc::mem_fun(*this, &MainWindow::anomalySearch));
+  grid->attach(*anomalysearch, 0, 13);
+
+  Gtk::Button *download = Gtk::make_managed<Gtk::Button>(
+      gettext("Download data"));
   download->set_name("downloadButton");
   download->set_margin(5);
-  download->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   download->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::downloadMenu));
-  grid->attach(*download, 0, 13);
+      sigc::mem_fun(*this, &MainWindow::downloadMenu));
+  grid->attach(*download, 0, 14);
 
-  Gtk::Button *aboutpr = Gtk::make_managed<Gtk::Button> (gettext("About"));
+  Gtk::Button *aboutpr = Gtk::make_managed<Gtk::Button>(gettext("About"));
   aboutpr->set_name("aboutprButton");
   aboutpr->set_margin(5);
-  aboutpr->get_style_context()->add_provider(
-    css_provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
   aboutpr->signal_clicked().connect(
-    sigc::mem_fun(*this, &MainWindow::aboutProg));
-  grid->attach(*aboutpr, 0, 14);
+      sigc::mem_fun(*this, &MainWindow::aboutProg));
+  grid->attach(*aboutpr, 0, 15);
   this->signal_close_request().connect([this, &af]
   {
-    std::vector<Gtk::Window *> win = this->get_application()->get_windows();
+    std::vector<Gtk::Window*> win = this->get_application()->get_windows();
     for(size_t i = 0; i < win.size(); i++)
       {
-        Gtk::Window *wind = win[i];
-        if(wind != nullptr && wind != this)
-          {
-            wind->hide();
-            delete wind;
-          }
+	Gtk::Window *wind = win[i];
+	if(wind != nullptr && wind != this)
+	  {
+	    wind->hide();
+	    delete wind;
+	  }
       }
     this->hide();
-    std::string fp;
-    fp = std::filesystem::temp_directory_path().u8string();
-    #ifdef __linux
+    std::string fp = af.tempPath();
     fp = fp + "/Money";
-    #endif
-    #ifdef _WIN32
-    fp = fp + "Money";
-    #endif
-    std::filesystem::path path =
-      std::filesystem::u8path(fp);
+
+    std::filesystem::path path = std::filesystem::u8path(fp);
     if(std::filesystem::exists(path))
       {
-        std::filesystem::remove_all(path);
+	std::filesystem::remove_all(path);
       }
     return true;
   },
-  false);
+				       false);
 }
 
 void
 MainWindow::plotPriceall()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(0, 0);
+  OpenDialog op(this);
+  op.creatDialogAll(0, req);
 }
 
 void
 MainWindow::plotPSDall()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(0, 1);
+  OpenDialog op(this);
+  op.creatDialogAll(1, req);
 }
 
 void
 MainWindow::plotVolumeAll()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(0, 2);
+  OpenDialog op(this);
+  op.creatDialogAll(2, req);
 }
 
 void
 MainWindow::plotMoneyVolumeAll()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(0, 3);
+  OpenDialog op(this);
+  op.creatDialogAll(3, req);
 }
 
 void
 MainWindow::plotPriceDeals()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(1, 4);
+  OpenDialogDeals opd(this);
+  opd.createDialog(4, req);
 }
 
 void
 MainWindow::plotPSDDeals()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(1, 5);
+  OpenDialogDeals opd(this);
+  opd.createDialog(5, req);
 }
 
 void
 MainWindow::plotVolumeDeals()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(1, 6);
+  OpenDialogDeals opd(this);
+  opd.createDialog(6, req);
 }
 
 void
 MainWindow::plotMoneyVolDeals()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(1, 7);
+  OpenDialogDeals opd(this);
+  opd.createDialog(7, req);
 }
 
 void
 MainWindow::plotAllCommon()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(0, 8);
+  OpenDialog op(this);
+  op.creatDialogAll(8, req);
 }
 
 void
 MainWindow::plotDealsCommon()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(1, 9);
+  OpenDialogDeals opd(this);
+  opd.createDialog(9, req);
 }
 
 void
 MainWindow::plotPSDGlobal()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(2, 10);
+  GraphicWidget *gr = new GraphicWidget(req.get_width(), req.get_height(), this,
+					"");
+  gr->plot(2, 10, "");
 }
 
 void
 MainWindow::plotVolumeGlobal()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(2, 11);
+  GraphicWidget *gr = new GraphicWidget(req.get_width(), req.get_height(), this,
+					"");
+  gr->plot(2, 11, "");
 }
 
 void
 MainWindow::plotMoneyGlobal()
 {
   Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(this->get_application(),
-                                        req.get_width(), req.get_height(),
-                                        this);
-  gr->class_finished.connect([gr]
-  {
-    delete gr;
-  });
-  gr->plot(2, 12);
+  GraphicWidget *gr = new GraphicWidget(req.get_width(), req.get_height(), this,
+					"");
+  gr->plot(2, 12, "");
+}
+
+void
+MainWindow::anomalySearch()
+{
+  AnomalySearch as(this);
+  as.windowFunc();
 }
 
 void
 MainWindow::downloadMenu()
 {
-  Gtk::MessageDialog *dialog = new Gtk::MessageDialog(
-    *this, gettext("<span foreground='#EFFF00' size='large'>"
-                   "Wait, shares list is downloading..."
-                   "</span>"),
-    true, Gtk::MessageType::INFO, Gtk::ButtonsType::NONE, true);
-  dialog->set_decorated(false);
-  dialog->set_name("dialog");
-  dialog->get_style_context()->add_provider(css_provider,
-      GTK_STYLE_PROVIDER_PRIORITY_USER);
-  Gtk::Box *bm = dialog->get_message_area();
-  bm->set_margin(10);
-  Gtk::Button *cancel = dialog->add_button(gettext("Cancel"), 3);
-  cancel->set_halign(Gtk::Align::CENTER);
-  cancel->set_name("dialogButton");
-  cancel->set_margin(5);
-  cancel->get_style_context()->add_provider(css_provider,
-      GTK_STYLE_PROVIDER_PRIORITY_USER);
-  dialog->set_hide_on_close(true);
+  Gtk::Window *window = new Gtk::Window;
+  window->set_application(this->get_application());
+  window->set_decorated(false);
+  window->set_transient_for(*this);
+  window->set_modal(true);
+  window->set_default_size(1, 1);
+  window->set_name("dialog");
 
-  DownloadMenu *menu = new DownloadMenu(this->get_application(), this);
-  delete dispv;
-  dispv = nullptr;
-  Glib::Dispatcher *dispatcher = new Glib::Dispatcher;
-  dispv = dispatcher;
-  menu->techdwnld.connect(sigc::mem_fun(*this, &MainWindow::ondwnldmenuCall));
-  std::thread *thr = new std::thread([menu]
+  Gtk::Grid *grid = Gtk::make_managed<Gtk::Grid>();
+  grid->set_halign(Gtk::Align::CENTER);
+  grid->set_valign(Gtk::Align::CENTER);
+  window->set_child(*grid);
+
+  Gtk::Label *msg = Gtk::make_managed<Gtk::Label>();
+  msg->set_margin(5);
+  msg->set_halign(Gtk::Align::CENTER);
+  msg->set_width_chars(30);
+  msg->set_wrap(true);
+  msg->set_wrap_mode(Pango::WrapMode::WORD);
+  msg->set_justify(Gtk::Justification::CENTER);
+  msg->set_use_markup(true);
+  msg->set_markup(
+      Glib::ustring("<span foreground='#EFFF00' size='large'>")
+	  + Glib::ustring(gettext("Wait, shares list is downloading..."))
+	  + Glib::ustring("</span>"));
+  grid->attach(*msg, 0, 0, 1, 1);
+
+  int *cncl = new int(0);
+  DownloadTechnical *dt = new DownloadTechnical(cncl);
+  Gtk::Button *cancel = Gtk::make_managed<Gtk::Button>();
+  cancel->set_margin(5);
+  cancel->set_halign(Gtk::Align::CENTER);
+  cancel->set_label(gettext("Cancel"));
+  cancel->set_name("closeButton");
+  cancel->signal_clicked().connect(
+      [window, cancel, grid, msg, cncl]
+      {
+	msg->set_markup(
+	    Glib::ustring("<span foreground='#EFFF00' size='large'>")
+		+ Glib::ustring(gettext("Cancelling operation..."))
+		+ Glib::ustring("</span>"));
+	window->set_default_size(1, 1);
+	grid->remove(*cancel);
+
+	*cncl = 1;
+      });
+  grid->attach(*cancel, 0, 1, 1, 1);
+
+  int *dt_resp = new int(0);
+  Glib::Dispatcher *dt_resp_disp = new Glib::Dispatcher;
+  dt_resp_disp->connect([dt_resp, dt_resp_disp, window, msg, grid, cancel, this]
   {
-    menu->downloadTechnical();
+    this->dtRespFunc(dt_resp, window, grid, cancel, msg);
+    delete dt_resp;
+    delete dt_resp_disp;
+  });
+
+  dt->techdwnld = [dt_resp, dt_resp_disp, dt]
+  (int resp_id)
+    {
+      *dt_resp = resp_id;
+      dt_resp_disp->emit();
+      delete dt;
+    };
+
+  window->signal_close_request().connect([window]
+  {
+    window->hide();
+    delete window;
+    return true;
+  },
+					 false);
+
+  window->present();
+
+  std::thread *thr = new std::thread([dt, cncl]
+  {
+    dt->downloadTechnical();
+    delete cncl;
   });
   thr->detach();
   delete thr;
-
-  dialog->signal_response().connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::deleteDialog), dialog,
-               menu, cancel));
-  dispatcher->connect(
-    sigc::bind(sigc::mem_fun(*this, &MainWindow::deleteDialog), 10, dialog,
-               menu, cancel));
-  dialog->set_application(this->get_application());
-  dialog->present();
 }
 
 void
-MainWindow::deleteDialog(int id, Gtk::MessageDialog *dl, DownloadMenu *menu,
-                         Gtk::Button *button)
+MainWindow::dtRespFunc(int *resp, Gtk::Window *window, Gtk::Grid *grid,
+		       Gtk::Button *cancel, Gtk::Label *msg)
 {
+  if(*resp == 0)
+    {
+      window->close();
+    }
+  else if(*resp == 1)
+    {
+      DownloadMenu menu(this);
+      menu.downloadMenu();
+      window->close();
+    }
+  else if(*resp == 2)
+    {
+      grid->remove(*cancel);
 
-  if(id == 10)
-    {
-      id = signid;
-    }
-  if(id == 0)
-    {
-      dl->hide();
-      delete menu;
-      delete dl;
-    }
-  if(id == 1)
-    {
-      dl->hide();
-      delete dl;
-      menu->downloadMenu();
-    }
-  if(id == 2)
-    {
-      dl->set_message(gettext("Network error"));
-      button->set_label(gettext("Close"));
-      button->signal_clicked().connect(
-        sigc::bind(sigc::mem_fun(*dl, &Gtk::MessageDialog::response), 0));
-    }
-  if(id == 3)
-    {
-      menu->cancelTechnical();
-    }
+      window->set_default_size(1, 1);
+      msg->set_markup(
+	  Glib::ustring("<span foreground='#EFFF00' size='large'>")
+	      + Glib::ustring(gettext("Network error"))
+	      + Glib::ustring("</span>"));
 
-}
+      Gtk::Button *close = Gtk::make_managed<Gtk::Button>();
+      close->set_margin(5);
+      close->set_halign(Gtk::Align::CENTER);
+      close->set_label(gettext("Close"));
+      close->set_name("closeButton");
+      close->signal_clicked().connect([window]
+      {
+	window->close();
+      });
+      grid->attach(*close, 0, 1, 1, 1);
 
-void
-MainWindow::ondwnldmenuCall(int Signid)
-{
-  signid = Signid;
-  dispv->emit();
+      Glib::RefPtr<Glib::MainContext> mc = Glib::MainContext::get_default();
+      while(mc->pending())
+	{
+	  mc->iteration(true);
+	}
+    }
 }
 
 Gdk::Rectangle
@@ -544,15 +500,14 @@ MainWindow::aboutProg()
   Gtk::AboutDialog *aboutd = new Gtk::AboutDialog;
   aboutd->set_transient_for(*this);
   aboutd->set_application(this->get_application());
+  aboutd->set_name("dialog");
 
   aboutd->set_program_name("Money");
-  aboutd->set_version("2.3.2");
-  aboutd->set_copyright(
-    "Copyright 2022 Yury Bobylev <bobilev_yury@mail.ru>");
+  aboutd->set_version("2.4");
+  aboutd->set_copyright("Copyright 2022 Yury Bobylev <bobilev_yury@mail.ru>");
   AuxFunc af;
   std::filesystem::path p = std::filesystem::u8path(af.get_selfpath());
-  std::string filename = p.parent_path().u8string()
-                         + "/../share/Money/COPYING";
+  std::string filename = p.parent_path().u8string() + "/../share/Money/COPYING";
   std::filesystem::path filepath = std::filesystem::u8path(filename);
   std::fstream f;
   Glib::ustring abbuf;
@@ -571,7 +526,7 @@ MainWindow::aboutProg()
       std::cerr << "Licence file not found" << std::endl;
     }
 
-  if(abbuf.size() == 0)
+  if(abbuf.empty())
     {
       aboutd->set_license_type(Gtk::License::GPL_3_0_ONLY);
     }
@@ -584,13 +539,13 @@ MainWindow::aboutProg()
   Glib::RefPtr<Gio::File> logofile = Gio::File::create_for_path(filename);
   aboutd->set_logo(Gdk::Texture::create_from_file(logofile));
   abbuf = gettext("Money is a programm to collect statistics from moex.com\n"
-                  "Author Yury Bobylev <bobilev_yury@mail.ru>.\n"
-                  "Program uses next libraries:\n"
-                  "GTK https://www.gtk.org\n"
-                  "Libcurl https://curl.se/libcurl/\n"
-                  "Libzip https://libzip.org\n"
-                  "GMP https://gmplib.org/\n"
-                  "ICU https://icu.unicode.org");
+		  "Author Yury Bobylev <bobilev_yury@mail.ru>.\n"
+		  "Program uses next libraries:\n"
+		  "GTK https://www.gtk.org\n"
+		  "Libcurl https://curl.se/libcurl/\n"
+		  "Libzip https://libzip.org\n"
+		  "GMP https://gmplib.org/\n"
+		  "ICU https://icu.unicode.org");
   aboutd->set_comments(abbuf);
 
   aboutd->signal_close_request().connect([aboutd]
@@ -599,6 +554,6 @@ MainWindow::aboutProg()
     delete aboutd;
     return true;
   },
-  false);
+					 false);
   aboutd->show();
 }

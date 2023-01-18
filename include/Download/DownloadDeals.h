@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -20,13 +20,12 @@
 
 #include <string>
 #include <vector>
-#include <glibmm/ustring.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <ctime>
-#include <sigc++/sigc++.h>
+#include <functional>
 #include "AuxFunc.h"
 
 class DownloadDeals
@@ -34,33 +33,33 @@ class DownloadDeals
   public:
     DownloadDeals(
       int *canceling,
-      std::vector<std::pair<Glib::ustring, Glib::ustring>> *instruments,
-      std::vector<std::pair<Glib::ustring, Glib::ustring>> *instrumentsF,
-      std::vector<std::pair<Glib::ustring, Glib::ustring>> *boards,
+      std::vector<std::tuple<std::string, std::string, std::string>> *instruments,
+      std::vector<std::tuple<std::string, std::string, std::string>> *instrumentsF,
+      std::vector<std::tuple<std::string, std::string>> *boards,
       int selector);
     virtual
     ~DownloadDeals();
     void
     downloadAll();
-    sigc::signal<void
+    std::function<void
     ()> noDeals;
-    sigc::signal<void
+    std::function<void
     ()> netError;
-    sigc::signal<void
+    std::function<void
     ()> canceled;
-    sigc::signal<void
+    std::function<void
     (double)> progr;
-    sigc::signal<void
+    std::function<void
     ()> pulse;
-    sigc::signal<void
+    std::function<void
     ()> finished;
   private:
     int
     checkTurnovers();
     int *Canceling;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> Instruments;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> InstrumentsF;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> Boards;
+    std::vector<std::tuple<std::string, std::string, std::string>> Instruments;
+    std::vector<std::tuple<std::string, std::string, std::string>> InstrumentsF;
+    std::vector<std::tuple<std::string, std::string>> Boards;
     int Selector;
 };
 

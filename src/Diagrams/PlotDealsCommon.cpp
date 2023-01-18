@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -18,10 +18,10 @@
 #include "PlotDealsCommon.h"
 
 PlotDealsCommon::PlotDealsCommon(
-  std::string file,
-  int Height,
-  int Width,
-  std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
+    std::string file,
+    int Height,
+    int Width,
+    std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
 {
   filename = std::filesystem::u8path(file);
   height = Height;
@@ -55,36 +55,41 @@ PlotDealsCommon::calcForDraw()  //График покупательной спо
     {
       f.open(p, std::ios_base::in);
       while(!f.eof())
-        {
-          getline(f, line);
-          if(count > 2 && line != "")
-            {
-              af.cp1251toutf8(line);
-              std::string::size_type nusd, neur;
-              neur = line.find("EUR");
-              nusd = line.find("USD");
-              if(neur != std::string::npos || nusd != std::string::npos)
-                {
-                  temp = line;
-                  temp.erase(0, temp.find(";") + std::string(";").size());
-                  temp.erase(0, temp.find(";") + std::string(";").size());
-                  temp = temp.substr(0, temp.find(";"));
-                  if(neur != std::string::npos)
-                    {
-                      eurv.push_back(temp);
-                    }
-                  if(nusd != std::string::npos)
-                    {
-                      usdv.push_back(temp);
-                    }
-                }
-            }
-          count++;
-        }
+	{
+	  getline(f, line);
+	  if(count > 0 && !line.empty())
+	    {
+	      std::string::size_type nusd, neur, ncny;
+	      neur = line.find("EUR");
+	      nusd = line.find("USD");
+	      ncny = line.find("CNY");
+	      if(neur != std::string::npos || nusd != std::string::npos
+		  || ncny != std::string::npos)
+		{
+		  temp = line;
+		  temp.erase(0, temp.find(";") + std::string(";").size());
+		  temp.erase(0, temp.find(";") + std::string(";").size());
+		  temp = temp.substr(0, temp.find(";"));
+		  if(neur != std::string::npos)
+		    {
+		      eurv.push_back(temp);
+		    }
+		  else if(nusd != std::string::npos)
+		    {
+		      usdv.push_back(temp);
+		    }
+		  else if(ncny != std::string::npos)
+		    {
+		      cnyv.push_back(temp);
+		    }
+		}
+	    }
+	  count++;
+	}
       f.close();
     }
-  line = "";
-  temp = "";
+  line.clear();
+  temp.clear();
   count = 0;
 
   if(!std::filesystem::exists(filename))
@@ -96,97 +101,94 @@ PlotDealsCommon::calcForDraw()  //График покупательной спо
       std::tuple<int, int, int> temptup;
       f.open(filename, std::ios_base::in);
       while(!f.eof())
-        {
-          getline(f, line);
-          if(count == 2)
-            {
-              midd = line;
-              int countch = 0;
-              while(midd.size() > 0)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  std::string::size_type n;
-                  if(temp == "TRADETIME")
-                    {
-                      std::get<0> (temptup) = countch;
-                    }
-                  if(temp == "VALUE")
-                    {
-                      std::get<1> (temptup) = countch;
-                    }
-                  if(temp == "PRICE")
-                    {
-                      std::get<2> (temptup) = countch;
-                    }
-                  n = midd.find(";");
-                  if(n != std::string::npos)
-                    {
-                      midd.erase(0, n + std::string(";").size());
-                    }
-                  else
-                    {
-                      break;
-                    }
-                  countch++;
-                }
-            }
-          if(count > 2 && line != "")
-            {
-              if(count == 3)
-                {
-                  yname = line;
-                  yname.erase(0, yname.find(";") + std::string(";").size());
-                  yname.erase(0, yname.find(";") + std::string(";").size());
-                  yname = yname.substr(0, yname.find(";"));
-                }
+	{
+	  getline(f, line);
+	  if(count == 2)
+	    {
+	      midd = line;
+	      int countch = 0;
+	      while(midd.size() > 0)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  std::string::size_type n;
+		  if(temp == "TRADETIME")
+		    {
+		      std::get<0>(temptup) = countch;
+		    }
+		  if(temp == "VALUE")
+		    {
+		      std::get<1>(temptup) = countch;
+		    }
+		  if(temp == "PRICE")
+		    {
+		      std::get<2>(temptup) = countch;
+		    }
+		  n = midd.find(";");
+		  if(n != std::string::npos)
+		    {
+		      midd.erase(0, n + std::string(";").size());
+		    }
+		  else
+		    {
+		      break;
+		    }
+		  countch++;
+		}
+	    }
+	  if(count > 2 && !line.empty())
+	    {
+	      if(count == 3)
+		{
+		  yname = line;
+		  yname.erase(0, yname.find(";") + std::string(";").size());
+		  yname.erase(0, yname.find(";") + std::string(";").size());
+		  yname = yname.substr(0, yname.find(";"));
+		}
 
-              midd = line;
-              temp = line;
-              for(int i = 0; i < std::get<0> (temptup); i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd = midd.erase(0,
-                                    temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              std::tuple<std::string, double, double, double, double> ttup;
-              std::get<0> (ttup) = midd;
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < std::get<0>(temptup); i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd = midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      std::tuple<std::string, double, double, double, double> ttup;
+	      std::get<0>(ttup) = midd;
 
-              midd = line;
-              temp = line;
-              for(int i = 0; i < std::get<1> (temptup); i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd = midd.erase(0,
-                                    temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              std::stringstream strm;
-              std::locale loc("C");
-              strm.imbue(loc);
-              strm << midd;
-              strm >> mon;
-              Mon.push_back(mon);
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < std::get<1>(temptup); i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd = midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      std::stringstream strm;
+	      std::locale loc("C");
+	      strm.imbue(loc);
+	      strm << midd;
+	      strm >> mon;
+	      Mon.push_back(mon);
 
-              midd = line;
-              temp = line;
-              for(int i = 0; i < std::get<2> (temptup); i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd = midd.erase(0,
-                                    temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              strm.str("");
-              strm.clear();
-              strm.imbue(loc);
-              strm << midd;
-              strm >> quan;
-              Quan.push_back(mon / quan);
-              plotdate->push_back(ttup);
-            }
-          count = count + 1;
-        }
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < std::get<2>(temptup); i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd = midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      strm.str("");
+	      strm.clear();
+	      strm.imbue(loc);
+	      strm << midd;
+	      strm >> quan;
+	      Quan.push_back(mon / quan);
+	      plotdate->push_back(ttup);
+	    }
+	  count = count + 1;
+	}
       f.close();
     }
   std::vector<mpf_class> TC;
@@ -203,19 +205,19 @@ PlotDealsCommon::calcForDraw()  //График покупательной спо
     {
       Tc.push_back(TC[i].get_d());
       Dc.push_back(DC[i].get_d());
-      std::get<1> (plotdate->at(i)) = Tc[i];
-      std::get<2> (plotdate->at(i)) = Dc[i];
+      std::get<1>(plotdate->at(i)) = Tc[i];
+      std::get<2>(plotdate->at(i)) = Dc[i];
     }
 
   if(plotdate->size() > 0)
     {
-      datebeg = std::get<0> (plotdate->at(0));
-      dateend = std::get<0> (plotdate->at(plotdate->size() - 1));
+      datebeg = std::get<0>(plotdate->at(0));
+      dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
     }
   for(size_t i = 0; i < Tc.size(); i++)
     {
       MRSP.push_back((Dc[i] / Tc[i] - 1) * 100);
-      std::get<3> (plotdate->at(i)) = MRSP[i];
+      std::get<3>(plotdate->at(i)) = MRSP[i];
     }
   mpf_class summ(0);
   for(size_t i = 0; i < Quan.size(); i++)
@@ -224,7 +226,7 @@ PlotDealsCommon::calcForDraw()  //График покупательной спо
       mpf_class dn = static_cast<double>(i + 1);
       mpf_class res = summ / dn;
       sharesvol.push_back(res.get_d());
-      std::get<4> (plotdate->at(i)) = res.get_d();
+      std::get<4>(plotdate->at(i)) = res.get_d();
     }
 }
 
@@ -306,13 +308,13 @@ PlotDealsCommon::Draw(mglGraph *gr)
       tick = strm.str();
       ticks.push_back(tickval);
       if(tickstr != "")
-        {
-          tickstr = tickstr + "\n" + tick;
-        }
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
       else
-        {
-          tickstr = tick;
-        }
+	{
+	  tickstr = tick;
+	}
     }
   mglData fortick(ticks);
   tickstr = af.utf8to(tickstr);
@@ -334,7 +336,12 @@ PlotDealsCommon::Draw(mglGraph *gr)
     {
       yname = gettext("Shares/EUR");
     }
-  if(itusd == usdv.end() && iteur == eurv.end())
+  auto itcny = std::find(cnyv.begin(), cnyv.end(), yname);
+  if(itcny != cnyv.end())
+    {
+      yname = gettext("Shares/CNY");
+    }
+  if(itusd == usdv.end() && iteur == eurv.end() && itcny == cnyv.end())
     {
       yname = gettext("Shares/Rouble");
     }
@@ -355,9 +362,9 @@ PlotDealsCommon::Draw(mglGraph *gr)
 
   //Подписи оси х
   mglPoint p1(x1.Minimal(),
-              y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
+	      y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
   mglPoint p5(x1.Maximal(),
-              y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
+	      y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
   datebeg = af.utf8to(datebeg);
   dateend = af.utf8to(dateend);
   gr->Puts(p1, datebeg.c_str(), "k", 3);
@@ -382,7 +389,7 @@ PlotDealsCommon::Draw(mglGraph *gr)
       tickstep = -tickstep;
     }
   tickval = y.Minimal();
-  tickstr = "";
+  tickstr.clear();
   for(int i = 0; i < 2; i++)
     {
       strm.str("");
@@ -394,14 +401,14 @@ PlotDealsCommon::Draw(mglGraph *gr)
       strm << tickval;
       tick = strm.str();
       ticks.push_back(tickval);
-      if(tickstr != "")
-        {
-          tickstr = tickstr + "\n" + tick;
-        }
+      if(!tickstr.empty())
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
       else
-        {
-          tickstr = tick;
-        }
+	{
+	  tickstr = tick;
+	}
     }
   mglData fortick2(ticks);
   tickstr = af.utf8to(tickstr);
@@ -423,10 +430,8 @@ PlotDealsCommon::Draw(mglGraph *gr)
   gr->ClearLegend();
 
   //Подписи оси х
-  mglPoint p11(x.Minimal(),
-               y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-  mglPoint p51(x.Maximal(),
-               y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p11(x.Minimal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p51(x.Maximal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
 
   gr->Puts(p11, datebeg.c_str(), "k", 3);
   gr->Puts(p51, dateend.c_str(), "k", 3);
@@ -450,7 +455,7 @@ PlotDealsCommon::Draw(mglGraph *gr)
       tickstep = -tickstep;
     }
   tickval = y.Minimal();
-  tickstr = "";
+  tickstr.clear();
   for(int i = 0; i < 2; i++)
     {
       strm.str("");
@@ -462,14 +467,14 @@ PlotDealsCommon::Draw(mglGraph *gr)
       strm << tickval;
       tick = strm.str();
       ticks.push_back(tickval);
-      if(tickstr != "")
-        {
-          tickstr = tickstr + "\n" + tick;
-        }
+      if(!tickstr.empty())
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
       else
-        {
-          tickstr = tick;
-        }
+	{
+	  tickstr = tick;
+	}
     }
   mglData fortick3(ticks);
   tickstr = af.utf8to(tickstr);
@@ -491,9 +496,9 @@ PlotDealsCommon::Draw(mglGraph *gr)
 
   //Подписи оси х
   mglPoint p31(x3.Minimal(),
-               y3.Maximal() + ((y3.Maximal() - y3.Minimal()) * 0.02));
+	       y3.Maximal() + ((y3.Maximal() - y3.Minimal()) * 0.02));
   mglPoint p32(x3.Maximal(),
-               y3.Maximal() + ((y3.Maximal() - y3.Minimal()) * 0.02));
+	       y3.Maximal() + ((y3.Maximal() - y3.Minimal()) * 0.02));
 
   gr->Puts(p31, datebeg.c_str(), "k", 3);
   gr->Puts(p32, dateend.c_str(), "k", 3);

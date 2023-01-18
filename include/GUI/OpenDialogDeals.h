@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -19,80 +19,54 @@
 #define OPENDIALOGDEALS_H_
 
 #include <gtkmm.h>
-#include <glibmm/ustring.h>
-#include <sigc++/sigc++.h>
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <filesystem>
 #include <tuple>
 #include <libintl.h>
+#include "GraphicWidget.h"
 #include "AuxFunc.h"
+#include "DownloadMenu.h"
 
 class OpenDialogDeals
 {
-  public:
-    OpenDialogDeals(Glib::RefPtr<Gtk::Application> app, Gtk::Window *mwin,
-                    std::string *opendate);
-    virtual
-    ~OpenDialogDeals();
-    sigc::signal<void
-    (std::string)> dealsfilepath;
-    sigc::signal<void
-    ()> deleteSign;
-  private:
-    void
-    createDialog();
-    void
-    expandScroll(Gtk::Expander *exp, Gtk::Window *window, Gtk::Grid *grid);
-    void
-    dateSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
-                  Glib::RefPtr<Gtk::ListStore> model,
-                  Gtk::TreeModelColumn<unsigned int> id, Gtk::Expander *exp);
-    void
-    boardsSelection(const Gtk::TreeModel::Path &path,
-                    Gtk::TreeViewColumn *column, Gtk::Expander *exp,
-                    Gtk::TreeView *view);
-    void
-    refreshBoards(Gtk::TreeView *view, Gtk::TreeViewColumn *column,
-                  Gtk::Expander *exp);
-    void
-    refreshSort(Gtk::Expander *exp);
-    void
-    sortSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
-                  Gtk::Expander *exp, Gtk::TreeView *view);
-    void
-    instrSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
-                   Gtk::Expander *exp, Gtk::TreeView *view);
-    void
-    refreshInstr(Gtk::TreeView *view, Gtk::TreeViewColumn *column,
-                 Gtk::Expander *exp);
-    void
-    openFile();
-    int selectedboard = 0;
-    int selecteddate = 0;
-    int sorting = 0;
-    int selectedfile = 0;
-    sigc::signal<void
-    ()> refreshboards;
-    sigc::signal<void
-    ()> refreshsort;
-    sigc::signal<void
-    ()> refreshinstr;
-    Gtk::TreeModelColumn<unsigned int> idbb;
-    Gtk::TreeModelColumn<Glib::ustring> boardcolb;
-    Gtk::TreeModelColumn<unsigned int> idss;
-    Gtk::TreeModelColumn<Glib::ustring> sortcols;
-    Gtk::TreeModelColumn<unsigned int> idii;
-    Gtk::TreeModelColumn<Glib::ustring> icoli;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> boards;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> boardstosh;
-    std::vector<std::string> dates;
-    std::vector<std::tuple<int, int, std::string>> filelist;
-    Glib::RefPtr<Gtk::CssProvider> css_provider;
-    Glib::RefPtr<Gtk::Application> App;
-    Gtk::Window *Mwin;
-    std::string *Opendate;
+public:
+  OpenDialogDeals(Gtk::Window *mwin);
+  virtual
+  ~OpenDialogDeals();
+  void
+  createDialog(int variant, Gdk::Rectangle rec);
+private:
+  void
+  dateSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
+		Gtk::MenuButton *date_men, Gtk::TreeView *view,
+		Gtk::Window *win);
+  void
+  boardsSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
+		  Gtk::MenuButton *boards_men, Gtk::TreeView *view,
+		  Gtk::Window *win);
+  void
+  sortSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
+		Gtk::MenuButton *sort_men, Gtk::TreeView *view,
+		Gtk::Window *win);
+  void
+  instrSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
+		 Gtk::MenuButton *instr_men, Gtk::TreeView *view,
+		 Gtk::Window *win);
+  void
+  refreshBoards(Gtk::TreeView *tv_boards, Gtk::TreeView *tv_dates,
+		Gtk::MenuButton *boards_men, Gtk::Window *win);
+  void
+  refreshSort(Gtk::TreeView *tv_sort, Gtk::MenuButton *men_sort);
+  void
+  refreshInstr(Gtk::TreeView *tv_instr, Gtk::TreeView *tv_dates,
+	       Gtk::TreeView *tv_boards, Gtk::TreeView *tv_sort,
+	       Gtk::MenuButton *men_instr, Gtk::Window *win);
+  void
+  openFile(Gtk::Window *win, Gdk::Rectangle rec, int variant,
+	   Gtk::TreeView *tv_dates, Gtk::TreeView *tv_instr);
+  Gtk::Window *Mwin = nullptr;
 };
 
 #endif /* OPENDIALOGDEALS_H_ */

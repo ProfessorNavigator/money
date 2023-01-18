@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -19,14 +19,11 @@
 #define GRAPHICWIDGET_H_
 
 #include <iostream>
-#include <sigc++/sigc++.h>
 #include <gtkmm.h>
 #include <filesystem>
 #include <fstream>
 #include <mgl2/mgl.h>
 #include <libintl.h>
-#include "OpenDialog.h"
-#include "OpenDialogDeals.h"
 #include "PlotPriceAll.h"
 #include "PSD.h"
 #include "PlotVolumeAll.h"
@@ -40,54 +37,47 @@
 #include "PlotVolumeGlobal.h"
 #include "PlotMoneyGlobal.h"
 #include "PlotMoneyVolumeDeals.h"
+#include "DownloadMenu.h"
 #include "AuxFunc.h"
 
 class GraphicWidget
 {
-  public:
-    GraphicWidget(Glib::RefPtr<Gtk::Application> app, int width, int height,
-                  Gtk::Window *mwin);
-    virtual
-    ~GraphicWidget();
-    void
-    plot(int variant, int graphic);
-    sigc::signal<void
-    ()> class_finished;
-  private:
-    void
-    graphic(std::string file, int grvar);
-    void
-    on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int width, int height);
-    void
-    zoomGraph(Gtk::DrawingArea *drar, int id);
-    void
-    saveGraph(int mode);
-    void
-    saveJPEG(Gtk::Window *window, std::string filename, Gtk::FileChooser *filech,
-             Gtk::Entry *file, int mode);
-    bool
-    scrollEvent(double x, double y, Gtk::DrawingArea *drar);
-    void
-    dragOperation(double x, double y, Gtk::DrawingArea *drar);
-    void
-    dragEnd(double x, double y);
-    void
-    rightClick(int n_press, double x, double y,
-               Glib::RefPtr<Gtk::GestureClick> cl,
-               Gtk::DrawingArea *drar);
-    void
-    plotMglFunc(std::string file, int variant);
+public:
+  GraphicWidget(int width, int height, Gtk::Window *mwin, std::string plotfnm);
+  virtual
+  ~GraphicWidget();
+  void
+  plot(int variant, int graph, std::string opendate);
+private:
+  void
+  graphic(std::string file, Gtk::Window *win, int grvar);
+  void
+  on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int width, int height);
+  void
+  zoomGraph(Gtk::DrawingArea *drar, int id);
+  void
+  saveGraph(Gtk::Window *par_win, int mode);
+  bool
+  scrollEvent(double x, double y, Gtk::DrawingArea *drar);
+  void
+  dragOperation(double x, double y, Gtk::DrawingArea *drar);
+  void
+  dragEnd(double x, double y);
+  void
+  rightClick(int n_press, double x, double y,
+	     Glib::RefPtr<Gtk::GestureClick> cl, Gtk::DrawingArea *drar);
+  void
+  plotMglFunc(std::string file, int variant);
 
-    Glib::RefPtr<Gtk::CssProvider> css_provider;
-    std::vector<double> plotincr;
-    int Height, Width;
-    int X = 0;
-    int Y = 0;
-    std::vector<std::tuple<std::string, double, double, double, double>> dateplot;
-    Glib::RefPtr<Gtk::Application> App;
-    Gtk::Window *Mwin;
-    std::string Opendate;
-    mglGraph *gr = nullptr;
+  std::vector<double> plotincr;
+  int Height, Width;
+  int X = 0;
+  int Y = 0;
+  std::vector<std::tuple<std::string, double, double, double, double>> dateplot;
+  Gtk::Window *Mwin;
+  std::string Opendate;
+  mglGraph *gr = nullptr;
+  std::string plotfnm;
 };
 
 #endif /* GRAPHICWIDGET_H_ */

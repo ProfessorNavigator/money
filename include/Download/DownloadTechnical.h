@@ -15,42 +15,41 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTVOLUMEALL_H_
-#define PLOTVOLUMEALL_H_
+#ifndef INCLUDE_DOWNLOAD_DOWNLOADTECHNICAL_H_
+#define INCLUDE_DOWNLOAD_DOWNLOADTECHNICAL_H_
 
-#include <mgl2/mgl.h>
+#include <iostream>
 #include <filesystem>
+#include <fstream>
 #include <string>
 #include <vector>
-#include <gmpxx.h>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <libintl.h>
+#include <functional>
 #include "AuxFunc.h"
 
-class PlotVolumeAll
+class DownloadTechnical
 {
-  public:
-    PlotVolumeAll(
-      std::string file,
-      int Height,
-      int Width,
-      std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PlotVolumeAll();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filename;
-    int height, width;
-    std::vector<double> Vol;
-    std::vector<double> Volmid;
-    std::string datebeg;
-    std::string dateend;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+public:
+  DownloadTechnical(int *cancel);
+  virtual
+  ~DownloadTechnical();
+  std::function<void
+  (int)> techdwnld;
+  void
+  downloadTechnical();
+
+private:
+  int
+  downloadBoards();
+  int
+  downloadListF();
+  int
+  downloadList();
+  int
+  availibaleDates();
+  int
+  availibaleDatesF();
+
+  int *cancel = nullptr;
 };
 
-#endif /* PLOTVOLUMEALL_H_ */
+#endif /* INCLUDE_DOWNLOAD_DOWNLOADTECHNICAL_H_ */

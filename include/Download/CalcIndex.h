@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -23,30 +23,29 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
-#include <sigc++/sigc++.h>
-#include <glibmm/ustring.h>
+#include <functional>
 #include <tuple>
 #include <libintl.h>
 #include "AuxFunc.h"
 
 class CalcIndex
 {
-  public:
-    CalcIndex(int *canceled);
-    virtual
-    ~CalcIndex();
-    void
-    mainCalc();
-    sigc::signal<void
-    (Glib::ustring)> operationName;
-    sigc::signal<void
-    (double)> progr;
-    sigc::signal<void
-    ()> allComplet;
-    sigc::signal<void
-    ()> canceled;
-  private:
-    int *Canceled;
+public:
+  CalcIndex(int *canceled);
+  virtual
+  ~CalcIndex();
+  void
+  mainCalc();
+  std::function<void
+  (std::string)> operationName;
+  std::function<void
+  (double)> progr;
+  std::function<void
+  ()> allComplet;
+  std::function<void
+  ()> canceled;
+private:
+  int *Canceled;
 };
 
 #endif /* CALCINDEX_H_ */

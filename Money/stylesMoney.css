@@ -1,6 +1,8 @@
+/*MainWindow.cpp GraphicWidget.cpp AnomalySearch.cpp DownloadMenu.cpp*/
 #mainWindow {
 	background-color: rgb(66, 143, 143);
-	color: white;	
+	color: black;
+	border-radius: 10px;	
 }
 
 #allButton {
@@ -20,6 +22,10 @@
 	color: white;
 }
 
+#allButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
 #dealsButton {
 	background-image: none;
 	background-color: rgb(0, 145, 255);
@@ -32,60 +38,13 @@
    rgba(0,0,0,.8) 0 3px 8px -3px;
 }
 
-#aboutprButton {
-	background-image: none;
-	background-color: rgb(69, 168, 213);
-	border-width: 1px;
-	border-color: black;
-	color: rgb(8, 8, 8);
-	box-shadow:
-   inset rgba(0,0,0,.6) 0 -3px 8px,
-   inset rgba(252,255,255,.7) 0 3px 8px,
-   rgba(0,0,0,.8) 0 3px 8px -3px;
-}
-
-#aboutprButton:hover {
-	background-color: rgb(51, 36, 249);
-	color: white;
-}
-
 #dealsButton:hover {
 	background-color: rgb(51, 36, 249);
 	color: white;
 }
 
-#dealsmoneyprButton {
-	background-image: none;
-	background-color: rgb(0, 145, 255);
-	border-width: 1px;
-	border-color: black;
-	color: rgb(8, 8, 8);
-	box-shadow:
-   inset rgba(0,0,0,.6) 0 -3px 8px,
-   inset rgba(252,255,255,.7) 0 3px 8px,
-   rgba(0,0,0,.8) 0 3px 8px -3px;
-}
-
-#dealsmoneyprButton:hover {
-	background-color: rgb(51, 36, 249);
-	color: white;
-}
-
-#dealsvolumeButton {
-	background-image: none;
-	background-color: rgb(0, 145, 255);
-	border-width: 1px;
-	border-color: black;
-	color: rgb(8, 8, 8);
-	box-shadow:
-   inset rgba(0,0,0,.6) 0 -3px 8px,
-   inset rgba(252,255,255,.7) 0 3px 8px,
-   rgba(0,0,0,.8) 0 3px 8px -3px;
-}
-
-#dealsvolumeButton:hover {
-	background-color: rgb(51, 36, 249);
-	color: white;
+#dealsButton:active {
+	background-color: rgb(199, 43, 10);
 }
 
 #commongraphicallButton {
@@ -105,6 +64,10 @@
 	color: white;	
 }
 
+#commongraphicallButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
 #commongraphicdealsButton {
 	background-image: none;
 	background-color: rgb(255, 152, 0);
@@ -122,60 +85,21 @@
 	color: white;
 }
 
-#psdButton {
-	background-image: none;
-	background-color: rgb(26, 100, 31);
+#commongraphicdealsButton:active {
+	background-color: rgb(199, 43, 10);
+}
+
+#dialog {
+	background-color: rgb(0, 145, 255);
+	border-radius: 10px;
 	border-width: 1px;
 	border-color: black;
-	color: rgb(239, 255, 0);
-	box-shadow:
-   inset rgba(0,0,0,.6) 0 -3px 8px,
-   inset rgba(252,255,255,.7) 0 3px 8px,
-   rgba(0,0,0,.8) 0 3px 8px -3px;
+	color: black;
 }
 
-#psdButton:hover {
-	background-color: rgb(51, 36, 249);
-	color: white;
-}
-
-#volumetotalButton {
+#anomalyButton {
 	background-image: none;
-	background-color: rgb(26, 100, 31);
-	border-width: 1px;
-	border-color: black;
-	color: rgb(239, 255, 0);
-	box-shadow:
-   inset rgba(0,0,0,.6) 0 -3px 8px,
-   inset rgba(252,255,255,.7) 0 3px 8px,
-   rgba(0,0,0,.8) 0 3px 8px -3px;
-}
-
-#volumetotalButton:hover {
-	background-color: rgb(51, 36, 249);
-	color: white;
-}
-
-#moneytotalButton {
-	background-image: none;
-	background-color: rgb(26, 100, 31);
-	border-width: 1px;
-	border-color: black;
-	color: rgb(239, 255, 0);
-	box-shadow:
-   inset rgba(0,0,0,.6) 0 -3px 8px,
-   inset rgba(252,255,255,.7) 0 3px 8px,
-   rgba(0,0,0,.8) 0 3px 8px -3px;	
-}
-
-#moneytotalButton:hover {
-	background-color: rgb(51, 36, 249);
-	color: white;
-}
-
-#commonpsdButton {
-	background-image: none;
-	background-color: rgb(177, 152, 119);
+	background-color: rgb(0, 224, 220);
 	border-width: 1px;
 	border-color: black;
 	color: rgb(8, 8, 8);
@@ -185,9 +109,13 @@
    rgba(0,0,0,.8) 0 3px 8px -3px;
 }
 
-#commonpsdButton:hover {
+#anomalyButton:hover {
 	background-color: rgb(51, 36, 249);
 	color: white;
+}
+
+#anomalyButton:active {
+	background-color: rgb(199, 43, 10);
 }
 
 #downloadButton {
@@ -211,24 +139,19 @@
 	background-color: rgb(199, 43, 10);
 }
 
-#dialog {
-	background-color: rgb(0, 145, 255);
-}
-
-#dialogButton {
+#aboutprButton {
 	background-image: none;
+	background-color: rgb(69, 168, 213);
 	border-width: 1px;
-    border-radius: 10px;
-    border-color: black;
-	background-color: rgb(255, 9, 0);
-	color: yellow;
+	border-color: black;
+	color: rgb(8, 8, 8);
 	box-shadow:
    inset rgba(0,0,0,.6) 0 -3px 8px,
    inset rgba(252,255,255,.7) 0 3px 8px,
    rgba(0,0,0,.8) 0 3px 8px -3px;
 }
 
-#dialogButton:hover {
+#aboutprButton:hover {
 	background-color: rgb(51, 36, 249);
 	color: white;
 }
@@ -238,47 +161,130 @@
 	color: white;
 }
 
-#dialogButton:active {
+#instrumLab {
+	color: red;
+}
+
+#saveButton {
+	background-image: none;
+	background-color: rgb(255, 152, 0);
+	color: rgb(8, 8, 8);
+	border-width: 1px;
+	border-color: black;
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#inflationTV {
+	border: solid;
+	border-width: 1px 1px 1px 1px;
+	border-color: black;
+	font-size: 24px;	
+}
+
+/*OpenDialog.cpp OpenDialogDeals.cpp*/
+#instrChooseWindow {
+	background-color: rgb(0, 145, 255);
+	border-radius: 10px;
+}
+
+#boards button {
+	background-image: none;
+	color: rgb(8, 8, 8);
+	background-color: rgb(255, 152, 0);
+	box-shadow:
+   		inset rgba(0,0,0,.6) 0 -3px 8px,
+   		inset rgba(252,255,255,.7) 0 3px 8px,
+   		rgba(0,0,0,.8) 0 3px 8px -3px;	
+}
+
+#treeViewI {
+	color: rgb(8, 8, 8);
+	background-color: rgb(255, 152, 0);
+}
+
+#confirmButton {
+	background-image: none;
+	background-color: rgb(239, 255, 0);
+	color: rgb(8, 8, 8);
+	border-width: 1px;
+	border-color: black;
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
+}
+
+#confirmButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
+}
+
+#confirmButton:active {
 	background-color: rgb(199, 43, 10);
 	color: white;
 }
 
-#moneytotalButton:active {
-	background-color: rgb(199, 43, 10);
+#closeButton {
+	background-image: none;
+	border-width: 1px;
+    border-color: black;
+	background-color: rgb(255, 9, 0);
+	color: yellow;
+	box-shadow:
+   inset rgba(0,0,0,.6) 0 -3px 8px,
+   inset rgba(252,255,255,.7) 0 3px 8px,
+   rgba(0,0,0,.8) 0 3px 8px -3px;
 }
 
-#commonpsdButton:active {
-	background-color: rgb(199, 43, 10);
+#closeButton:hover {
+	background-color: rgb(51, 36, 249);
+	color: white;
 }
 
-#volumetotalButton:active {
+#closeButton:active {
 	background-color: rgb(199, 43, 10);
+	color: white;
 }
 
-#psdButton:active {
-	background-color: rgb(199, 43, 10);
+/*AnomalySearch.cpp DownloadMenu.cpp*/
+#tvAnomality {
+	border: solid;
+	border-width: 1px 1px 1px 1px;	
+	border-radius: 5px;
 }
 
-#commongraphicdealsButton:active {
-	background-color: rgb(199, 43, 10);
+#errorMessage {
+	background-color: rgb(31, 207, 224);
+	color: red;
+	border-radius: 10px;
 }
 
-#commongraphicallButton:active {
-	background-color: rgb(199, 43, 10);
+#downloadWindow {
+	background-color: rgb(31, 207, 224);
+	border-radius: 10px;	
 }
 
-#dealsvolumeButton:active {
-	background-color: rgb(199, 43, 10);
+#progBar {
+	color: red;
 }
 
-#dealsmoneyprButton:active {
-	background-color: rgb(199, 43, 10);
+#progBar trough progress{
+	min-height: 20px;
+	background-color: rgb(211, 67, 218);
 }
 
-#dealsButton:active {
-	background-color: rgb(199, 43, 10);
+#progBar trough {
+	min-height: 20px;	
 }
 
-#allButton:active {
-	background-color: rgb(199, 43, 10);
+#dateServer {
+	color: black;
+}
+
+#finishMessage {
+	background-color: rgb(31, 224, 75);
+	border-radius: 10px;
 }

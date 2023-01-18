@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -18,10 +18,10 @@
 #include "PlotAllCommon.h"
 
 PlotAllCommon::PlotAllCommon(
-  std::string file,
-  int Height,
-  int Width,
-  std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
+    std::string file,
+    int Height,
+    int Width,
+    std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
 {
   filename = std::filesystem::u8path(file);
   height = Height;
@@ -52,36 +52,41 @@ PlotAllCommon::calcForDraw()
     {
       f.open(p, std::ios_base::in);
       while(!f.eof())
-        {
-          getline(f, line);
-          if(count > 2 && line != "")
-            {
-              af.cp1251toutf8(line);
-              std::string::size_type nusd, neur;
-              neur = line.find("EUR");
-              nusd = line.find("USD");
-              if(neur != std::string::npos || nusd != std::string::npos)
-                {
-                  temp = line;
-                  temp.erase(0, temp.find(";") + std::string(";").size());
-                  temp.erase(0, temp.find(";") + std::string(";").size());
-                  temp = temp.substr(0, temp.find(";"));
-                  if(neur != std::string::npos)
-                    {
-                      eurv.push_back(temp);
-                    }
-                  if(nusd != std::string::npos)
-                    {
-                      usdv.push_back(temp);
-                    }
-                }
-            }
-          count++;
-        }
+	{
+	  getline(f, line);
+	  if(count > 0 && !line.empty())
+	    {
+	      std::string::size_type nusd, neur, ncny;
+	      neur = line.find("EUR");
+	      nusd = line.find("USD");
+	      ncny = line.find("CNY");
+	      if(neur != std::string::npos || nusd != std::string::npos
+		  || ncny != std::string::npos)
+		{
+		  temp = line;
+		  temp.erase(0, temp.find(";") + std::string(";").size());
+		  temp.erase(0, temp.find(";") + std::string(";").size());
+		  temp = temp.substr(0, temp.find(";"));
+		  if(neur != std::string::npos)
+		    {
+		      eurv.push_back(temp);
+		    }
+		  else if(nusd != std::string::npos)
+		    {
+		      usdv.push_back(temp);
+		    }
+		  else if(ncny != std::string::npos)
+		    {
+		      cnyv.push_back(temp);
+		    }
+		}
+	    }
+	  count++;
+	}
       f.close();
     }
-  line = "";
-  temp = "";
+  line.clear();
+  temp.clear();
   count = 0;
   if(!std::filesystem::exists(filename))
     {
@@ -91,93 +96,90 @@ PlotAllCommon::calcForDraw()
     {
       f.open(filename, std::ios_base::in);
       while(!f.eof())
-        {
-          getline(f, line);
+	{
+	  getline(f, line);
 
-          if(count > 1 && line != "")
-            {
-              midd = line;
-              midd = midd.substr(0, midd.find(";"));
-              std::tuple<std::string, double, double, double, double> ttup;
-              std::get<0> (ttup) = midd;
+	  if(count > 1 && !line.empty())
+	    {
+	      midd = line;
+	      midd = midd.substr(0, midd.find(";"));
+	      std::tuple<std::string, double, double, double, double> ttup;
+	      std::get<0>(ttup) = midd;
 
-              midd = line;
-              temp = line;
-              for(int i = 0; i < 7; i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd = midd.erase(0,
-                                    temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              std::stringstream strm;
-              std::locale loc("C");
-              strm.imbue(loc);
-              double tmpd;
-              strm << midd;
-              strm >> tmpd;
-              Tc.push_back(tmpd);
-              std::get<1> (ttup) = tmpd;
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < 7; i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd = midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      std::stringstream strm;
+	      std::locale loc("C");
+	      strm.imbue(loc);
+	      double tmpd;
+	      strm << midd;
+	      strm >> tmpd;
+	      Tc.push_back(tmpd);
+	      std::get<1>(ttup) = tmpd;
 
-              midd = line;
-              temp = line;
-              for(int i = 0; i < 6; i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd = midd.erase(0,
-                                    temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              strm.str("");
-              strm.clear();
-              strm.imbue(loc);
-              strm << midd;
-              strm >> tmpd;
-              Dc.push_back(tmpd);
-              std::get<2> (ttup) = tmpd;
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < 6; i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd = midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      strm.str("");
+	      strm.clear();
+	      strm.imbue(loc);
+	      strm << midd;
+	      strm >> tmpd;
+	      Dc.push_back(tmpd);
+	      std::get<2>(ttup) = tmpd;
 
-              midd = line;
-              temp = line;
-              for(int i = 0; i < 4; i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd = midd.erase(0,
-                                    temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              strm.str("");
-              strm.clear();
-              strm.imbue(loc);
-              strm << midd;
-              strm >> tmpd;
-              volume.push_back(tmpd);
-              plotdate->push_back(ttup);
-            }
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < 4; i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd = midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      strm.str("");
+	      strm.clear();
+	      strm.imbue(loc);
+	      strm << midd;
+	      strm >> tmpd;
+	      volume.push_back(tmpd);
+	      plotdate->push_back(ttup);
+	    }
 
-          count = count + 1;
-        }
+	  count = count + 1;
+	}
       f.close();
     }
 
   for(size_t i = 0; i < Tc.size(); i++)
     {
       Ot.push_back((Dc[i] / Tc[i] - 1) * 100);
-      std::get<3> (plotdate->at(i)) = Ot[i];
+      std::get<3>(plotdate->at(i)) = Ot[i];
     }
 
   if(plotdate->size() > 0)
     {
-      datebeg = std::get<0> (plotdate->at(0));
-      dateend = std::get<0> (plotdate->at(plotdate->size() - 1));
+      datebeg = std::get<0>(plotdate->at(0));
+      dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
     }
   mpf_class summ(0);
   for(size_t i = 0; i < volume.size(); i++)
     {
       summ = summ + volume[i];
-      mpf_class dn = static_cast <double>(i + 1);
+      mpf_class dn = static_cast<double>(i + 1);
       mpf_class res = summ / dn;
       sharesvol.push_back(res.get_d());
-      std::get<4> (plotdate->at(i)) = res.get_d();
+      std::get<4>(plotdate->at(i)) = res.get_d();
     }
   midd = filename.filename().u8string();
   std::string::size_type n;
@@ -202,9 +204,9 @@ PlotAllCommon::Draw(mglGraph *gr)
 
   //Координаты подписей оси х
   mglPoint p1(x.Minimal(),
-              y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
+	      y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
   mglPoint p5(x.Maximal(),
-              y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
+	      y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
 
   int d = 6;
   int number = X.size();
@@ -219,12 +221,11 @@ PlotAllCommon::Draw(mglGraph *gr)
   for(size_t i = 0; i < X.size(); i = i + d)
     {
       if(i > 0)
-        {
-          mglPoint p(i,
-                     y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
-          Coord.push_back(p);
-          dates.push_back(std::get<0> (plotdate->at(i)));
-        }
+	{
+	  mglPoint p(i, y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
+	  Coord.push_back(p);
+	  dates.push_back(std::get<0>(plotdate->at(i)));
+	}
     }
   std::string grnm = gettext("Purchasing power of money");
   AuxFunc af;
@@ -261,14 +262,14 @@ PlotAllCommon::Draw(mglGraph *gr)
       strm << tickval;
       tick = strm.str();
       ticks.push_back(tickval);
-      if(tickstr != "")
-        {
-          tickstr = tickstr + "\n" + tick;
-        }
+      if(!tickstr.empty())
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
       else
-        {
-          tickstr = tick;
-        }
+	{
+	  tickstr = tick;
+	}
     }
   mglData fortick(ticks);
   tickstr = af.utf8to(tickstr);
@@ -290,7 +291,12 @@ PlotAllCommon::Draw(mglGraph *gr)
     {
       yname = gettext("Shares/EUR");
     }
-  if(itusd == usdv.end() && iteur == eurv.end())
+  auto itcny = std::find(cnyv.begin(), cnyv.end(), yname);
+  if(itcny != cnyv.end())
+    {
+      yname = gettext("Shares/CNY");
+    }
+  if(itusd == usdv.end() && iteur == eurv.end() && itcny == cnyv.end())
     {
       yname = gettext("Shares/Rouble");
     }
@@ -329,18 +335,18 @@ PlotAllCommon::Draw(mglGraph *gr)
 
   //Координаты подписей оси х
   mglPoint p11(x1.Minimal(),
-               y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
+	       y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
   mglPoint p51(x.Maximal(),
-               y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
+	       y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
   Coord.clear();
   for(size_t i = 0; i < X1.size(); i = i + d)
     {
       if(i > 0)
-        {
-          mglPoint p(
-            i, y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
-          Coord.push_back(p);
-        }
+	{
+	  mglPoint p(i,
+		     y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
+	  Coord.push_back(p);
+	}
     }
 
   grnm = gettext("PPTm/PPm in %");
@@ -362,7 +368,7 @@ PlotAllCommon::Draw(mglGraph *gr)
       tickstep = -tickstep;
     }
   tickval = y11.Minimal();
-  tickstr = "";
+  tickstr.clear();
   for(int i = 0; i < 2; i++)
     {
       strm.str("");
@@ -374,14 +380,14 @@ PlotAllCommon::Draw(mglGraph *gr)
       strm << tickval;
       tick = strm.str();
       ticks.push_back(tickval);
-      if(tickstr != "")
-        {
-          tickstr = tickstr + "\n" + tick;
-        }
+      if(!tickstr.empty())
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
       else
-        {
-          tickstr = tick;
-        }
+	{
+	  tickstr = tick;
+	}
     }
   mglData fortick2(ticks);
   tickstr = af.utf8to(tickstr);
@@ -416,16 +422,15 @@ PlotAllCommon::Draw(mglGraph *gr)
   for(size_t i = 0; i < X1.size(); i = i + d)
     {
       if(i > 0)
-        {
-          mglPoint p(i,
-                     y3.Maximal() + ((y3.Maximal() - y3.Minimal()) * 0.02));
-          Coord.push_back(p);
-        }
+	{
+	  mglPoint p(i, y3.Maximal() + ((y3.Maximal() - y3.Minimal()) * 0.02));
+	  Coord.push_back(p);
+	}
     }
   mglPoint p31(x3.Minimal(),
-               y3.Maximal() + ((y3.Maximal() - y3.Minimal()) * 0.02));
+	       y3.Maximal() + ((y3.Maximal() - y3.Minimal()) * 0.02));
   mglPoint p32(x3.Maximal(),
-               y3.Maximal() + ((y3.Maximal() - y3.Minimal()) * 0.02));
+	       y3.Maximal() + ((y3.Maximal() - y3.Minimal()) * 0.02));
 
   grnm = gettext("Average shares volume per day");
   grnm = af.utf8to(grnm);
@@ -446,7 +451,7 @@ PlotAllCommon::Draw(mglGraph *gr)
       tickstep = -tickstep;
     }
   tickval = y3.Minimal();
-  tickstr = "";
+  tickstr.clear();
   for(int i = 0; i < 2; i++)
     {
       strm.str("");
@@ -458,14 +463,14 @@ PlotAllCommon::Draw(mglGraph *gr)
       strm << tickval;
       tick = strm.str();
       ticks.push_back(tickval);
-      if(tickstr != "")
-        {
-          tickstr = tickstr + "\n" + tick;
-        }
+      if(!tickstr.empty())
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
       else
-        {
-          tickstr = tick;
-        }
+	{
+	  tickstr = tick;
+	}
     }
   mglData fortick3(ticks);
   tickstr = af.utf8to(tickstr);

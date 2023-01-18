@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -21,49 +21,49 @@
 #include <filesystem>
 #include <gmpxx.h>
 #include <vector>
-#include <glibmm/ustring.h>
+#include <functional>
 #include <string>
+#include <tuple>
 #include <fstream>
 #include <iostream>
-#include <sigc++/sigc++.h>
 #include <unistd.h>
 #include "AuxFunc.h"
 
 class DownloadAll
 {
-  public:
-    DownloadAll(
+public:
+  DownloadAll(
       int *cancel,
-      std::vector<std::pair<Glib::ustring, Glib::ustring>> *instruments,
-      std::vector<std::pair<Glib::ustring, Glib::ustring>> *instrumentsF,
-      std::vector<std::pair<Glib::ustring, Glib::ustring>> *boards, double db);
-    virtual
-    ~DownloadAll();
-    void
-    downloadAll();
-    sigc::signal<void
-    ()> globError;
-    sigc::signal<void
-    (double)> progress;
-    sigc::signal<void
-    ()> pulse;
-    sigc::signal<void
-    ()> canceled;
-    sigc::signal<void
-    ()> netError;
-    sigc::signal<void
-    (int)> saveDate;
-    sigc::signal<void
-    ()> finished;
-  private:
-    void
-    saveRes(std::vector<std::string> &source, Glib::ustring instrname,
-            Glib::ustring boardid, std::tuple<int, int, int, int, int> tupforsave);
-    int *Cancel;
-    double Db;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> Instruments;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> InstrumentsF;
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> Boards;
+      std::vector<std::tuple<std::string, std::string, std::string>> *instruments,
+      std::vector<std::tuple<std::string, std::string, std::string>> *instrumentsF,
+      std::vector<std::tuple<std::string, std::string>> *boards, double db);
+  virtual
+  ~DownloadAll();
+  void
+  downloadAll();
+  std::function<void
+  ()> globError;
+  std::function<void
+  (double)> progress;
+  std::function<void
+  ()> pulse;
+  std::function<void
+  ()> canceled;
+  std::function<void
+  ()> netError;
+  std::function<void
+  (int)> saveDate;
+  std::function<void
+  ()> finished;
+private:
+  void
+  saveRes(std::vector<std::string> &source, std::string instrname,
+	  std::string boardid, std::tuple<int, int, int, int, int> tupforsave);
+  int *Cancel;
+  double Db;
+  std::vector<std::tuple<std::string, std::string, std::string>> Instruments;
+  std::vector<std::tuple<std::string, std::string, std::string>> InstrumentsF;
+  std::vector<std::tuple<std::string, std::string>> Boards;
 };
 
 #endif /* DOWNLOADALL_H_ */

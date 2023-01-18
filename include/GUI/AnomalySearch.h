@@ -15,40 +15,47 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef OPENDIALOG_H_
-#define OPENDIALOG_H_
+#ifndef INCLUDE_GUI_ANOMALYSEARCH_H_
+#define INCLUDE_GUI_ANOMALYSEARCH_H_
+
 #include <gtkmm.h>
-#include <string>
-#include <fstream>
 #include <iostream>
+#include <string>
+#include <filesystem>
+#include <fstream>
+#include <vector>
+#include <thread>
 #include <libintl.h>
 #include "DownloadMenu.h"
 #include "GraphicWidget.h"
 #include "AuxFunc.h"
 
-class OpenDialog
+class AnomalySearch
 {
 public:
-  OpenDialog(Gtk::Window *mwin);
+  AnomalySearch(Gtk::Window *par_win);
   virtual
-  ~OpenDialog();
+  ~AnomalySearch();
   void
-  creatDialogAll(int variant, Gdk::Rectangle rec);
+  windowFunc();
+  void
+  searchWin(Gtk::Window *win, Gtk::Entry *day_ent, Gtk::Entry *month_ent,
+	    Gtk::Entry *year_ent, Gtk::Entry *sens_ent, Gtk::Entry *depth_ent);
+  void
+  searchFunc(std::vector<std::tuple<std::string, std::string>> *result,
+	     double jd, int depth, int sens, int *cancel);
+  void
+  errDialog(int variant, Gtk::Window *win);
+  void
+  resultWin(Gtk::Window *win,
+	    std::vector<std::tuple<std::string, std::string>> *result);
 private:
-  void
-  boardSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
-		 Glib::RefPtr<Gtk::TreeModel> model, Gtk::MenuButton *men_b);
-  void
-  instrSelection(const Gtk::TreeModel::Path &path, Gtk::TreeViewColumn *column,
-		 Glib::RefPtr<Gtk::TreeModel> model,
-		 Gtk::MenuButton *men_instr);
-  void
-  refreshInstr(Gtk::TreeView *tv_instr, Gtk::TreeView *tv_boards,
-	       Gtk::MenuButton *men_instr);
-  void
-  plotDiagram(Gtk::Window *win, Gtk::TreeView *tv_boards,
-		  Gtk::TreeView *tv_instr, int variant, Gdk::Rectangle rec);
-  Gtk::Window *Mwin;
+  sigc::signal<void
+  (double)> signal_progr;
+  sigc::signal<void
+  ()> signal_serch_compl;
+
+  Gtk::Window *par_win = nullptr;
 };
 
-#endif /* OPENDIALOG_H_ */
+#endif /* INCLUDE_GUI_ANOMALYSEARCH_H_ */

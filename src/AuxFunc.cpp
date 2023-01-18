@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -157,12 +157,6 @@ AuxFunc::callNetwork(std::string urli, std::string filename, int *check)
   CURL *curl;
   CURLcode res;
   curl = curl_easy_init();
-#ifdef _WIN32
-  std::filesystem::path certp = std::filesystem::u8path(get_selfpath());
-  certp = certp.parent_path();
-  std::string certstr = certp.u8string();
-  certstr = certstr + "/ca-bundle.trust.crt";
-  #endif
 
   if(curl)
     {
@@ -173,18 +167,16 @@ AuxFunc::callNetwork(std::string urli, std::string filename, int *check)
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, &f);
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_func);
       curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
-#ifdef _WIN32
-      certp = std::filesystem::u8path(certstr);
-      if(std::filesystem::exists(certp))
-        {
-          curl_easy_setopt(curl, CURLOPT_CAINFO, certstr.c_str());
-        }
-      #endif
+      if(!MONEY_CA_CERT.empty())
+	{
+	  std::filesystem::path ca_cert = std::filesystem::u8path(MONEY_CA_CERT);
+	  curl_easy_setopt(curl, CURLOPT_CAINFO, ca_cert.string().c_str());
+	}
       res = curl_easy_perform(curl);
       if(res != CURLE_OK)
 	{
 	  *check = 0;
-	  std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res)
+	  std::cerr << "CURL error: " << curl_easy_strerror(res)
 	      << std::endl;
 	}
       else
@@ -278,6 +270,20 @@ AuxFunc::homePath(std::string *filename)
 	}
     }
   toutf8(*filename);
+}
+
+std::string
+AuxFunc::tempPath()
+{
+  std::string result;
+#ifdef __linux
+  result = std::filesystem::temp_directory_path().u8string();
+#endif
+#ifdef _WIN32
+  result = std::filesystem::temp_directory_path().parent_path().u8string();
+#endif
+
+  return result;
 }
 
 int

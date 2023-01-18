@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -51,7 +51,7 @@ PlotVolumeGlobal::calcForDraw()
       while(!f.eof())
         {
           getline(f, line);
-          if(count > 0 && line != "")
+          if(count > 0 && !line.empty())
             {
               temp = line;
               temp.erase(0, temp.find(";") + std::string(";").size());
@@ -159,7 +159,7 @@ PlotVolumeGlobal::Draw(mglGraph *gr)
       strm << tickval;
       tick = strm.str();
       ticks.push_back(tickval);
-      if(tickstr != "")
+      if(!tickstr.empty())
         {
           tickstr = tickstr + "\n" + tick;
         }

@@ -1,5 +1,5 @@
 /*
- Copyright 2021-2022 Yury Bobylev <bobilev_yury@mail.ru>
+ Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>
 
  This file is part of Money.
  Money is free software: you can redistribute it and/or
@@ -18,10 +18,10 @@
 #include "PlotMoneyVolumeAll.h"
 
 PlotMoneyVolumeAll::PlotMoneyVolumeAll(
-  std::string file,
-  int Height,
-  int Width,
-  std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
+    std::string file,
+    int Height,
+    int Width,
+    std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
 {
   filename = std::filesystem::u8path(file);
   width = Width;
@@ -52,36 +52,41 @@ PlotMoneyVolumeAll::calcForDraw()
     {
       f.open(p, std::ios_base::in);
       while(!f.eof())
-        {
-          getline(f, line);
-          if(count > 2 && line != "")
-            {
-              af.cp1251toutf8(line);
-              std::string::size_type nusd, neur;
-              neur = line.find("EUR");
-              nusd = line.find("USD");
-              if(neur != std::string::npos || nusd != std::string::npos)
-                {
-                  temp = line;
-                  temp.erase(0, temp.find(";") + std::string(";").size());
-                  temp.erase(0, temp.find(";") + std::string(";").size());
-                  temp = temp.substr(0, temp.find(";"));
-                  if(neur != std::string::npos)
-                    {
-                      eurv.push_back(temp);
-                    }
-                  if(nusd != std::string::npos)
-                    {
-                      usdv.push_back(temp);
-                    }
-                }
-            }
-          count++;
-        }
+	{
+	  getline(f, line);
+	  if(count > 0 && !line.empty())
+	    {
+	      std::string::size_type nusd, neur, ncny;
+	      neur = line.find("EUR");
+	      nusd = line.find("USD");
+	      ncny = line.find("CNY");
+	      if(neur != std::string::npos || nusd != std::string::npos
+		  || ncny != std::string::npos)
+		{
+		  temp = line;
+		  temp.erase(0, temp.find(";") + std::string(";").size());
+		  temp.erase(0, temp.find(";") + std::string(";").size());
+		  temp = temp.substr(0, temp.find(";"));
+		  if(neur != std::string::npos)
+		    {
+		      eurv.push_back(temp);
+		    }
+		  else if(nusd != std::string::npos)
+		    {
+		      usdv.push_back(temp);
+		    }
+		  else if(ncny != std::string::npos)
+		    {
+		      cnyv.push_back(temp);
+		    }
+		}
+	    }
+	  count++;
+	}
       f.close();
     }
-  line = "";
-  temp = "";
+  line.clear();
+  temp.clear();
   count = 0;
 
   yname = filename.parent_path().filename().u8string();
@@ -94,36 +99,36 @@ PlotMoneyVolumeAll::calcForDraw()
     {
       f.open(filename, std::ios_base::in);
       while(!f.eof())
-        {
-          getline(f, line);
+	{
+	  getline(f, line);
 
-          if(count > 1 && line != "")
-            {
-              midd = line;
-              midd = midd.substr(0, midd.find(";"));
-              std::tuple<std::string, double, double, double, double> ttup;
-              std::get<0> (ttup) = midd;
+	  if(count > 1 && !line.empty())
+	    {
+	      midd = line;
+	      midd = midd.substr(0, midd.find(";"));
+	      std::tuple<std::string, double, double, double, double> ttup;
+	      std::get<0>(ttup) = midd;
 
-              midd = line;
-              temp = line;
-              for(int i = 0; i < 5; i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd.erase(0, temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              std::stringstream strm;
-              std::locale loc("C");
-              double tmpdouble;
-              strm.imbue(loc);
-              strm << midd;
-              strm >> tmpdouble;
-              VolM.push_back(tmpdouble);
-              std::get<1> (ttup) = tmpdouble;
-              plotdate->push_back(ttup);
-            }
-          count = count + 1;
-        }
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < 5; i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      std::stringstream strm;
+	      std::locale loc("C");
+	      double tmpdouble;
+	      strm.imbue(loc);
+	      strm << midd;
+	      strm >> tmpdouble;
+	      VolM.push_back(tmpdouble);
+	      std::get<1>(ttup) = tmpdouble;
+	      plotdate->push_back(ttup);
+	    }
+	  count = count + 1;
+	}
       f.close();
     }
   mpf_class summ(0);
@@ -135,13 +140,13 @@ PlotMoneyVolumeAll::calcForDraw()
       vols = vols + VolM[i];
       res = vols / summ;
       VolMmid.push_back(res.get_d());
-      std::get<2> (plotdate->at(i)) = VolMmid[i];
+      std::get<2>(plotdate->at(i)) = VolMmid[i];
     }
 
   if(plotdate->size() > 0)
     {
-      datebeg = std::get<0> (plotdate->at(0));
-      dateend = std::get<0> (plotdate->at(plotdate->size() - 1));
+      datebeg = std::get<0>(plotdate->at(0));
+      dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
     }
 }
 
@@ -157,10 +162,8 @@ PlotMoneyVolumeAll::Draw(mglGraph *gr)
   mglData x(X), y(VolM), y2(VolMmid);
 
   //Координаты подписей оси х
-  mglPoint p1(x.Minimal(),
-              y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-  mglPoint p5(x.Maximal(),
-              y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p1(x.Minimal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p5(x.Maximal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
 
   int d = 6;
   int number = X.size();
@@ -175,11 +178,11 @@ PlotMoneyVolumeAll::Draw(mglGraph *gr)
   for(size_t i = 0; i < X.size(); i = i + d)
     {
       if(i > 0)
-        {
-          mglPoint p(i, y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-          Coord.push_back(p);
-          dates.push_back(std::get<0> (plotdate->at(i)));
-        }
+	{
+	  mglPoint p(i, y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+	  Coord.push_back(p);
+	  dates.push_back(std::get<0>(plotdate->at(i)));
+	}
     }
 
   AuxFunc af;
@@ -215,14 +218,14 @@ PlotMoneyVolumeAll::Draw(mglGraph *gr)
       strm << tickval;
       tick = strm.str();
       ticks.push_back(tickval);
-      if(tickstr != "")
-        {
-          tickstr = tickstr + "\n" + tick;
-        }
+      if(!tickstr.empty())
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
       else
-        {
-          tickstr = tick;
-        }
+	{
+	  tickstr = tick;
+	}
     }
   mglData fortick(ticks);
   tickstr = af.utf8to(tickstr);
@@ -244,7 +247,12 @@ PlotMoneyVolumeAll::Draw(mglGraph *gr)
     {
       yname = "EUR";
     }
-  if(itusd == usdv.end() && iteur == eurv.end())
+  auto itcny = std::find(cnyv.begin(), cnyv.end(), yname);
+  if(itcny != cnyv.end())
+    {
+      yname = "CNY";
+    }
+  if(itusd == usdv.end() && iteur == eurv.end() && itcny == cnyv.end())
     {
       yname = gettext("Roubles");
     }
