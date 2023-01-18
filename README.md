@@ -39,6 +39,11 @@ First of all you need to download data from [https://www.moex.com/](https://www.
 
 After downloading completion you will be able to plot corresponding diagrams.
 
+If downloading process finished with error and in terminal you see messages like `CURL error: Problem with the SSL CA cert (path? access rights?)` - set environment variable MONEY_CA_CERT  with full path to ca-certificate file and restart the application or use option `--ca-cert=` with full path to ca-certificate file on next start. Possible commands are:\
+`$ MONEY_CA_CERT=path_to_certificate money`\
+or\
+`$ money --ca-cert=path_to_certificate`
+
 ## License
 
 GPLv3 (see `COPYING`).
