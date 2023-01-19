@@ -11,7 +11,7 @@ Money plots diagrams to show price and other parameters of different securities 
 
 `git clone https://github.com/ProfessorNavigator/money.git`\
 `cd money`\
-`meson -Dbuildtype=release build`\
+`meson setup -Dbuildtype=release build`\
 `ninja -C build install`
 
 You may need superuser privileges to execute last command.
@@ -23,7 +23,7 @@ You can build Money from source by MSYS2 project [https://www.msys2.org/](https:
 `cd /c/Money`\
 `git clone https://gitflic.ru/project/professornavigator/money.git`\
 `cd money`\
-`meson -Dbuildtype=release build`\
+`meson setup -Dbuildtype=release build`\
 `ninja -C build install`
 
 If everything was correct, you can find money.exe file in `msys_folder/mingw_folder/bin`. Icon to create desktop shortcut can be found in `msys_folder/mingw_folder/share/icons/hicolor/128x128/money.ico` path.
