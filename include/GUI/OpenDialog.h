@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef OPENDIALOG_H_
-#define OPENDIALOG_H_
+#ifndef INCLUDE_GUI_OPENDIALOG_H_
+#define INCLUDE_GUI_OPENDIALOG_H_
 #include <gtkmm.h>
 #include <string>
 #include <fstream>
@@ -47,8 +47,8 @@ private:
 	       Gtk::MenuButton *men_instr);
   void
   plotDiagram(Gtk::Window *win, Gtk::TreeView *tv_boards,
-		  Gtk::TreeView *tv_instr, int variant, Gdk::Rectangle rec);
+	      Gtk::TreeView *tv_instr, int variant, Gdk::Rectangle rec);
   Gtk::Window *Mwin;
 };
 
-#endif /* OPENDIALOG_H_ */
+#endif /* INCLUDE_GUI_OPENDIALOG_H_ */

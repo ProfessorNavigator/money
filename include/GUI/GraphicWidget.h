@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef GRAPHICWIDGET_H_
-#define GRAPHICWIDGET_H_
+#ifndef INCLUDE_GUI_GRAPHICWIDGET_H_
+#define INCLUDE_GUI_GRAPHICWIDGET_H_
 
 #include <iostream>
 #include <gtkmm.h>
@@ -80,4 +80,4 @@ private:
   std::string plotfnm;
 };
 
-#endif /* GRAPHICWIDGET_H_ */
+#endif /* INCLUDE_GUI_GRAPHICWIDGET_H_ */

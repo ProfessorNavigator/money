@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PSDDEALS_H_
-#define PSDDEALS_H_
+#ifndef INCLUDE_DIAGRAMS_PSDDEALS_H_
+#define INCLUDE_DIAGRAMS_PSDDEALS_H_
 
 #include <mgl2/mgl.h>
 #include <filesystem>
@@ -31,32 +31,32 @@
 
 class PSDDeals
 {
-  public:
-    PSDDeals(
+public:
+  PSDDeals(
       std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PSDDeals();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    int height, width;
-    std::filesystem::path filename;
-    std::vector<mpf_class> TC;
-    std::vector<mpf_class> DC;
-    std::vector<double> Tc;
-    std::vector<double> Dc;
-    std::string datebeg;
-    std::string dateend;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
-    std::vector<std::string> usdv;
-    std::vector<std::string> eurv;
-    std::vector<std::string> cnyv;
-    std::string yname;
+  virtual
+  ~PSDDeals();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  int height, width;
+  std::filesystem::path filename;
+  std::vector<mpf_class> TC;
+  std::vector<mpf_class> DC;
+  std::vector<double> Tc;
+  std::vector<double> Dc;
+  std::string datebeg;
+  std::string dateend;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  std::vector<std::string> usdv;
+  std::vector<std::string> eurv;
+  std::vector<std::string> cnyv;
+  std::string yname;
 };
 
-#endif /* PSDDEALS_H_ */
+#endif /* INCLUDE_DIAGRAMS_PSDDEALS_H_ */

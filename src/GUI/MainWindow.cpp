@@ -45,7 +45,7 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
-
+  // TODO Auto-generated destructor stub
 }
 
 void
@@ -503,8 +503,9 @@ MainWindow::aboutProg()
   aboutd->set_name("dialog");
 
   aboutd->set_program_name("Money");
-  aboutd->set_version("2.4");
-  aboutd->set_copyright("Copyright 2022 Yury Bobylev <bobilev_yury@mail.ru>");
+  aboutd->set_version("3.0");
+  aboutd->set_copyright(
+      "Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>");
   AuxFunc af;
   std::filesystem::path p = std::filesystem::u8path(af.get_selfpath());
   std::string filename = p.parent_path().u8string() + "/../share/Money/COPYING";

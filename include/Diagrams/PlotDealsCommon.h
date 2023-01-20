@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTDEALSCOMMON_H_
-#define PLOTDEALSCOMMON_H_
+#ifndef INCLUDE_DIAGRAMS_PLOTDEALSCOMMON_H_
+#define INCLUDE_DIAGRAMS_PLOTDEALSCOMMON_H_
 
 #include <mgl2/mgl.h>
 #include <string>
@@ -31,32 +31,35 @@
 
 class PlotDealsCommon
 {
-  public:
-    PlotDealsCommon(std::string file, int Height, int Width,
-                    std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PlotDealsCommon();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filename;
-    int height, width;
-    std::string datebeg;
-    std::string dateend;
-    std::string date1;
-    std::string datehalf;
-    std::string date2;
-    std::vector<double> MRSP;
-    std::vector<double> Tc;
-    std::vector<double> Dc;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
-    std::vector<std::string> usdv;
-    std::vector<std::string> eurv;
-    std::vector<std::string> cnyv;
-    std::vector<double> sharesvol;
-    std::string yname;
+public:
+  PlotDealsCommon(
+      std::string file,
+      int Height,
+      int Width,
+      std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
+  virtual
+  ~PlotDealsCommon();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  std::filesystem::path filename;
+  int height, width;
+  std::string datebeg;
+  std::string dateend;
+  std::string date1;
+  std::string datehalf;
+  std::string date2;
+  std::vector<double> MRSP;
+  std::vector<double> Tc;
+  std::vector<double> Dc;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  std::vector<std::string> usdv;
+  std::vector<std::string> eurv;
+  std::vector<std::string> cnyv;
+  std::vector<double> sharesvol;
+  std::string yname;
 };
 
-#endif /* PLOTDEALSCOMMON_H_ */
+#endif /* INCLUDE_DIAGRAMS_PLOTDEALSCOMMON_H_ */

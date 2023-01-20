@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTVOLUMEGLOBAL_H_
-#define PLOTVOLUMEGLOBAL_H_
+#ifndef INCLUDE_DIAGRAMS_PLOTVOLUMEGLOBAL_H_
+#define INCLUDE_DIAGRAMS_PLOTVOLUMEGLOBAL_H_
 
 #include <mgl2/mgl.h>
 #include <filesystem>
@@ -31,25 +31,25 @@
 
 class PlotVolumeGlobal
 {
-  public:
-    PlotVolumeGlobal(
+public:
+  PlotVolumeGlobal(
       std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PlotVolumeGlobal();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filename;
-    int height, width;
-    std::vector<double> Volume;
-    std::vector<double> Volmid;
-    std::string datebeg, dateend;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  virtual
+  ~PlotVolumeGlobal();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  std::filesystem::path filename;
+  int height, width;
+  std::vector<double> Volume;
+  std::vector<double> Volmid;
+  std::string datebeg, dateend;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
 };
 
-#endif /* PLOTVOLUMEGLOBAL_H_ */
+#endif /* INCLUDE_DIAGRAMS_PLOTVOLUMEGLOBAL_H_ */

@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTMONEYVOLUMEDEALS_H_
-#define PLOTMONEYVOLUMEDEALS_H_
+#ifndef INCLUDE_DIAGRAMS_PLOTMONEYVOLUMEDEALS_H_
+#define INCLUDE_DIAGRAMS_PLOTMONEYVOLUMEDEALS_H_
 
 #include <mgl2/mgl.h>
 #include <filesystem>
@@ -31,30 +31,30 @@
 
 class PlotMoneyVolumeDeals
 {
-  public:
-    PlotMoneyVolumeDeals(
+public:
+  PlotMoneyVolumeDeals(
       std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PlotMoneyVolumeDeals();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filename;
-    int height, width;
-    std::string datebeg;
-    std::string dateend;
-    std::vector<double> VolumeM;
-    std::vector<double> VolMmid;
-    std::vector<std::string> usdv;
-    std::vector<std::string> eurv;
-    std::vector<std::string> cnyv;
-    std::string yname;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  virtual
+  ~PlotMoneyVolumeDeals();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  std::filesystem::path filename;
+  int height, width;
+  std::string datebeg;
+  std::string dateend;
+  std::vector<double> VolumeM;
+  std::vector<double> VolMmid;
+  std::vector<std::string> usdv;
+  std::vector<std::string> eurv;
+  std::vector<std::string> cnyv;
+  std::string yname;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
 };
 
-#endif /* PLOTMONEYVOLUMEDEALS_H_ */
+#endif /* INCLUDE_DIAGRAMS_PLOTMONEYVOLUMEDEALS_H_ */

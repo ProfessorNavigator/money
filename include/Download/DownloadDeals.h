@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOWNLOADDEALS_H_
-#define DOWNLOADDEALS_H_
+#ifndef INCLUDE_DOWNLOAD_DOWNLOADDEALS_H_
+#define INCLUDE_DOWNLOAD_DOWNLOADDEALS_H_
 
 #include <string>
 #include <vector>
@@ -30,37 +30,36 @@
 
 class DownloadDeals
 {
-  public:
-    DownloadDeals(
+public:
+  DownloadDeals(
       int *canceling,
       std::vector<std::tuple<std::string, std::string, std::string>> *instruments,
       std::vector<std::tuple<std::string, std::string, std::string>> *instrumentsF,
-      std::vector<std::tuple<std::string, std::string>> *boards,
-      int selector);
-    virtual
-    ~DownloadDeals();
-    void
-    downloadAll();
-    std::function<void
-    ()> noDeals;
-    std::function<void
-    ()> netError;
-    std::function<void
-    ()> canceled;
-    std::function<void
-    (double)> progr;
-    std::function<void
-    ()> pulse;
-    std::function<void
-    ()> finished;
-  private:
-    int
-    checkTurnovers();
-    int *Canceling;
-    std::vector<std::tuple<std::string, std::string, std::string>> Instruments;
-    std::vector<std::tuple<std::string, std::string, std::string>> InstrumentsF;
-    std::vector<std::tuple<std::string, std::string>> Boards;
-    int Selector;
+      std::vector<std::tuple<std::string, std::string>> *boards, int selector);
+  virtual
+  ~DownloadDeals();
+  void
+  downloadAll();
+  std::function<void
+  ()> noDeals;
+  std::function<void
+  ()> netError;
+  std::function<void
+  ()> canceled;
+  std::function<void
+  (double)> progr;
+  std::function<void
+  ()> pulse;
+  std::function<void
+  ()> finished;
+private:
+  int
+  checkTurnovers();
+  int *Canceling;
+  std::vector<std::tuple<std::string, std::string, std::string>> Instruments;
+  std::vector<std::tuple<std::string, std::string, std::string>> InstrumentsF;
+  std::vector<std::tuple<std::string, std::string>> Boards;
+  int Selector;
 };
 
-#endif /* DOWNLOADDEALS_H_ */
+#endif /* INCLUDE_DOWNLOAD_DOWNLOADDEALS_H_ */

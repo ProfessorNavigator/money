@@ -15,11 +15,10 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOWNLOADMENU_H_
-#define DOWNLOADMENU_H_
+#ifndef INCLUDE_GUI_DOWNLOADMENU_H_
+#define INCLUDE_GUI_DOWNLOADMENU_H_
 
 #include <gtkmm.h>
-#include <unistd.h>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -31,13 +30,6 @@
 #include "DownloadAll.h"
 #include "CalcIndex.h"
 #include "DownloadDeals.h"
-
-#ifdef __unix__
-#include <X11/Xlib.h>
-#endif
-#ifdef _WIN32
-  #include <windows.h>
-#endif
 
 class DownloadMenu
 {
@@ -80,4 +72,4 @@ private:
   Gtk::Window *Mwin = nullptr;
 };
 
-#endif /* DOWNLOADMENU_H_ */
+#endif /* INCLUDE_GUI_DOWNLOADMENU_H_ */

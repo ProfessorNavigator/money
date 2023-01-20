@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTMONEYGLOBAL_H_
-#define PLOTMONEYGLOBAL_H_
+#ifndef INCLUDE_DIAGRAMS_PLOTMONEYGLOBAL_H_
+#define INCLUDE_DIAGRAMS_PLOTMONEYGLOBAL_H_
 
 #include <mgl2/mgl.h>
 #include <filesystem>
@@ -31,25 +31,25 @@
 
 class PlotMoneyGlobal
 {
-  public:
-    PlotMoneyGlobal(
+public:
+  PlotMoneyGlobal(
       std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PlotMoneyGlobal();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filename;
-    int height, width;
-    std::vector<double> Money;
-    std::vector<double> Moneymid;
-    std::string datebeg, dateend;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  virtual
+  ~PlotMoneyGlobal();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  std::filesystem::path filename;
+  int height, width;
+  std::vector<double> Money;
+  std::vector<double> Moneymid;
+  std::string datebeg, dateend;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
 };
 
-#endif /* PLOTMONEYGLOBAL_H_ */
+#endif /* INCLUDE_DIAGRAMS_PLOTMONEYGLOBAL_H_ */

@@ -18,7 +18,7 @@
 #include "MoneyApplication.h"
 
 MoneyApplication::MoneyApplication() :
-  Gtk::Application("ru.mail.bobilev_yury.Money")
+    Gtk::Application("ru.mail.bobilev_yury.Money")
 {
   // TODO Auto-generated constructor stub
 
@@ -32,27 +32,27 @@ MoneyApplication::~MoneyApplication()
 Glib::RefPtr<MoneyApplication>
 MoneyApplication::create()
 {
-  return Glib::make_refptr_for_instance<MoneyApplication> (
-           new MoneyApplication());
+  return Glib::make_refptr_for_instance<MoneyApplication>(
+      new MoneyApplication());
 }
 
-MainWindow *
+MainWindow*
 MoneyApplication::create_appwindow()
 {
   MainWindow *mw = new MainWindow;
   this->add_window(*mw);
   mw->signal_hide().connect([mw, this]
   {
-    std::vector<Gtk::Window *> wv;
+    std::vector<Gtk::Window*> wv;
     wv = this->get_windows();
     for(size_t i = 0; i < wv.size(); i++)
       {
-        Gtk::Window *win = wv[i];
-        if(win != mw)
-          {
-            win->hide();
-            delete win;
-          }
+	Gtk::Window *win = wv[i];
+	if(win != mw)
+	  {
+	    win->hide();
+	    delete win;
+	  }
       }
     delete mw;
   });
@@ -63,7 +63,7 @@ MoneyApplication::create_appwindow()
 void
 MoneyApplication::on_activate()
 {
-  std::vector<Gtk::Window *> winv;
+  std::vector<Gtk::Window*> winv;
   winv = this->get_windows();
   if(winv.size() == 0)
     {

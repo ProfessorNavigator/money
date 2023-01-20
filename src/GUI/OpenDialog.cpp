@@ -24,7 +24,7 @@ OpenDialog::OpenDialog(Gtk::Window *mwin)
 }
 OpenDialog::~OpenDialog()
 {
-
+  // TODO Auto-generated destructor stub
 }
 
 void
@@ -75,15 +75,51 @@ OpenDialog::creatDialogAll(int variant, Gdk::Rectangle rec)
 	      instruments.push_back(p);
 	    }
 	}
-      std::sort(instruments.begin(), instruments.end(), [&af]
-      (std::string &e1, std::string &e2)
-	{
-	  std::string l1 = e1.substr(0, e1.rfind("-"));
-	  std::string l2 = e2.substr(0, e2.rfind("-"));
-	  af.stringToLower(l1);
-	  af.stringToLower(l2);
-	  return l1 < l2;
-	});
+      std::sort(
+	  instruments.begin(),
+	  instruments.end(),
+	  [&af, &instrbase]
+	  (auto &el1,
+	   auto &el2)
+	     {
+	       std::string l1 = el1;
+	       auto itib = std::find_if(instrbase.begin(), instrbase.end(), [l1](auto &el)
+		     {
+		       return std::get<0>(el) == l1;
+		     });
+	       if(itib != instrbase.end())
+		 {
+		   l1 = std::get<2>(*itib);
+		 }
+	       std::string l2 = el2;
+	       itib = std::find_if(instrbase.begin(), instrbase.end(), [l2](auto &el)
+		     {
+		       return std::get<0>(el) == l2;
+		     });
+	       if(itib != instrbase.end())
+		 {
+		   l2 = std::get<2>(*itib);
+		 }
+	       l1.erase(std::remove_if(l1.begin(), l1.end(), [](auto &el)
+			 {
+			   return el == '\"';
+			 }),l1.end());
+	       l2.erase(std::remove_if(l2.begin(), l2.end(), [](auto &el)
+			 {
+			   return el == '\"';
+			 }),l2.end());
+	       while(*(l1.begin()) == ' ')
+		 {
+		   l1.erase(l1.begin());
+		 }
+	       while(*(l2.begin()) == ' ')
+		 {
+		   l2.erase(l2.begin());
+		 }
+	       af.stringToLower(l1);
+	       af.stringToLower(l2);
+	       return l1 < l2;
+	     });
     }
 
   Gtk::Window *window = new Gtk::Window;
@@ -177,7 +213,6 @@ OpenDialog::creatDialogAll(int variant, Gdk::Rectangle rec)
       auto row = *(model_instr->append());
       std::string val = instruments[i];
       row[fnm_col] = Glib::ustring(val);
-      val.erase(0, val.rfind("-") + std::string("-").size());
       auto itib = std::find_if(instrbase.begin(), instrbase.end(), [val]
       (auto &el)
 	{
@@ -185,7 +220,8 @@ OpenDialog::creatDialogAll(int variant, Gdk::Rectangle rec)
 	});
       if(itib != instrbase.end())
 	{
-	  row[instr_col] = Glib::ustring(std::get<2>(*itib));
+	  row[instr_col] = Glib::ustring(
+	      std::get<2>(*itib) + "-" + std::get<0>(*itib));
 	}
       else
 	{
@@ -374,15 +410,51 @@ OpenDialog::refreshInstr(Gtk::TreeView *tv_instr, Gtk::TreeView *tv_boards,
 	      instruments.push_back(p);
 	    }
 	}
-      std::sort(instruments.begin(), instruments.end(), [&af]
-      (std::string &e1, std::string &e2)
-	{
-	  std::string l1 = e1;
-	  std::string l2 = e2;
-	  af.stringToLower(l1);
-	  af.stringToLower(l2);
-	  return l1 < l2;
-	});
+      std::sort(
+	  instruments.begin(),
+	  instruments.end(),
+	  [&af, &instrbase]
+	  (auto &el1,
+	   auto &el2)
+	     {
+	       std::string l1 = el1;
+	       auto itib = std::find_if(instrbase.begin(), instrbase.end(), [l1](auto &el)
+		     {
+		       return std::get<0>(el) == l1;
+		     });
+	       if(itib != instrbase.end())
+		 {
+		   l1 = std::get<2>(*itib);
+		 }
+	       std::string l2 = el2;
+	       itib = std::find_if(instrbase.begin(), instrbase.end(), [l2](auto &el)
+		     {
+		       return std::get<0>(el) == l2;
+		     });
+	       if(itib != instrbase.end())
+		 {
+		   l2 = std::get<2>(*itib);
+		 }
+	       l1.erase(std::remove_if(l1.begin(), l1.end(), [](auto &el)
+			 {
+			   return el == '\"';
+			 }),l1.end());
+	       l2.erase(std::remove_if(l2.begin(), l2.end(), [](auto &el)
+			 {
+			   return el == '\"';
+			 }),l2.end());
+	       while(*(l1.begin()) == ' ')
+		 {
+		   l1.erase(l1.begin());
+		 }
+	       while(*(l2.begin()) == ' ')
+		 {
+		   l2.erase(l2.begin());
+		 }
+	       af.stringToLower(l1);
+	       af.stringToLower(l2);
+	       return l1 < l2;
+	     });
 
       Gtk::TreeModel::ColumnRecord record_instr;
       Gtk::TreeModelColumn<Glib::ustring> fnm_col;
@@ -396,7 +468,6 @@ OpenDialog::refreshInstr(Gtk::TreeView *tv_instr, Gtk::TreeView *tv_boards,
 	  auto row = *(model_instr->append());
 	  std::string val = instruments[i];
 	  row[fnm_col] = Glib::ustring(val);
-	  val.erase(0, val.rfind("-") + std::string("-").size());
 	  auto itib = std::find_if(instrbase.begin(), instrbase.end(), [val]
 	  (auto &el)
 	    {
@@ -404,7 +475,8 @@ OpenDialog::refreshInstr(Gtk::TreeView *tv_instr, Gtk::TreeView *tv_boards,
 	    });
 	  if(itib != instrbase.end())
 	    {
-	      row[instr_col] = Glib::ustring(std::get<2>(*itib));
+	      row[instr_col] = Glib::ustring(
+		  std::get<2>(*itib) + "-" + std::get<0>(*itib));
 	    }
 	  else
 	    {

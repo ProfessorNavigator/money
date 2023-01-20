@@ -18,10 +18,10 @@
 #include "PlotVolumeAll.h"
 
 PlotVolumeAll::PlotVolumeAll(
-  std::string file,
-  int Height,
-  int Width,
-  std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
+    std::string file,
+    int Height,
+    int Width,
+    std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
 {
   filename = std::filesystem::u8path(file);
   width = Width;
@@ -50,36 +50,36 @@ PlotVolumeAll::calcForDraw()
     {
       f.open(filename, std::ios_base::in);
       while(!f.eof())
-        {
-          getline(f, line);
+	{
+	  getline(f, line);
 
-          if(count > 1 && !line.empty())
-            {
-              midd = line;
-              midd = midd.substr(0, midd.find(";"));
-              std::tuple<std::string, double, double, double, double> ttup;
-              std::get<0> (ttup) = midd;
+	  if(count > 1 && !line.empty())
+	    {
+	      midd = line;
+	      midd = midd.substr(0, midd.find(";"));
+	      std::tuple<std::string, double, double, double, double> ttup;
+	      std::get<0>(ttup) = midd;
 
-              midd = line;
-              temp = line;
-              for(int i = 0; i < 4; i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd.erase(0, temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              std::stringstream strm;
-              std::locale loc("C");
-              double tmpdouble;
-              strm.imbue(loc);
-              strm << midd;
-              strm >> tmpdouble;
-              Vol.push_back(tmpdouble);
-              std::get<1> (ttup) = tmpdouble;
-              plotdate->push_back(ttup);
-            }
-          count = count + 1;
-        }
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < 4; i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      std::stringstream strm;
+	      std::locale loc("C");
+	      double tmpdouble;
+	      strm.imbue(loc);
+	      strm << midd;
+	      strm >> tmpdouble;
+	      Vol.push_back(tmpdouble);
+	      std::get<1>(ttup) = tmpdouble;
+	      plotdate->push_back(ttup);
+	    }
+	  count = count + 1;
+	}
       f.close();
     }
   mpf_class summ(0);
@@ -91,13 +91,13 @@ PlotVolumeAll::calcForDraw()
       vols = vols + Vol[i];
       res = vols / summ;
       Volmid.push_back(res.get_d());
-      std::get<2> (plotdate->at(i)) = Volmid[i];
+      std::get<2>(plotdate->at(i)) = Volmid[i];
     }
 
   if(plotdate->size() > 0)
     {
-      datebeg = std::get<0> (plotdate->at(0));
-      dateend = std::get<0> (plotdate->at(plotdate->size() - 1));
+      datebeg = std::get<0>(plotdate->at(0));
+      dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
     }
 }
 
@@ -113,10 +113,8 @@ PlotVolumeAll::Draw(mglGraph *gr)
   mglData x(X), y(Vol), y2(Volmid);
 
   //Координаты подписей оси х
-  mglPoint p1(x.Minimal(),
-              y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-  mglPoint p5(x.Maximal(),
-              y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p1(x.Minimal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p5(x.Maximal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
 
   int d = 6;
   int number = X.size();
@@ -131,11 +129,11 @@ PlotVolumeAll::Draw(mglGraph *gr)
   for(size_t i = 0; i < X.size(); i = i + d)
     {
       if(i > 0)
-        {
-          mglPoint p(i, y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-          Coord.push_back(p);
-          dates.push_back(std::get<0> (plotdate->at(i)));
-        }
+	{
+	  mglPoint p(i, y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+	  Coord.push_back(p);
+	  dates.push_back(std::get<0>(plotdate->at(i)));
+	}
     }
 
   AuxFunc af;
@@ -172,13 +170,13 @@ PlotVolumeAll::Draw(mglGraph *gr)
       tick = strm.str();
       ticks.push_back(tickval);
       if(!tickstr.empty())
-        {
-          tickstr = tickstr + "\n" + tick;
-        }
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
       else
-        {
-          tickstr = tick;
-        }
+	{
+	  tickstr = tick;
+	}
     }
   mglData fortick(ticks);
   tickstr = af.utf8to(tickstr);

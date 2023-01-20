@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MAINWINDOW_H_
-#define MAINWINDOW_H_
+#ifndef INCLUDE_GUI_MAINWINDOW_H_
+#define INCLUDE_GUI_MAINWINDOW_H_
 
 #include <gtkmm.h>
 #include <filesystem>
@@ -80,4 +80,4 @@ private:
   aboutProg();
 };
 
-#endif /* MAINWINDOW_H_ */
+#endif /* INCLUDE_GUI_MAINWINDOW_H_ */

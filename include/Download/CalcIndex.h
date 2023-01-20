@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CALCINDEX_H_
-#define CALCINDEX_H_
+#ifndef INCLUDE_DOWNLOAD_CALCINDEX_H_
+#define INCLUDE_DOWNLOAD_CALCINDEX_H_
 
 #include <vector>
 #include <gmpxx.h>
@@ -48,4 +48,4 @@ private:
   int *Canceled;
 };
 
-#endif /* CALCINDEX_H_ */
+#endif /* INCLUDE_DOWNLOAD_CALCINDEX_H_ */

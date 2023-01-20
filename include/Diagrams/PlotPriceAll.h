@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTPRICEALL_H_
-#define PLOTPRICEALL_H_
+#ifndef INCLUDE_DIAGRAMS_PLOTPRICEALL_H_
+#define INCLUDE_DIAGRAMS_PLOTPRICEALL_H_
 
 #include <mgl2/mgl.h>
 #include <string>
@@ -31,32 +31,32 @@
 
 class PlotPriceAll
 {
-  public:
-    PlotPriceAll(
+public:
+  PlotPriceAll(
       std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PlotPriceAll();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filepath;
-    int height;
-    int width;
-    std::vector<double> Pricemid;
-    std::vector<double> Pricebeg;
-    std::vector<double> Priceend;
-    std::vector<double> Tc;
-    std::string datebeg;
-    std::string dateend;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
-    std::vector<std::string> usdv;
-    std::vector<std::string> eurv;
-    std::vector<std::string> cnyv;
+  virtual
+  ~PlotPriceAll();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  std::filesystem::path filepath;
+  int height;
+  int width;
+  std::vector<double> Pricemid;
+  std::vector<double> Pricebeg;
+  std::vector<double> Priceend;
+  std::vector<double> Tc;
+  std::string datebeg;
+  std::string dateend;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  std::vector<std::string> usdv;
+  std::vector<std::string> eurv;
+  std::vector<std::string> cnyv;
 };
 
-#endif /* PLOTPRICEALL_H_ */
+#endif /* INCLUDE_DIAGRAMS_PLOTPRICEALL_H_ */

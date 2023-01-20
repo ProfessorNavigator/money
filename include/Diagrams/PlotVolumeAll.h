@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTVOLUMEALL_H_
-#define PLOTVOLUMEALL_H_
+#ifndef INCLUDE_DIAGRAMS_PLOTVOLUMEALL_H_
+#define INCLUDE_DIAGRAMS_PLOTVOLUMEALL_H_
 
 #include <mgl2/mgl.h>
 #include <filesystem>
@@ -31,26 +31,26 @@
 
 class PlotVolumeAll
 {
-  public:
-    PlotVolumeAll(
+public:
+  PlotVolumeAll(
       std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PlotVolumeAll();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filename;
-    int height, width;
-    std::vector<double> Vol;
-    std::vector<double> Volmid;
-    std::string datebeg;
-    std::string dateend;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  virtual
+  ~PlotVolumeAll();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  std::filesystem::path filename;
+  int height, width;
+  std::vector<double> Vol;
+  std::vector<double> Volmid;
+  std::string datebeg;
+  std::string dateend;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
 };
 
-#endif /* PLOTVOLUMEALL_H_ */
+#endif /* INCLUDE_DIAGRAMS_PLOTVOLUMEALL_H_ */

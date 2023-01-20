@@ -369,17 +369,14 @@ DownloadAll::downloadAll()
 	    {
 	      if(boardsvect[j].size() > 0)
 		{
-		  saveRes(
-		      boardsvect[j],
-		      std::get<1>(Instruments.at(i)) + "-"
-			  + std::get<0>(Instruments.at(i)),
-		      std::get<0>(Boards.at(j)), tupforsave);
+		  saveRes(boardsvect[j], std::get<0>(Instruments.at(i)),
+			  std::get<0>(Boards.at(j)), tupforsave);
 		}
 	    }
 	  if(progress)
 	    {
 	      progress(
-		  static_cast<double>(i)
+		  static_cast<double>(i + 1)
 		      / static_cast<double>(Instruments.size()));
 	    }
 	  for(size_t j = 0; j < boardsvect.size(); j++)
@@ -440,6 +437,14 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
   std::string finalpathstr = line + "/Money/" + boardid + "/" + instrname
       + ".csv";
   finalpath = std::filesystem::u8path(finalpathstr);
+  std::vector<std::tuple<std::string, int, int, int>> split;
+  split.push_back(std::make_tuple("IRAO", 25, 12, 2014));
+  split.push_back(std::make_tuple("ROLO", 10, 1, 2023));
+  auto itspl = std::find_if(split.begin(), split.end(), [instrname]
+  (auto &el)
+    {
+      return std::get<0>(el) == instrname;
+    });
   if(!std::filesystem::exists(finalpath))
     {
       finalv.push_back(instrname + "\n");
@@ -525,6 +530,8 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
       f.close();
     }
   std::string temp;
+  bool apply_split = false;
+  bool split_applaied = false;
   for(size_t i = 0; i < source.size(); i++)
     {
       line = source[i];
@@ -573,6 +580,16 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 	    }
 	  double td = af.grigtojulian(std::stoi(day), std::stoi(month),
 				      std::stoi(year), 0, 0, 0.0);
+	  if(itspl != split.end())
+	    {
+	      double spl_date = af.grigtojulian(std::get<1>(*itspl),
+						std::get<2>(*itspl),
+						std::get<3>(*itspl), 0, 0, 0);
+	      if(td > spl_date)
+		{
+		  apply_split = true;
+		}
+	    }
 	  writevalue = af.togrigday(td) + "." + af.togrigmonth(td) + "."
 	      + af.togrigyear(td) + ";";
 
@@ -588,6 +605,13 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 	  strm.imbue(loc);
 	  strm << line;
 	  strm >> money;
+	  if(apply_split)
+	    {
+	      if(!split_applaied)
+		{
+		  Money = 0;
+		}
+	    }
 	  Money = Money + money;
 
 	  line = source[i];
@@ -602,6 +626,13 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 	  strm.imbue(loc);
 	  strm << line;
 	  strm >> volume;
+	  if(apply_split)
+	    {
+	      if(!split_applaied)
+		{
+		  Volume = 0;
+		}
+	    }
 	  Volume = Volume + volume;
 
 	  double waprice = money / volume;
@@ -675,6 +706,13 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 	  if(it == finalv.end())
 	    {
 	      finalv.push_back(writevalue);
+	    }
+	  if(apply_split)
+	    {
+	      if(!split_applaied)
+		{
+		  split_applaied = true;
+		}
 	    }
 	}
     }

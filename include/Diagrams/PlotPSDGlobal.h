@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTPSDGLOBAL_H_
-#define PLOTPSDGLOBAL_H_
+#ifndef INCLUDE_DIAGRAMS_PLOTPSDGLOBAL_H_
+#define INCLUDE_DIAGRAMS_PLOTPSDGLOBAL_H_
 
 #include <mgl2/mgl.h>
 #include <filesystem>
@@ -31,26 +31,26 @@
 
 class PlotPSDGlobal
 {
-  public:
-    PlotPSDGlobal(
+public:
+  PlotPSDGlobal(
       std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PlotPSDGlobal();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filename;
-    int width, height;
-    std::vector<double> Index;
-    std::vector<double> Daily;
-    std::string datebeg;
-    std::string dateend;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  virtual
+  ~PlotPSDGlobal();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  std::filesystem::path filename;
+  int width, height;
+  std::vector<double> Index;
+  std::vector<double> Daily;
+  std::string datebeg;
+  std::string dateend;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
 };
 
-#endif /* PLOTPSDGLOBAL_H_ */
+#endif /* INCLUDE_DIAGRAMS_PLOTPSDGLOBAL_H_ */

@@ -402,7 +402,6 @@ OpenDialogDeals::createDialog(int variant, Gdk::Rectangle rec)
 	    {
 	      std::filesystem::path p = std::filesystem::u8path(fnm);
 	      fnm = p.stem().u8string();
-	      fnm = fnm.substr(0, fnm.find("-"));
 	      auto itib = std::find_if(instrbase.begin(), instrbase.end(), [fnm]
 	      (auto &el)
 		{
@@ -410,7 +409,8 @@ OpenDialogDeals::createDialog(int variant, Gdk::Rectangle rec)
 		});
 	      if(itib != instrbase.end())
 		{
-		  std::get<1>(ttup) = std::get<2>(*itib);
+		  std::get<1>(ttup) = std::get<2>(*itib) + "-"
+		      + std::get<0>(*itib);
 		}
 	      else
 		{
@@ -817,7 +817,6 @@ OpenDialogDeals::refreshInstr(Gtk::TreeView *tv_instr, Gtk::TreeView *tv_dates,
 	  std::filesystem::path p = std::filesystem::u8path(
 	      std::get<2>(files[i]));
 	  std::string fnm = p.stem().u8string();
-	  fnm = fnm.substr(0, fnm.find("-"));
 	  auto itib = std::find_if(instrbase.begin(), instrbase.end(), [fnm]
 	  (auto &el)
 	    {
@@ -851,6 +850,22 @@ OpenDialogDeals::refreshInstr(Gtk::TreeView *tv_instr, Gtk::TreeView *tv_dates,
 	    {
 	      std::string f = std::get<2>(el1);
 	      std::string s = std::get<2>(el2);
+	      f.erase(std::remove_if(f.begin(), f.end(), [](auto &el)
+			{
+			  return el == '\"';
+			}), f.end());
+	      s.erase(std::remove_if(s.begin(), s.end(), [](auto &el)
+			{
+			  return el == '\"';
+			}), s.end());
+	      while(*(f.begin()) == ' ')
+		{
+		  f.erase(f.begin());
+		}
+	      while(*(s.begin()) == ' ')
+		{
+		  s.erase(s.begin());
+		}
 	      af.stringToLower(f);
 	      af.stringToLower(s);
 	      return f < s;
@@ -881,7 +896,8 @@ OpenDialogDeals::refreshInstr(Gtk::TreeView *tv_instr, Gtk::TreeView *tv_dates,
 	{
 	  auto row = *(model_instr->append());
 	  row[index] = std::get<0>(filelist[i]);
-	  row[instrument] = std::get<2>(filelist[i]);
+	  row[instrument] = std::get<2>(filelist[i]) + "-"
+	      + std::get<3>(filelist[i]);
 	}
 
       tv_instr->set_model(model_instr);

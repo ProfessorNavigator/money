@@ -43,7 +43,7 @@ public:
 	    Gtk::Entry *year_ent, Gtk::Entry *sens_ent, Gtk::Entry *depth_ent);
   void
   searchFunc(std::vector<std::tuple<std::string, std::string>> *result,
-	     double jd, int depth, int sens, int *cancel);
+	     double jd, int depth, double sens, int *cancel);
   void
   errDialog(int variant, Gtk::Window *win);
   void

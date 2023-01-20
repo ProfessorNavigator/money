@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PSD_H_
-#define PSD_H_
+#ifndef INCLUDE_DIAGRAMS_PSD_H_
+#define INCLUDE_DIAGRAMS_PSD_H_
 
 #include <mgl2/mgl.h>
 #include <filesystem>
@@ -31,30 +31,29 @@
 
 class PSD
 {
-  public:
-    PSD(
-      std::string file,
+public:
+  PSD(std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PSD();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filename;
-    int height;
-    int width;
-    std::vector<double> Tc;
-    std::vector<double> Dc;
-    std::string datebeg;
-    std::string dateend;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
-    std::vector<std::string> usdv;
-    std::vector<std::string> eurv;
-    std::vector<std::string> cnyv;
+  virtual
+  ~PSD();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  std::filesystem::path filename;
+  int height;
+  int width;
+  std::vector<double> Tc;
+  std::vector<double> Dc;
+  std::string datebeg;
+  std::string dateend;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  std::vector<std::string> usdv;
+  std::vector<std::string> eurv;
+  std::vector<std::string> cnyv;
 };
 
-#endif /* PSD_H_ */
+#endif /* INCLUDE_DIAGRAMS_PSD_H_ */

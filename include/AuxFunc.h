@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUXFUNC_H_
-#define AUXFUNC_H_
+#ifndef INCLUDE_AUXFUNC_H_
+#define INCLUDE_AUXFUNC_H_
 #include <string>
 #include <sstream>
 #include <curl/curl.h>
@@ -91,4 +91,4 @@ private:
   curl_write_func(char *ptr, size_t size, size_t nmemb, std::fstream *f);
 };
 
-#endif /* AUXFUNC_H_ */
+#endif /* INCLUDE_AUXFUNC_H_ */

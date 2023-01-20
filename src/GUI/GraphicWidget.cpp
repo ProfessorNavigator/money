@@ -124,7 +124,6 @@ GraphicWidget::graphic(std::string file, Gtk::Window *win, int graphvar)
 		std::back_inserter(instrbase));
       instrbasef.clear();
       std::string val = p.filename().stem().u8string();
-      val.erase(0, val.rfind("-") + std::string("-").size());
       auto itib = std::find_if(instrbase.begin(), instrbase.end(), [val]
       (auto &el)
 	{

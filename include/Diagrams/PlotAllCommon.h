@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTALLCOMMON_H_
-#define PLOTALLCOMMON_H_
+#ifndef INCLUDE_DIAGRAMS_PLOTALLCOMMON_H_
+#define INCLUDE_DIAGRAMS_PLOTALLCOMMON_H_
 
 #include <mgl2/mgl.h>
 #include <string>
@@ -31,31 +31,31 @@
 
 class PlotAllCommon
 {
-  public:
-    PlotAllCommon(
+public:
+  PlotAllCommon(
       std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PlotAllCommon();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filename;
-    int height, width;
-    std::vector<double> Tc;
-    std::vector<double> Dc;
-    std::vector<double> Ot;
-    std::string datebeg;
-    std::string dateend;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
-    std::vector<std::string> usdv;
-    std::vector<std::string> eurv;
-    std::vector<std::string> cnyv;
-    std::vector<double> sharesvol;
+  virtual
+  ~PlotAllCommon();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  std::filesystem::path filename;
+  int height, width;
+  std::vector<double> Tc;
+  std::vector<double> Dc;
+  std::vector<double> Ot;
+  std::string datebeg;
+  std::string dateend;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  std::vector<std::string> usdv;
+  std::vector<std::string> eurv;
+  std::vector<std::string> cnyv;
+  std::vector<double> sharesvol;
 };
 
-#endif /* PLOTALLCOMMON_H_ */
+#endif /* INCLUDE_DIAGRAMS_PLOTALLCOMMON_H_ */

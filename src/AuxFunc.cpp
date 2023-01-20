@@ -42,10 +42,8 @@ AuxFunc::grigtojulian(int day, int month, int year, int hour, int minut,
   double JD;
   if(J >= 0)
     {
-
       JD = static_cast<double>(J) + static_cast<double>(hour) / 24.0
-	  + static_cast<double>(minut) / 1440.0 + sec / 86400.0;
-    }
+	  + static_cast<double>(minut) / 1440.0 + sec / 86400.0;    }
   else
     {
       double k = static_cast<double>(hour) / 24.0
@@ -613,7 +611,7 @@ AuxFunc::get_selfpath()
   GetModuleFileNameA(NULL, pth, MAX_PATH);
   p = std::filesystem::path(pth);
   return p.u8string();
-  #endif
+#endif
 }
 
 void

@@ -160,7 +160,8 @@ CalcIndex::mainCalc()
 	}
       if(progr)
 	{
-	  progr(static_cast<double>(i) / static_cast<double>(maindir.size()));
+	  progr(
+	      static_cast<double>(i + 1) / static_cast<double>(maindir.size()));
 	}
     }
 
@@ -305,7 +306,9 @@ CalcIndex::mainCalc()
       f.close();
       if(progr)
 	{
-	  progr(static_cast<double>(i) / static_cast<double>(filelist.size()));
+	  progr(
+	      static_cast<double>(i + 1)
+		  / static_cast<double>(filelist.size()));
 	}
     }
   maindir.clear();
@@ -504,7 +507,7 @@ CalcIndex::mainCalc()
 	}
       if(progr)
 	{
-	  progr(static_cast<double>(i) / static_cast<double>(data.size()));
+	  progr(static_cast<double>(i + 1) / static_cast<double>(data.size()));
 	}
     }
   f.close();

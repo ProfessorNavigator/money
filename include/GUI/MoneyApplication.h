@@ -15,27 +15,27 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MONEYAPPLICATION_H_
-#define MONEYAPPLICATION_H_
+#ifndef INCLUDE_GUI_MONEYAPPLICATION_H_
+#define INCLUDE_GUI_MONEYAPPLICATION_H_
 
 #include <gtkmm.h>
 #include "MainWindow.h"
 
 class MoneyApplication : public Gtk::Application
 {
-  protected:
-    MoneyApplication();
-  public:
-    static Glib::RefPtr<MoneyApplication>
-    create();
-    virtual
-    ~MoneyApplication();
-  private:
-    MainWindow *
-    create_appwindow();
-  protected:
-    void
-    on_activate() override;
+protected:
+  MoneyApplication();
+public:
+  static Glib::RefPtr<MoneyApplication>
+  create();
+  virtual
+  ~MoneyApplication();
+private:
+  MainWindow*
+  create_appwindow();
+protected:
+  void
+  on_activate() override;
 };
 
-#endif /* MONEYAPPLICATION_H_ */
+#endif /* INCLUDE_GUI_MONEYAPPLICATION_H_ */

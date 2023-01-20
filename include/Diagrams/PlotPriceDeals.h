@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLOTPRICEDEALS_H_
-#define PLOTPRICEDEALS_H_
+#ifndef INCLUDE_DIAGRAMS_PLOTPRICEDEALS_H_
+#define INCLUDE_DIAGRAMS_PLOTPRICEDEALS_H_
 
 #include <mgl2/mgl.h>
 #include <string>
@@ -31,30 +31,30 @@
 
 class PlotPriceDeals
 {
-  public:
-    PlotPriceDeals(
+public:
+  PlotPriceDeals(
       std::string file,
       int Height,
       int Width,
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
-    virtual
-    ~PlotPriceDeals();
-    int
-    Draw(mglGraph *gr);
-  private:
-    void
-    calcForDraw();
-    std::filesystem::path filename;
-    int height, width;
-    std::vector<double> Tc;
-    std::vector<double> Price;
-    std::string datebeg;
-    std::string dateend;
-    std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
-    std::vector<std::string> usdv;
-    std::vector<std::string> eurv;
-    std::vector<std::string> cnyv;
-    std::string yname;
+  virtual
+  ~PlotPriceDeals();
+  int
+  Draw(mglGraph *gr);
+private:
+  void
+  calcForDraw();
+  std::filesystem::path filename;
+  int height, width;
+  std::vector<double> Tc;
+  std::vector<double> Price;
+  std::string datebeg;
+  std::string dateend;
+  std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  std::vector<std::string> usdv;
+  std::vector<std::string> eurv;
+  std::vector<std::string> cnyv;
+  std::string yname;
 };
 
-#endif /* PLOTPRICEDEALS_H_ */
+#endif /* INCLUDE_DIAGRAMS_PLOTPRICEDEALS_H_ */

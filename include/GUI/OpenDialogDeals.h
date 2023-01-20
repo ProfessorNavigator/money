@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef OPENDIALOGDEALS_H_
-#define OPENDIALOGDEALS_H_
+#ifndef INCLUDE_GUI_OPENDIALOGDEALS_H_
+#define INCLUDE_GUI_OPENDIALOGDEALS_H_
 
 #include <gtkmm.h>
 #include <string>
@@ -69,4 +69,4 @@ private:
   Gtk::Window *Mwin = nullptr;
 };
 
-#endif /* OPENDIALOGDEALS_H_ */
+#endif /* INCLUDE_GUI_OPENDIALOGDEALS_H_ */

@@ -15,8 +15,8 @@
  see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOWNLOADALL_H_
-#define DOWNLOADALL_H_
+#ifndef INCLUDE_DOWNLOAD_DOWNLOADALL_H_
+#define INCLUDE_DOWNLOAD_DOWNLOADALL_H_
 
 #include <filesystem>
 #include <gmpxx.h>
@@ -66,4 +66,4 @@ private:
   std::vector<std::tuple<std::string, std::string>> Boards;
 };
 
-#endif /* DOWNLOADALL_H_ */
+#endif /* INCLUDE_DOWNLOAD_DOWNLOADALL_H_ */

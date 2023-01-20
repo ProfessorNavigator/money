@@ -24,23 +24,73 @@ DownloadMenu::DownloadMenu(Gtk::Window *mwin)
 
 DownloadMenu::~DownloadMenu()
 {
-
+  // TODO Auto-generated destructor stub
 }
 
 void
 DownloadMenu::downloadMenu()
 {
+  AuxFunc af;
   std::vector<std::tuple<std::string, std::string, std::string>> instruments;
-  std::vector<std::tuple<std::string, std::string, std::string>> resv;
-  resv = formVectorInstr(1);
-  std::copy(resv.begin(), resv.end(), std::back_inserter(instruments));
-  resv.clear();
-  resv = formVectorInstr(2);
-  std::copy(resv.begin(), resv.end(), std::back_inserter(instruments));
+  std::vector<std::tuple<std::string, std::string, std::string>> instrumentsf;
+  instruments = formVectorInstr(1);
+  std::sort(instruments.begin(), instruments.end(), [&af]
+  (auto &el1, auto &el2)
+    {
+      std::string l1 = std::get<2>(el1);
+      std::string l2 = std::get<2>(el2);
+      l1.erase(std::remove_if(l1.begin(), l1.end(), [](auto &el)
+		{
+		  return el == '\"';
+		}), l1.end());
+      l2.erase(std::remove_if(l2.begin(), l2.end(), [](auto &el)
+		{
+		  return el == '\"';
+		}), l2.end());
+      while(*(l1.begin()) == ' ')
+	{
+	  l1.erase(l1.begin());
+	}
+      while(*(l2.begin()) == ' ')
+	{
+	  l2.erase(l2.begin());
+	}
+      af.stringToLower(l1);
+      af.stringToLower(l2);
+      return l1 < l2;
+    });
+  instrumentsf = formVectorInstr(2);
+  std::sort(instrumentsf.begin(), instrumentsf.end(), [&af]
+  (auto &el1, auto &el2)
+    {
+      std::string l1 = std::get<2>(el1);
+      std::string l2 = std::get<2>(el2);
+      l1.erase(std::remove_if(l1.begin(), l1.end(), [](auto &el)
+		{
+		  return el == '\"';
+		}), l1.end());
+      l2.erase(std::remove_if(l2.begin(), l2.end(), [](auto &el)
+		{
+		  return el == '\"';
+		}), l2.end());
+      while(*(l1.begin()) == ' ')
+	{
+	  l1.erase(l1.begin());
+	}
+      while(*(l2.begin()) == ' ')
+	{
+	  l2.erase(l2.begin());
+	}
+      af.stringToLower(l1);
+      af.stringToLower(l2);
+      return l1 < l2;
+    });
+  std::copy(instrumentsf.begin(), instrumentsf.end(),
+	    std::back_inserter(instruments));
+  instrumentsf.clear();
 
   if(instruments.size() > 0)
     {
-      AuxFunc af;
       Gtk::Window *window = new Gtk::Window;
       window->set_application(Mwin->get_application());
       window->set_default_size(1, 1);
@@ -55,16 +105,22 @@ DownloadMenu::downloadMenu()
       window->set_child(*grid);
 
       Gtk::TreeModel::ColumnRecord record;
-      Gtk::TreeModelColumn<unsigned int> id;
       Gtk::TreeModelColumn<Glib::ustring> instrument;
       Gtk::TreeModelColumn<Glib::ustring> code;
       Gtk::TreeModelColumn<Glib::ustring> instrfnm;
-      record.add(id);
       record.add(instrument);
       record.add(instrfnm);
       record.add(code);
-
       Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(record);
+      for(size_t i = 0; i < instruments.size(); i++)
+	{
+	  auto row = *(model->append());
+	  row[instrument] = Glib::ustring(std::get<2>(instruments[i])) + "-"
+	      + Glib::ustring(std::get<0>(instruments[i]));
+	  row[instrfnm] = Glib::ustring(std::get<1>(instruments[i]));
+	  row[code] = Glib::ustring(std::get<0>(instruments[i]));
+	}
+
       Gtk::TreeView *box = Gtk::make_managed<Gtk::TreeView>();
       box->set_name("treeViewI");
 
@@ -79,20 +135,15 @@ DownloadMenu::downloadMenu()
       Gtk::MenuButton *mb = Gtk::make_managed<Gtk::MenuButton>();
       mb->set_margin(5);
       mb->set_name("boards");
-      mb->set_label(
-	  std::get<1>(instruments[0]) + "-" + std::get<0>(instruments[0]));
       mb->set_popover(*pop);
-      grid->attach(*mb, 0, 0, 1, 1);
-
-      for(size_t i = 0; i < instruments.size(); i++)
+      auto row_instr = model->children()[0];
+      if(row_instr)
 	{
-	  auto row = *(model->append());
-	  row[id] = i;
-	  row[instrument] = Glib::ustring(std::get<2>(instruments[i])) + "-"
-	      + Glib::ustring(std::get<0>(instruments[i]));
-	  row[instrfnm] = Glib::ustring(std::get<1>(instruments[i]));
-	  row[code] = Glib::ustring(std::get<0>(instruments[i]));
+	  Glib::ustring val;
+	  row_instr.get_value(0, val);
+	  mb->set_label(val);
 	}
+      grid->attach(*mb, 0, 0, 1, 1);
 
       box->append_column("", instrument);
       box->set_headers_visible(false);
@@ -591,7 +642,7 @@ DownloadMenu::instrSelection(const Gtk::TreeModel::Path &path,
   if(iter)
     {
       Glib::ustring val;
-      iter->get_value(1, val);
+      iter->get_value(0, val);
       mb->set_label(val);
       mb->popdown();
     }
@@ -1191,8 +1242,8 @@ DownloadMenu::downlodSinglInstrAll(Gtk::Window *win, Gtk::TreeView *tv)
       Glib::ustring code, fnm;
       if(iter)
 	{
-	  iter->get_value(2, fnm);
-	  iter->get_value(3, code);
+	  iter->get_value(1, fnm);
+	  iter->get_value(2, code);
 	  instruments.push_back(
 	      std::make_tuple(std::string(code), std::string(fnm), ""));
 	}
@@ -1201,8 +1252,8 @@ DownloadMenu::downlodSinglInstrAll(Gtk::Window *win, Gtk::TreeView *tv)
 	  auto row = tv->get_model()->children()[0];
 	  if(row)
 	    {
-	      row.get_value(2, fnm);
-	      row.get_value(3, code);
+	      row.get_value(1, fnm);
+	      row.get_value(2, code);
 	      instruments.push_back(
 		  std::make_tuple(std::string(code), std::string(fnm), ""));
 	    }
@@ -1394,8 +1445,8 @@ DownloadMenu::downlodSinglInstrDeals(Gtk::Window *win, Gtk::TreeView *tv)
       Glib::ustring code, fnm;
       if(iter)
 	{
-	  iter->get_value(2, fnm);
-	  iter->get_value(3, code);
+	  iter->get_value(1, fnm);
+	  iter->get_value(2, code);
 	  instruments.push_back(
 	      std::make_tuple(std::string(code), std::string(fnm), ""));
 	}
@@ -1404,8 +1455,8 @@ DownloadMenu::downlodSinglInstrDeals(Gtk::Window *win, Gtk::TreeView *tv)
 	  auto row = tv->get_model()->children()[0];
 	  if(row)
 	    {
-	      row.get_value(2, fnm);
-	      row.get_value(3, code);
+	      row.get_value(1, fnm);
+	      row.get_value(2, code);
 	      instruments.push_back(
 		  std::make_tuple(std::string(code), std::string(fnm), ""));
 	    }

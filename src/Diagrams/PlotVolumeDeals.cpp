@@ -18,10 +18,10 @@
 #include "PlotVolumeDeals.h"
 
 PlotVolumeDeals::PlotVolumeDeals(
-  std::string file,
-  int Height,
-  int Width,
-  std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
+    std::string file,
+    int Height,
+    int Width,
+    std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
 {
   filename = std::filesystem::u8path(file);
   height = Height;
@@ -54,89 +54,86 @@ PlotVolumeDeals::calcForDraw()
       std::tuple<int, int, int> temptup;
       f.open(filename, std::ios_base::in);
       while(!f.eof())
-        {
-          getline(f, line);
-          if(count == 2)
-            {
-              midd = line;
-              int countch = 0;
-              while(midd.size() > 0)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  std::string::size_type n;
-                  if(temp == "TRADETIME")
-                    {
-                      std::get<0> (temptup) = countch;
-                    }
-                  if(temp == "VALUE")
-                    {
-                      std::get<1> (temptup) = countch;
-                    }
-                  if(temp == "PRICE")
-                    {
-                      std::get<2> (temptup) = countch;
-                    }
-                  n = midd.find(";");
-                  if(n != std::string::npos)
-                    {
-                      midd.erase(0, n + std::string(";").size());
-                    }
-                  else
-                    {
-                      break;
-                    }
-                  countch++;
-                }
-            }
-          if(count > 2 && !line.empty())
-            {
-              midd = line;
-              temp = line;
-              for(int i = 0; i < std::get<0> (temptup); i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd = midd.erase(0,
-                                    temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              std::tuple<std::string, double, double, double, double> ttup;
-              std::get<0> (ttup) = midd;
+	{
+	  getline(f, line);
+	  if(count == 2)
+	    {
+	      midd = line;
+	      int countch = 0;
+	      while(midd.size() > 0)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  std::string::size_type n;
+		  if(temp == "TRADETIME")
+		    {
+		      std::get<0>(temptup) = countch;
+		    }
+		  if(temp == "VALUE")
+		    {
+		      std::get<1>(temptup) = countch;
+		    }
+		  if(temp == "PRICE")
+		    {
+		      std::get<2>(temptup) = countch;
+		    }
+		  n = midd.find(";");
+		  if(n != std::string::npos)
+		    {
+		      midd.erase(0, n + std::string(";").size());
+		    }
+		  else
+		    {
+		      break;
+		    }
+		  countch++;
+		}
+	    }
+	  if(count > 2 && !line.empty())
+	    {
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < std::get<0>(temptup); i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd = midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      std::tuple<std::string, double, double, double, double> ttup;
+	      std::get<0>(ttup) = midd;
 
-              midd = line;
-              temp = line;
-              for(int i = 0; i < std::get<1> (temptup); i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd = midd.erase(0,
-                                    temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              std::stringstream strm;
-              std::locale loc("C");
-              strm.imbue(loc);
-              strm << midd;
-              strm >> mon;
-              Mon.push_back(mon);
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < std::get<1>(temptup); i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd = midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      std::stringstream strm;
+	      std::locale loc("C");
+	      strm.imbue(loc);
+	      strm << midd;
+	      strm >> mon;
+	      Mon.push_back(mon);
 
-              midd = line;
-              temp = line;
-              for(int i = 0; i < std::get<2> (temptup); i++)
-                {
-                  temp = midd.substr(0, midd.find(";"));
-                  midd = midd.erase(0,
-                                    temp.size() + std::string(";").size());
-                }
-              midd = midd.substr(0, midd.find(";"));
-              strm.str("");
-              strm.clear();
-              strm.imbue(loc);
-              strm << midd;
-              strm >> quan;
-              Quan.push_back(mon / quan);
-              plotdate->push_back(ttup);
-            }
-          count = count + 1;
-        }
+	      midd = line;
+	      temp = line;
+	      for(int i = 0; i < std::get<2>(temptup); i++)
+		{
+		  temp = midd.substr(0, midd.find(";"));
+		  midd = midd.erase(0, temp.size() + std::string(";").size());
+		}
+	      midd = midd.substr(0, midd.find(";"));
+	      strm.str("");
+	      strm.clear();
+	      strm.imbue(loc);
+	      strm << midd;
+	      strm >> quan;
+	      Quan.push_back(mon / quan);
+	      plotdate->push_back(ttup);
+	    }
+	  count = count + 1;
+	}
       f.close();
     }
   mpf_class temp2;
@@ -144,7 +141,7 @@ PlotVolumeDeals::calcForDraw()
     {
       temp2 = Quan[i];
       Volume.push_back(temp2.get_d());
-      std::get<1> (plotdate->at(i)) = Volume[i];
+      std::get<1>(plotdate->at(i)) = Volume[i];
     }
   mpf_class summ(0);
   mpf_class vols(0);
@@ -155,13 +152,13 @@ PlotVolumeDeals::calcForDraw()
       vols = vols + Volume[i];
       res = vols / summ;
       Volmid.push_back(res.get_d());
-      std::get<2> (plotdate->at(i)) = Volmid[i];
+      std::get<2>(plotdate->at(i)) = Volmid[i];
     }
 
   if(plotdate->size() > 0)
     {
-      datebeg = std::get<0> (plotdate->at(0));
-      dateend = std::get<0> (plotdate->at(plotdate->size() - 1));
+      datebeg = std::get<0>(plotdate->at(0));
+      dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
     }
 }
 
@@ -219,13 +216,13 @@ PlotVolumeDeals::Draw(mglGraph *gr)
       tick = strm.str();
       ticks.push_back(tickval);
       if(!tickstr.empty())
-        {
-          tickstr = tickstr + "\n" + tick;
-        }
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
       else
-        {
-          tickstr = tick;
-        }
+	{
+	  tickstr = tick;
+	}
     }
   mglData fortick(ticks);
 
@@ -249,10 +246,8 @@ PlotVolumeDeals::Draw(mglGraph *gr)
   gr->Legend(1.1, 1.3);
 
   //Подписи оси х
-  mglPoint p1(x.Minimal(),
-              y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-  mglPoint p5(x.Maximal(),
-              y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p1(x.Minimal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p5(x.Maximal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
   datebeg = af.utf8to(datebeg);
   dateend = af.utf8to(dateend);
   gr->Puts(p1, datebeg.c_str(), "k", 3);

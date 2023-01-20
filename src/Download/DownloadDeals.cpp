@@ -185,8 +185,7 @@ DownloadDeals::downloadAll()
 		    }
 		  filename = af.tempPath();
 		  filename = filename + "/Money/Deals/"
-		      + std::get<0>(Instruments.at(i)) + "-"
-		      + std::get<1>(Instruments.at(i)) + std::to_string(count);
+		      + std::get<0>(Instruments.at(i)) + std::to_string(count);
 		  filepath = std::filesystem::u8path(filename);
 
 		  for(;;)
@@ -260,8 +259,7 @@ DownloadDeals::downloadAll()
 		  linecount = 0;
 		  filename = af.tempPath();
 		  filename = filename + "/Money/Deals/"
-		      + std::get<0>(Instruments.at(i)) + "-"
-		      + std::get<1>(Instruments.at(i)) + std::to_string(count);
+		      + std::get<0>(Instruments.at(i)) + std::to_string(count);
 		  filepath = std::filesystem::u8path(filename);
 
 		  if(!std::filesystem::exists(filepath))
@@ -323,8 +321,7 @@ DownloadDeals::downloadAll()
 		      filename = af.tempPath();
 		      filename = filename + "/Money/DownloadDeals/" + date + "/"
 			  + std::get<0>(Boards.at(k)) + "/"
-			  + std::get<0>(Instruments.at(i)) + "-"
-			  + std::get<1>(Instruments.at(i));
+			  + std::get<0>(Instruments.at(i));
 		      filepath = std::filesystem::u8path(filename);
 
 		      std::fstream f;
@@ -344,7 +341,7 @@ DownloadDeals::downloadAll()
 	      if(progr)
 		{
 		  progr(
-		      static_cast<double>(i)
+		      static_cast<double>(i + 1)
 			  / static_cast<double>(Instruments.size()));
 		}
 	    }
@@ -471,8 +468,7 @@ DownloadDeals::downloadAll()
 		    {
 		      filename = af.tempPath();
 		      filename = filename + "/Money/DealsSingl/" + date + "/"
-			  + dirnms[o] + "/" + std::get<0>(Instruments.at(0))
-			  + "-" + std::get<1>(Instruments.at(0));
+			  + dirnms[o] + "/" + std::get<0>(Instruments.at(0));
 		      filepath = std::filesystem::u8path(filename);
 		      if(std::filesystem::exists(filepath))
 			{
@@ -480,13 +476,11 @@ DownloadDeals::downloadAll()
 			}
 		      filename = af.tempPath();
 		      filename = filename + "/Money/DownloadDeals/" + date + "/"
-			  + dirnms[o] + "/" + std::get<0>(Instruments.at(0))
-			  + "-" + std::get<1>(Instruments.at(0));
+			  + dirnms[o] + "/" + std::get<0>(Instruments.at(0));
 		      filepath = std::filesystem::u8path(filename);
 		      dirline = af.tempPath();
 		      dirline = dirline + "/Money/DealsSingl/" + date + "/"
-			  + dirnms[o] + "/" + std::get<0>(Instruments.at(0))
-			  + "-" + std::get<1>(Instruments.at(0));
+			  + dirnms[o] + "/" + std::get<0>(Instruments.at(0));
 		      dir = std::filesystem::u8path(dirline);
 		      std::filesystem::copy(filepath, dir);
 		    }

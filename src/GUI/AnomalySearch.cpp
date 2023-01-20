@@ -30,9 +30,64 @@ AnomalySearch::~AnomalySearch()
 void
 AnomalySearch::windowFunc()
 {
-  time_t ctm = time(NULL);
-  ctm = ctm + 3600 * 3;
-  tm *moscow = gmtime(&ctm);
+  std::vector<Glib::ustring> date_val;
+  std::string filename;
+  AuxFunc af;
+  af.homePath(&filename);
+  filename = filename + "/.Money/DateBegin";
+  std::filesystem::path filepath = std::filesystem::u8path(filename);
+  std::fstream f;
+  f.open(filepath, std::ios_base::in | std::ios_base::binary);
+  if(f.is_open())
+    {
+      std::string line;
+      line.resize(std::filesystem::file_size(filepath));
+      f.read(&line[0], line.size());
+      f.close();
+      std::stringstream strm;
+      std::locale loc("C");
+      strm.imbue(loc);
+      strm << line;
+      double JDN;
+      strm >> JDN;
+      if(JDN > 2450531.0)
+	{
+	  date_val.push_back(Glib::ustring(af.togrigday(JDN)));
+	  date_val.push_back(Glib::ustring(af.togrigmonth(JDN)));
+	  date_val.push_back(Glib::ustring(af.togrigyear(JDN)));
+	}
+    }
+  if(date_val.size() == 0)
+    {
+      time_t ctm = time(NULL);
+      ctm = ctm + 3600 * 3;
+      ctm = ctm - 3600 * 24;
+      tm *moscow = gmtime(&ctm);
+      std::stringstream strm;
+      std::locale loc("C");
+      strm.imbue(loc);
+      strm << moscow->tm_mday;
+      date_val.push_back(Glib::ustring(strm.str()));
+
+      strm.clear();
+      strm.str("");
+      strm.imbue(loc);
+      strm << moscow->tm_mon + 1;
+      if(moscow->tm_mon + 1 < 10)
+	{
+	  date_val.push_back(Glib::ustring("0") + Glib::ustring(strm.str()));
+	}
+      else
+	{
+	  date_val.push_back(Glib::ustring(strm.str()));
+	}
+
+      strm.clear();
+      strm.str("");
+      strm.imbue(loc);
+      strm << moscow->tm_year + 1900;
+      date_val.push_back(Glib::ustring(strm.str()));
+    }
 
   Gtk::Window *window = new Gtk::Window;
   window->set_application(par_win->get_application());
@@ -73,13 +128,6 @@ AnomalySearch::windowFunc()
   year_lb->set_text(gettext("Year"));
   grid->attach(*year_lb, 2, 1, 1, 1);
 
-  std::stringstream strm;
-  std::locale loc("C");
-  strm.imbue(loc);
-  Glib::ustring date_val;
-  strm << moscow->tm_mday;
-  date_val = Glib::ustring(strm.str());
-
   Gtk::Entry *day_ent = Gtk::make_managed<Gtk::Entry>();
   day_ent->set_margin(5);
   day_ent->set_halign(Gtk::Align::CENTER);
@@ -88,22 +136,11 @@ AnomalySearch::windowFunc()
   day_ent->set_max_length(2);
   day_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
   day_ent->set_alignment(Gtk::Align::CENTER);
-  day_ent->set_text(date_val);
+  if(date_val.size() > 0)
+    {
+      day_ent->set_text(date_val[0]);
+    }
   grid->attach(*day_ent, 0, 2, 1, 1);
-
-  date_val.clear();
-  strm.clear();
-  strm.str("");
-  strm.imbue(loc);
-  strm << moscow->tm_mon + 1;
-  if(moscow->tm_mon + 1 < 10)
-    {
-      date_val = Glib::ustring("0") + Glib::ustring(strm.str());
-    }
-  else
-    {
-      date_val = Glib::ustring(strm.str());
-    }
 
   Gtk::Entry *month_ent = Gtk::make_managed<Gtk::Entry>();
   month_ent->set_margin(5);
@@ -113,15 +150,11 @@ AnomalySearch::windowFunc()
   month_ent->set_max_length(2);
   month_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
   month_ent->set_alignment(Gtk::Align::CENTER);
-  month_ent->set_text(date_val);
+  if(date_val.size() > 1)
+    {
+      month_ent->set_text(date_val[1]);
+    }
   grid->attach(*month_ent, 1, 2, 1, 1);
-
-  date_val.clear();
-  strm.clear();
-  strm.str("");
-  strm.imbue(loc);
-  strm << moscow->tm_year + 1900;
-  date_val = Glib::ustring(strm.str());
 
   Gtk::Entry *year_ent = Gtk::make_managed<Gtk::Entry>();
   year_ent->set_margin(5);
@@ -131,7 +164,10 @@ AnomalySearch::windowFunc()
   year_ent->set_max_length(4);
   year_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
   year_ent->set_alignment(Gtk::Align::CENTER);
-  year_ent->set_text(date_val);
+  if(date_val.size() > 2)
+    {
+      year_ent->set_text(date_val[2]);
+    }
   grid->attach(*year_ent, 2, 2, 1, 1);
 
   Gtk::Label *depth_lb = Gtk::make_managed<Gtk::Label>();
@@ -235,8 +271,7 @@ AnomalySearch::searchWin(Gtk::Window *win, Gtk::Entry *day_ent,
   int monthnum = -1;
   int yearnum = -1;
   int depth = -1;
-  int sens = -1;
-
+  double sens = -1.0;
   std::stringstream strm;
   std::locale loc("C");
   strm.imbue(loc);
@@ -540,10 +575,10 @@ AnomalySearch::errDialog(int variant, Gtk::Window *win)
 void
 AnomalySearch::searchFunc(
     std::vector<std::tuple<std::string, std::string>> *result, double jd,
-    int depth, int sens, int *cancel)
+    int depth, double sens, int *cancel)
 {
   jd = jd - static_cast<double>(depth);
-  double sns = std::abs(static_cast<double>(sens) / 100);
+  double sns = std::abs(sens * 0.01);
   std::vector<std::filesystem::path> files;
   std::string filename;
   AuxFunc af;
@@ -756,7 +791,6 @@ AnomalySearch::resultWin(
 	}
 
       std::string instr = std::get<1>(result->at(i));
-      instr.erase(0, instr.rfind("-") + std::string("-").size());
       auto itib = std::find_if(instrbase.begin(), instrbase.end(), [instr]
       (auto &el)
 	{

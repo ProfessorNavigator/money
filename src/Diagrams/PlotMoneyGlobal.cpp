@@ -18,10 +18,10 @@
 #include "PlotMoneyGlobal.h"
 
 PlotMoneyGlobal::PlotMoneyGlobal(
-  std::string file,
-  int Height,
-  int Width,
-  std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
+    std::string file,
+    int Height,
+    int Width,
+    std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
 {
   filename = std::filesystem::u8path(file);
   height = Height;
@@ -49,36 +49,36 @@ PlotMoneyGlobal::calcForDraw()
     {
       f.open(filename, std::ios_base::in);
       while(!f.eof())
-        {
-          getline(f, line);
-          if(count > 0 && !line.empty())
-            {
-              temp = line;
-              temp.erase(0, temp.find(";") + std::string(";").size());
-              temp.erase(0, temp.find(";") + std::string(";").size());
-              temp = temp.substr(0, temp.find(";"));
-              std::stringstream strm;
-              std::locale loc("C");
-              double tmpd;
-              strm.imbue(loc);
-              strm << temp;
-              strm >> tmpd;
-              std::tuple<std::string, double, double, double, double> ttup;
-              std::get<1> (ttup) = tmpd;
-              Money.push_back(tmpd);
+	{
+	  getline(f, line);
+	  if(count > 0 && !line.empty())
+	    {
+	      temp = line;
+	      temp.erase(0, temp.find(";") + std::string(";").size());
+	      temp.erase(0, temp.find(";") + std::string(";").size());
+	      temp = temp.substr(0, temp.find(";"));
+	      std::stringstream strm;
+	      std::locale loc("C");
+	      double tmpd;
+	      strm.imbue(loc);
+	      strm << temp;
+	      strm >> tmpd;
+	      std::tuple<std::string, double, double, double, double> ttup;
+	      std::get<1>(ttup) = tmpd;
+	      Money.push_back(tmpd);
 
-              temp = line;
-              temp = temp.substr(0, temp.find(";"));
-              std::get<0> (ttup) = temp;
-              plotdate->push_back(ttup);
-            }
-          count = count + 1;
-        }
+	      temp = line;
+	      temp = temp.substr(0, temp.find(";"));
+	      std::get<0>(ttup) = temp;
+	      plotdate->push_back(ttup);
+	    }
+	  count = count + 1;
+	}
       if(plotdate->size() > 0)
-        {
-          datebeg = std::get<0> (plotdate->at(0));
-          dateend = std::get<0> (plotdate->at(plotdate->size() - 1));
-        }
+	{
+	  datebeg = std::get<0>(plotdate->at(0));
+	  dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
+	}
       f.close();
     }
   mpf_class summ(0);
@@ -90,7 +90,7 @@ PlotMoneyGlobal::calcForDraw()
       mons = mons + Money[i];
       res = mons / summ;
       Moneymid.push_back(res.get_d());
-      std::get<2> (plotdate->at(i)) = Moneymid[i];
+      std::get<2>(plotdate->at(i)) = Moneymid[i];
     }
 }
 
@@ -104,10 +104,8 @@ PlotMoneyGlobal::Draw(mglGraph *gr)
       X.push_back(i);
     }
   mglData x(X), y(Money), y2(Moneymid);
-  mglPoint p1(x.Minimal(),
-              y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-  mglPoint p5(x.Maximal(),
-              y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p1(x.Minimal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p5(x.Maximal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
 
   int d = 6;
   int number = X.size();
@@ -122,11 +120,11 @@ PlotMoneyGlobal::Draw(mglGraph *gr)
   for(size_t i = 0; i < X.size(); i = i + d)
     {
       if(i > 0)
-        {
-          mglPoint p(i, y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-          Coord.push_back(p);
-          dates.push_back(std::get<0> (plotdate->at(i)));
-        }
+	{
+	  mglPoint p(i, y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+	  Coord.push_back(p);
+	  dates.push_back(std::get<0>(plotdate->at(i)));
+	}
     }
   gr->SetObjId(32);
   gr->SetSize(width, height);
@@ -161,13 +159,13 @@ PlotMoneyGlobal::Draw(mglGraph *gr)
       tick = strm.str();
       ticks.push_back(tickval);
       if(!tickstr.empty())
-        {
-          tickstr = tickstr + "\n" + tick;
-        }
+	{
+	  tickstr = tickstr + "\n" + tick;
+	}
       else
-        {
-          tickstr = tick;
-        }
+	{
+	  tickstr = tick;
+	}
     }
   mglData fortick(ticks);
   tickstr = af.utf8to(tickstr);
