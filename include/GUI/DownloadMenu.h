@@ -69,6 +69,10 @@ private:
   downlodSinglInstrDeals(Gtk::Window *win, Gtk::TreeView *tv);
   void
   noDeals(int sel);
+  void
+  splitInstrument(Gtk::Window *win);
+  void
+  addSplitInstr(Gtk::Window *win, Gtk::TreeView *tv_split);
   Gtk::Window *Mwin = nullptr;
 };
 

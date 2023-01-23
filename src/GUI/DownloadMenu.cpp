@@ -152,17 +152,30 @@ DownloadMenu::downloadMenu()
 	  sigc::bind(sigc::mem_fun(*this, &DownloadMenu::instrSelection), model,
 		     mb));
 
+      Gtk::Window *mw = Mwin;
+
+      Gtk::Button *split = Gtk::make_managed<Gtk::Button>();
+      split->set_margin(5);
+      split->set_halign(Gtk::Align::FILL);
+      split->set_name("commongraphicallButton");
+      split->set_label(gettext("Splitting/backsplitting instrument"));
+      split->signal_clicked().connect([window, mw]
+      {
+	DownloadMenu dm(mw);
+	dm.splitInstrument(window);
+      });
+      grid->attach(*split, 0, 1, 1, 1);
+
       Gtk::Button *instrdeals = Gtk::make_managed<Gtk::Button>();
       instrdeals->set_name("allButton");
       instrdeals->set_label(gettext("Transactions for instrument"));
       instrdeals->set_margin(5);
-      Gtk::Window *mw = Mwin;
       instrdeals->signal_clicked().connect([window, box, mw]
       {
 	DownloadMenu dm(mw);
 	dm.downlodSinglInstrDeals(window, box);
       });
-      grid->attach(*instrdeals, 0, 1, 1, 1);
+      grid->attach(*instrdeals, 0, 2, 1, 1);
 
       Gtk::Button *instrall = Gtk::make_managed<Gtk::Button>();
       instrall->set_name("allButton");
@@ -173,7 +186,7 @@ DownloadMenu::downloadMenu()
 	DownloadMenu dm(mw);
 	dm.downlodSinglInstrAll(window, box);
       });
-      grid->attach(*instrall, 0, 2, 1, 1);
+      grid->attach(*instrall, 0, 3, 1, 1);
 
       Gtk::Label *Dateserver = Gtk::make_managed<Gtk::Label>();
       Dateserver->set_name("dateServer");
@@ -183,7 +196,7 @@ DownloadMenu::downloadMenu()
 	  + af.togrigyear(dateserver);
       Dateserver->set_text(dateservstr);
       Dateserver->set_margin(5);
-      grid->attach(*Dateserver, 0, 3, 1, 1);
+      grid->attach(*Dateserver, 0, 4, 1, 1);
 
       Gtk::Label *Datehome = Gtk::make_managed<Gtk::Label>();
       Datehome->set_name("dateServer");
@@ -193,7 +206,7 @@ DownloadMenu::downloadMenu()
 	  + af.togrigyear(datehome);
       Datehome->set_text(datehomestr);
       Datehome->set_margin(5);
-      grid->attach(*Datehome, 0, 4, 1, 1);
+      grid->attach(*Datehome, 0, 5, 1, 1);
 
       Gtk::Button *dealsdaily = Gtk::make_managed<Gtk::Button>();
       dealsdaily->set_name("confirmButton");
@@ -204,7 +217,7 @@ DownloadMenu::downloadMenu()
 	DownloadMenu dm(mw);
 	dm.downloadDeals(window);
       });
-      grid->attach(*dealsdaily, 0, 5, 1, 1);
+      grid->attach(*dealsdaily, 0, 6, 1, 1);
 
       Gtk::Button *alld = Gtk::make_managed<Gtk::Button>();
       alld->set_name("confirmButton");
@@ -215,7 +228,7 @@ DownloadMenu::downloadMenu()
 	DownloadMenu dm(mw);
 	dm.downloadAll(window);
       });
-      grid->attach(*alld, 0, 6, 1, 1);
+      grid->attach(*alld, 0, 7, 1, 1);
       box->set_model(model);
 
       Gtk::TreeViewColumn *column = box->get_column(0);
@@ -1614,4 +1627,399 @@ DownloadMenu::downlodSinglInstrDeals(Gtk::Window *win, Gtk::TreeView *tv)
   });
   thr->detach();
   delete thr;
+}
+
+void
+DownloadMenu::splitInstrument(Gtk::Window *win)
+{
+  Gtk::Window *window = new Gtk::Window;
+  window->set_application(Mwin->get_application());
+  window->set_default_size(1, 1);
+  window->set_name("mainWindow");
+  window->set_title(gettext("Split/Backsplit"));
+  window->set_transient_for(*win);
+  window->set_modal(true);
+
+  Gtk::Grid *grid = Gtk::make_managed<Gtk::Grid>();
+  grid->set_halign(Gtk::Align::CENTER);
+  grid->set_valign(Gtk::Align::CENTER);
+  window->set_child(*grid);
+
+  Gtk::TreeModelColumn<Glib::ustring> id_col;
+  Gtk::TreeModelColumn<Glib::ustring> date_col;
+  Gtk::TreeModel::ColumnRecord record_split;
+  record_split.add(id_col);
+  record_split.add(date_col);
+  Glib::RefPtr<Gtk::ListStore> model_split = Gtk::ListStore::create(
+      record_split);
+
+  std::string filename;
+  AuxFunc af;
+  af.homePath(&filename);
+  filename = filename + "/.Money/SplitList";
+  std::filesystem::path filepath = std::filesystem::u8path(filename);
+  std::fstream f;
+  f.open(filepath, std::ios_base::in);
+  std::vector<std::tuple<std::string, std::string>> vect_split;
+  if(f.is_open())
+    {
+      while(!f.eof())
+	{
+	  std::string line;
+	  getline(f, line);
+	  if(!line.empty())
+	    {
+	      std::tuple<std::string, std::string> ttup;
+	      std::get<0>(ttup) = line.substr(0, line.find("<%>"));
+	      line.erase(0, line.find("<%>") + std::string("<%>").size());
+	      std::get<1>(ttup) = line;
+	      vect_split.push_back(ttup);
+	    }
+	}
+      f.close();
+    }
+
+  for(size_t i = 0; i < vect_split.size(); i++)
+    {
+      auto row = *(model_split->append());
+      row[id_col] = Glib::ustring(std::get<0>(vect_split[i]));
+      row[date_col] = Glib::ustring(std::get<1>(vect_split[i]));
+    }
+
+  Gtk::ScrolledWindow *scrl_split = Gtk::make_managed<Gtk::ScrolledWindow>();
+  scrl_split->set_margin(5);
+  scrl_split->set_halign(Gtk::Align::FILL);
+  scrl_split->set_policy(Gtk::PolicyType::AUTOMATIC,
+			 Gtk::PolicyType::AUTOMATIC);
+  grid->attach(*scrl_split, 0, 0, 2, 1);
+
+  Gtk::TreeView *tv_split = Gtk::make_managed<Gtk::TreeView>();
+  tv_split->set_model(model_split);
+  tv_split->set_name("tvAnomality");
+  tv_split->append_column(gettext("Instrument ID"), id_col);
+  tv_split->append_column(gettext("Split/Backsplit date"), date_col);
+  tv_split->set_activate_on_single_click(false);
+  tv_split->set_headers_visible(true);
+  scrl_split->set_child(*tv_split);
+
+  int w, h, x, y;
+  Gtk::TreeViewColumn *col = tv_split->get_column(0);
+  col->cell_get_size(x, y, w, h);
+  scrl_split->set_min_content_height(20 * h);
+
+  Gtk::Requisition min, nat;
+  tv_split->get_preferred_size(min, nat);
+  scrl_split->set_min_content_width(nat.get_width());
+
+  Gtk::Window *mw = Mwin;
+
+  Glib::RefPtr<Gio::SimpleActionGroup> acgroup =
+      Gio::SimpleActionGroup::create();
+  acgroup->add_action("add_instr", [mw, window, tv_split]
+  {
+    DownloadMenu dm(mw);
+    dm.addSplitInstr(window, tv_split);
+  });
+  acgroup->add_action("remove_instr", [tv_split]
+  {
+    auto sel = tv_split->get_selection();
+    if(sel)
+      {
+	auto iter = sel->get_selected();
+	if(iter)
+	  {
+	    Glib::ustring val;
+	    iter->get_value(0, val);
+	    std::string sl(val);
+	    std::string filename;
+	    AuxFunc af;
+	    af.homePath(&filename);
+	    filename = filename + "/.Money/SplitList";
+	    std::filesystem::path filepath = std::filesystem::u8path(filename);
+	    std::fstream f;
+	    f.open(filepath, std::ios_base::in);
+	    std::vector<std::tuple<std::string, std::string>> vect_split;
+	    if(f.is_open())
+	      {
+		while(!f.eof())
+		  {
+		    std::string line;
+		    getline(f, line);
+		    if(!line.empty())
+		      {
+			std::tuple<std::string, std::string> ttup;
+			std::get<0>(ttup) = line.substr(0, line.find("<%>"));
+			line.erase(0, line.find("<%>") + std::string("<%>").size());
+			std::get<1>(ttup) = line;
+			vect_split.push_back(ttup);
+		      }
+		  }
+		f.close();
+	      }
+	    vect_split.erase(
+		std::remove_if(vect_split.begin(), vect_split.end(), [sl]
+		(auto &el)
+		  {
+		    return std::get<0>(el) == sl;
+		  }),
+		vect_split.end());
+	    if(vect_split.size() > 0)
+	      {
+		f.open(filepath, std::ios_base::out | std::ios_base::binary);
+		if(f.is_open())
+		  {
+		    for(size_t i = 0; i < vect_split.size(); i++)
+		      {
+			std::string line = std::get<0>(vect_split[i]);
+			line = line + "<%>";
+			line = line + std::get<1>(vect_split[i]) + "\n";
+			f.write(line.c_str(), line.size());
+		      }
+		    f.close();
+		  }
+	      }
+	    else
+	      {
+		std::filesystem::remove_all(filepath);
+	      }
+	    Glib::RefPtr<Gtk::ListStore> ls = std::dynamic_pointer_cast<
+		Gtk::ListStore>(tv_split->get_model());
+	    ls->erase(iter);
+	  }
+      }
+  });
+  scrl_split->insert_action_group("popup", acgroup);
+
+  Glib::RefPtr<Gtk::GestureClick> clck = Gtk::GestureClick::create();
+  clck->set_button(3);
+  tv_split->add_controller(clck);
+
+  Glib::RefPtr<Gio::Menu> menu = Gio::Menu::create();
+  menu->append(gettext("Add instrument"), "popup.add_instr");
+  menu->append(gettext("Remove instrument"), "popup.remove_instr");
+
+  Gtk::PopoverMenu *Menu = new Gtk::PopoverMenu;
+  Menu->set_parent(*scrl_split);
+  Menu->set_menu_model(menu);
+  Menu->set_has_arrow(true);
+
+  clck->signal_pressed().connect([Menu]
+  (int nm, double x, double y)
+    {
+      Gdk::Rectangle rect(x, y, 1, 1);
+      Menu->set_pointing_to(rect);
+      Menu->popup();
+    });
+
+  Gtk::Button *add_instr = Gtk::make_managed<Gtk::Button>();
+  add_instr->set_halign(Gtk::Align::CENTER);
+  add_instr->set_margin(5);
+  add_instr->set_name("allButton");
+  add_instr->set_label(gettext("Add instrument"));
+  add_instr->insert_action_group("instr_op", acgroup);
+  add_instr->set_action_name("instr_op.add_instr");
+  grid->attach(*add_instr, 0, 1, 1, 1);
+
+  Gtk::Button *remove_instr = Gtk::make_managed<Gtk::Button>();
+  remove_instr->set_halign(Gtk::Align::CENTER);
+  remove_instr->set_margin(5);
+  remove_instr->set_name("closeButton");
+  remove_instr->insert_action_group("instr_op", acgroup);
+  remove_instr->set_action_name("instr_op.remove_instr");
+  remove_instr->set_label(gettext("Remove instrument"));
+
+  grid->attach(*remove_instr, 1, 1, 1, 1);
+
+  window->signal_close_request().connect([window, Menu]
+  {
+    window->hide();
+    delete Menu;
+    delete window;
+    return true;
+  },
+					 false);
+  window->present();
+}
+
+void
+DownloadMenu::addSplitInstr(Gtk::Window *win, Gtk::TreeView *tv_split)
+{
+  Gtk::Window *window = new Gtk::Window;
+  window->set_application(Mwin->get_application());
+  window->set_default_size(1, 1);
+  window->set_name("mainWindow");
+  window->set_title(gettext("Add instrument"));
+  window->set_transient_for(*win);
+  window->set_modal(true);
+
+  Gtk::Grid *grid = Gtk::make_managed<Gtk::Grid>();
+  grid->set_column_homogeneous(true);
+  grid->set_halign(Gtk::Align::CENTER);
+  grid->set_valign(Gtk::Align::CENTER);
+  window->set_child(*grid);
+
+  Gtk::Label *instr_nm_lb = Gtk::make_managed<Gtk::Label>();
+  instr_nm_lb->set_halign(Gtk::Align::CENTER);
+  instr_nm_lb->set_margin(5);
+  instr_nm_lb->set_use_markup(true);
+  instr_nm_lb->set_markup(
+      "<b>" + Glib::ustring(gettext("Instriment ID")) + "</b>");
+  grid->attach(*instr_nm_lb, 0, 0, 3, 1);
+
+  Gtk::Entry *instr_nm_ent = Gtk::make_managed<Gtk::Entry>();
+  instr_nm_ent->set_margin(5);
+  instr_nm_ent->set_halign(Gtk::Align::FILL);
+  instr_nm_ent->set_alignment(Gtk::Align::START);
+  grid->attach(*instr_nm_ent, 0, 1, 3, 1);
+
+  Gtk::Label *date_m_lb = Gtk::make_managed<Gtk::Label>();
+  date_m_lb->set_margin(5);
+  date_m_lb->set_halign(Gtk::Align::CENTER);
+  date_m_lb->set_use_markup(true);
+  date_m_lb->set_markup(
+      "<b>" + Glib::ustring(gettext("Date of split/backsplit")) + "</b>");
+  grid->attach(*date_m_lb, 0, 2, 3, 1);
+
+  Gtk::Label *day_lb = Gtk::make_managed<Gtk::Label>();
+  day_lb->set_halign(Gtk::Align::CENTER);
+  day_lb->set_margin(5);
+  day_lb->set_text(gettext("Day"));
+  grid->attach(*day_lb, 0, 3, 1, 1);
+
+  Gtk::Label *month_lb = Gtk::make_managed<Gtk::Label>();
+  month_lb->set_halign(Gtk::Align::CENTER);
+  month_lb->set_margin(5);
+  month_lb->set_text(gettext("Month"));
+  grid->attach(*month_lb, 1, 3, 1, 1);
+
+  Gtk::Label *year_lb = Gtk::make_managed<Gtk::Label>();
+  year_lb->set_halign(Gtk::Align::CENTER);
+  year_lb->set_margin(5);
+  year_lb->set_text(gettext("Year"));
+  grid->attach(*year_lb, 2, 3, 1, 1);
+
+  Gtk::Entry *day_ent = Gtk::make_managed<Gtk::Entry>();
+  day_ent->set_margin(5);
+  day_ent->set_halign(Gtk::Align::CENTER);
+  day_ent->set_alignment(Gtk::Align::CENTER);
+  day_ent->set_width_chars(2);
+  day_ent->set_max_width_chars(2);
+  day_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  grid->attach(*day_ent, 0, 4, 1, 1);
+
+  Gtk::Entry *month_ent = Gtk::make_managed<Gtk::Entry>();
+  month_ent->set_margin(5);
+  month_ent->set_halign(Gtk::Align::CENTER);
+  month_ent->set_alignment(Gtk::Align::CENTER);
+  month_ent->set_width_chars(2);
+  month_ent->set_max_width_chars(2);
+  month_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  grid->attach(*month_ent, 1, 4, 1, 1);
+
+  Gtk::Entry *year_ent = Gtk::make_managed<Gtk::Entry>();
+  year_ent->set_margin(5);
+  year_ent->set_halign(Gtk::Align::CENTER);
+  year_ent->set_alignment(Gtk::Align::CENTER);
+  year_ent->set_width_chars(4);
+  year_ent->set_max_width_chars(4);
+  year_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  grid->attach(*year_ent, 2, 4, 1, 1);
+
+  Gtk::Button *apply = Gtk::make_managed<Gtk::Button>();
+  apply->set_halign(Gtk::Align::CENTER);
+  apply->set_margin(5);
+  apply->set_name("allButton");
+  apply->set_label(gettext("Add instrument"));
+  apply->signal_clicked().connect(
+      [instr_nm_ent, day_ent, month_ent, year_ent, tv_split, window]
+      {
+	std::string instr(instr_nm_ent->get_text());
+	std::string day_str(day_ent->get_text());
+	std::stringstream strm;
+	std::locale loc("C");
+	strm.imbue(loc);
+	if(!day_str.empty())
+	  {
+	    strm << day_str;
+	    int day;
+	    strm >> day;
+	    if(day < 10 && day > 0)
+	      {
+		strm.clear();
+		strm.str("");
+		strm.imbue(loc);
+		strm << day;
+		day_str = "0" + strm.str();
+	      }
+	  }
+
+	std::string month_str(month_ent->get_text());
+	if(!month_str.empty())
+	  {
+	    strm.clear();
+	    strm.str("");
+	    strm.imbue(loc);
+	    strm << month_str;
+	    int month;
+	    strm >> month;
+	    if(month < 10 && month > 0)
+	      {
+		strm.clear();
+		strm.str("");
+		strm.imbue(loc);
+		strm << month;
+		month_str = "0" + strm.str();
+	      }
+	  }
+	std::string year_str(year_ent->get_text());
+
+	if(!instr.empty() && !day_str.empty() && !month_str.empty()
+	    && !year_str.empty())
+	  {
+	    Glib::RefPtr<Gtk::ListStore> ls = std::dynamic_pointer_cast<
+		Gtk::ListStore>(tv_split->get_model());
+	    auto row = *(ls->append());
+	    row.set_value(0, Glib::ustring(instr));
+	    std::string date_line = day_str + "." + month_str + "." + year_str;
+	    row.set_value(1, Glib::ustring(date_line));
+	    std::string filename;
+	    AuxFunc af;
+	    af.homePath(&filename);
+	    filename = filename + "/.Money/SplitList";
+	    std::filesystem::path filepath = std::filesystem::u8path(filename);
+	    std::fstream f;
+	    f.open(
+		filepath,
+		std::ios_base::out | std::ios_base::app
+		    | std::ios_base::binary);
+	    if(f.is_open())
+	      {
+		std::string line = instr + "<%>" + date_line + "\n";
+		f.write(line.c_str(), line.size());
+		f.close();
+	      }
+	  }
+	window->close();
+      });
+  grid->attach(*apply, 0, 5, 1, 1);
+
+  Gtk::Button *cancel = Gtk::make_managed<Gtk::Button>();
+  cancel->set_halign(Gtk::Align::CENTER);
+  cancel->set_margin(5);
+  cancel->set_name("closeButton");
+  cancel->set_label(gettext("Cancel"));
+  cancel->signal_clicked().connect([window]
+  {
+    window->close();
+  });
+  grid->attach(*cancel, 2, 5, 1, 1);
+
+  window->signal_close_request().connect([window]
+  {
+    window->hide();
+    delete window;
+    return true;
+  },
+					 false);
+  window->present();
 }

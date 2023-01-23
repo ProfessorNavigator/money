@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Money\n"
-"POT-Creation-Date: 2023-01-20 23:36+0400\n"
-"PO-Revision-Date: 2023-01-20 23:37+0400\n"
+"POT-Creation-Date: 2023-01-23 12:36+0400\n"
+"PO-Revision-Date: 2023-01-23 12:40+0400\n"
 "Last-Translator: Юрий Бобылев\n"
 "Language-Team: Юрий Бобылев\n"
 "Language: ru_RU\n"
@@ -203,15 +203,15 @@ msgstr "Поиск аномалий"
 msgid "Search parameters"
 msgstr "Параметры поиска"
 
-#: GUI/AnomalySearch.cpp:116
+#: GUI/AnomalySearch.cpp:116 GUI/DownloadMenu.cpp:1886
 msgid "Day"
 msgstr "День"
 
-#: GUI/AnomalySearch.cpp:122
+#: GUI/AnomalySearch.cpp:122 GUI/DownloadMenu.cpp:1892
 msgid "Month"
 msgstr "Месяц"
 
-#: GUI/AnomalySearch.cpp:128
+#: GUI/AnomalySearch.cpp:128 GUI/DownloadMenu.cpp:1898
 msgid "Year"
 msgstr "Год"
 
@@ -231,10 +231,11 @@ msgstr "Поиск"
 msgid "Clear"
 msgstr "Очистить"
 
-#: GUI/AnomalySearch.cpp:241 GUI/AnomalySearch.cpp:453 GUI/DownloadMenu.cpp:679
-#: GUI/DownloadMenu.cpp:923 GUI/DownloadMenu.cpp:1050 GUI/DownloadMenu.cpp:1290
-#: GUI/DownloadMenu.cpp:1492 GUI/GraphicWidget.cpp:575 GUI/MainWindow.cpp:391
-#: GUI/OpenDialog.cpp:287 GUI/OpenDialogDeals.cpp:524
+#: GUI/AnomalySearch.cpp:241 GUI/AnomalySearch.cpp:453 GUI/DownloadMenu.cpp:692
+#: GUI/DownloadMenu.cpp:936 GUI/DownloadMenu.cpp:1063 GUI/DownloadMenu.cpp:1303
+#: GUI/DownloadMenu.cpp:1505 GUI/DownloadMenu.cpp:2010
+#: GUI/GraphicWidget.cpp:575 GUI/MainWindow.cpp:391 GUI/OpenDialog.cpp:287
+#: GUI/OpenDialogDeals.cpp:524
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -242,7 +243,7 @@ msgstr "Отмена"
 msgid "Searching..."
 msgstr "Поиск..."
 
-#: GUI/AnomalySearch.cpp:521 GUI/DownloadMenu.cpp:1207
+#: GUI/AnomalySearch.cpp:521 GUI/DownloadMenu.cpp:1220
 msgid "Error!"
 msgstr "Ошибка!"
 
@@ -266,8 +267,8 @@ msgstr "Неправильно введена глубина поиска!"
 msgid "Wrong sensitivity input!"
 msgstr "Неправильно введена чувствительность!"
 
-#: GUI/AnomalySearch.cpp:560 GUI/AnomalySearch.cpp:901 GUI/DownloadMenu.cpp:860
-#: GUI/DownloadMenu.cpp:1215 GUI/DownloadMenu.cpp:1419
+#: GUI/AnomalySearch.cpp:560 GUI/AnomalySearch.cpp:901 GUI/DownloadMenu.cpp:873
+#: GUI/DownloadMenu.cpp:1228 GUI/DownloadMenu.cpp:1432
 #: GUI/GraphicWidget.cpp:274 GUI/MainWindow.cpp:470
 msgid "Close"
 msgstr "Закрыть"
@@ -292,73 +293,106 @@ msgstr "График"
 msgid "Download menu"
 msgstr "Меню загрузки"
 
-#: GUI/DownloadMenu.cpp:157
+#: GUI/DownloadMenu.cpp:161
+msgid "Splitting/backsplitting instrument"
+msgstr "Дробление/консолидация акций"
+
+#: GUI/DownloadMenu.cpp:171
 msgid "Transactions for instrument"
 msgstr "Сделки по инструменту"
 
-#: GUI/DownloadMenu.cpp:169
+#: GUI/DownloadMenu.cpp:182
 msgid "Daily results for instrument"
 msgstr "Итоги по инструменту"
 
-#: GUI/DownloadMenu.cpp:181
+#: GUI/DownloadMenu.cpp:194
 msgid "Last available date on server: "
 msgstr "Данные, последняя дата на сервере: "
 
-#: GUI/DownloadMenu.cpp:191
+#: GUI/DownloadMenu.cpp:204
 msgid "Last downloaded data, date: "
 msgstr "Последние сохранённые данные, дата: "
 
-#: GUI/DownloadMenu.cpp:200
+#: GUI/DownloadMenu.cpp:213
 msgid "All transactions for current date"
 msgstr "Все сделки за текущую дату"
 
-#: GUI/DownloadMenu.cpp:211
+#: GUI/DownloadMenu.cpp:224
 msgid "All results"
 msgstr "Все итоги торгов"
 
-#: GUI/DownloadMenu.cpp:657 GUI/DownloadMenu.cpp:1266 GUI/DownloadMenu.cpp:1468
+#: GUI/DownloadMenu.cpp:670 GUI/DownloadMenu.cpp:1279 GUI/DownloadMenu.cpp:1481
 msgid "Downloading..."
 msgstr "Загрузка..."
 
-#: GUI/DownloadMenu.cpp:669 GUI/DownloadMenu.cpp:1277 GUI/DownloadMenu.cpp:1479
+#: GUI/DownloadMenu.cpp:682 GUI/DownloadMenu.cpp:1290 GUI/DownloadMenu.cpp:1492
 msgid "Downloading in progress..."
 msgstr "Загрузка..."
 
-#: GUI/DownloadMenu.cpp:842 GUI/DownloadMenu.cpp:1206 GUI/MainWindow.cpp:464
+#: GUI/DownloadMenu.cpp:855 GUI/DownloadMenu.cpp:1219 GUI/MainWindow.cpp:464
 msgid "Network error"
 msgstr "Ошибка сети"
 
-#: GUI/DownloadMenu.cpp:852
+#: GUI/DownloadMenu.cpp:865
 msgid "Network error!"
 msgstr "Ошибка сети!"
 
-#: GUI/DownloadMenu.cpp:905
+#: GUI/DownloadMenu.cpp:918
 msgid "PPm calculation"
 msgstr "Расчёт ПСд"
 
-#: GUI/DownloadMenu.cpp:1029
+#: GUI/DownloadMenu.cpp:1042
 msgid "Transactions downloading"
 msgstr "Загрузка сделок"
 
-#: GUI/DownloadMenu.cpp:1039
+#: GUI/DownloadMenu.cpp:1052
 msgid "Transaction downloading progress:"
 msgstr "Прогресс загрузки сделок:"
 
-#: GUI/DownloadMenu.cpp:1199
+#: GUI/DownloadMenu.cpp:1212
 msgid "No transactions today"
 msgstr "Торги не проводились"
 
-#: GUI/DownloadMenu.cpp:1201
+#: GUI/DownloadMenu.cpp:1214
 msgid "Message"
 msgstr "Сообщение"
 
-#: GUI/DownloadMenu.cpp:1403
+#: GUI/DownloadMenu.cpp:1416
 msgid "Downloading completed"
 msgstr "Загрузка завершена"
 
-#: GUI/DownloadMenu.cpp:1413
+#: GUI/DownloadMenu.cpp:1426
 msgid "Downloading completed!"
 msgstr "Загрузка завершена!"
+
+#: GUI/DownloadMenu.cpp:1639
+msgid "Split/Backsplit"
+msgstr "Дробление/Консолидация"
+
+#: GUI/DownloadMenu.cpp:1699
+msgid "Instrument ID"
+msgstr "Код инсрумента"
+
+#: GUI/DownloadMenu.cpp:1700
+msgid "Split/Backsplit date"
+msgstr "Дата дробления/консолидации"
+
+#: GUI/DownloadMenu.cpp:1798 GUI/DownloadMenu.cpp:1818
+#: GUI/DownloadMenu.cpp:1851 GUI/DownloadMenu.cpp:1932
+msgid "Add instrument"
+msgstr "Добавить инструмент"
+
+#: GUI/DownloadMenu.cpp:1799 GUI/DownloadMenu.cpp:1829
+msgid "Remove instrument"
+msgstr "Удалить инструмент"
+
+#: GUI/DownloadMenu.cpp:1866
+msgid "Instriment ID"
+msgstr "Код инструмента"
+
+#: GUI/DownloadMenu.cpp:1880
+msgid "Date of split/backsplit"
+msgstr "Дата дробления /консолидации"
 
 #: GUI/GraphicWidget.cpp:135 GUI/GraphicWidget.cpp:149
 #: GUI/GraphicWidget.cpp:154

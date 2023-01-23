@@ -390,6 +390,10 @@ DownloadAll::downloadAll()
 	}
       if(saveDate)
 	{
+	  if(dt < 2450531.0)
+	    {
+	      dt = 2450531.0;
+	    }
 	  saveDate(dt);
 	}
       if(finished)
@@ -401,6 +405,10 @@ DownloadAll::downloadAll()
     {
       if(saveDate)
 	{
+	  if(dt < 2450531.0)
+	    {
+	      dt = 2450531.0;
+	    }
 	  saveDate(dt);
 	}
       if(finished)
@@ -438,13 +446,87 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
       + ".csv";
   finalpath = std::filesystem::u8path(finalpathstr);
   std::vector<std::tuple<std::string, int, int, int>> split;
-  split.push_back(std::make_tuple("IRAO", 25, 12, 2014));
-  split.push_back(std::make_tuple("ROLO", 10, 1, 2023));
-  auto itspl = std::find_if(split.begin(), split.end(), [instrname]
-  (auto &el)
+  std::string split_addr;
+  af.homePath(&split_addr);
+  split_addr = split_addr + "/.Money/SplitList";
+  std::filesystem::path split_path = std::filesystem::u8path(split_addr);
+  f.open(split_path, std::ios_base::in);
+  if(f.is_open())
     {
-      return std::get<0>(el) == instrname;
-    });
+      while(!f.eof())
+	{
+	  std::string line;
+	  getline(f, line);
+	  if(!line.empty())
+	    {
+	      std::tuple<std::string, int, int, int> ttup;
+	      std::get<0>(ttup) = line.substr(0, line.find("<%>"));
+	      if(instrname == std::get<0>(ttup))
+		{
+		  std::string date = line;
+		  date.erase(0, date.find("<%>") + std::string("<%>").size());
+		  std::string val = date.substr(0, date.find("."));
+		  std::stringstream strm;
+		  std::locale loc("C");
+		  strm.imbue(loc);
+		  strm << val;
+		  int day;
+		  strm >> day;
+
+		  val = date;
+		  val.erase(0, val.find(".") + std::string(".").size());
+		  val = val.substr(0, val.find("."));
+		  strm.clear();
+		  strm.str("");
+		  strm.imbue(loc);
+		  strm << val;
+		  int month;
+		  strm >> month;
+
+		  val = date;
+		  val.erase(0, val.rfind(".") + std::string(".").size());
+		  strm.clear();
+		  strm.str("");
+		  strm.imbue(loc);
+		  strm << val;
+		  int year;
+		  strm >> year;
+
+		  if(day > 0 && month > 0 && year > 0)
+		    {
+		      std::get<1>(ttup) = day;
+		      std::get<2>(ttup) = month;
+		      std::get<3>(ttup) = year;
+		      split.push_back(ttup);
+		    }
+		}
+	    }
+	}
+      f.close();
+    }
+  std::sort(
+      split.begin(),
+      split.end(),
+      [&af]
+      (auto &el1,
+       auto &el2)
+	 {
+	   double f =
+	   af.grigtojulian(std::get<1>(el1), std::get<2>(el1), std::get<3>(el1), 0, 0, 0);
+	   double s =
+	   af.grigtojulian(std::get<1>(el2), std::get<2>(el2), std::get<3>(el2), 0, 0, 0);
+	   return f < s;
+	 });
+
+  std::vector<std::tuple<std::string, int, int, int>>::iterator itspl;
+  if(split.size() > 0)
+    {
+      itspl = split.begin();
+    }
+  else
+    {
+      itspl = split.end();
+    }
   if(!std::filesystem::exists(finalpath))
     {
       finalv.push_back(instrname + "\n");
@@ -531,7 +613,6 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
     }
   std::string temp;
   bool apply_split = false;
-  bool split_applaied = false;
   for(size_t i = 0; i < source.size(); i++)
     {
       line = source[i];
@@ -588,6 +669,15 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 	      if(td > spl_date)
 		{
 		  apply_split = true;
+		  split.erase(itspl);
+		  if(split.size() > 0)
+		    {
+		      itspl = split.begin();
+		    }
+		  else
+		    {
+		      itspl = split.end();
+		    }
 		}
 	    }
 	  writevalue = af.togrigday(td) + "." + af.togrigmonth(td) + "."
@@ -607,10 +697,7 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 	  strm >> money;
 	  if(apply_split)
 	    {
-	      if(!split_applaied)
-		{
-		  Money = 0;
-		}
+	      Money = 0;
 	    }
 	  Money = Money + money;
 
@@ -628,10 +715,7 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 	  strm >> volume;
 	  if(apply_split)
 	    {
-	      if(!split_applaied)
-		{
-		  Volume = 0;
-		}
+	      Volume = 0;
 	    }
 	  Volume = Volume + volume;
 
@@ -709,10 +793,7 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 	    }
 	  if(apply_split)
 	    {
-	      if(!split_applaied)
-		{
-		  split_applaied = true;
-		}
+	      apply_split = false;
 	    }
 	}
     }
