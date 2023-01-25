@@ -28,6 +28,7 @@ DownloadAll::DownloadAll(
   InstrumentsF = *instrumentsF;
   Boards = *boards;
   Db = db;
+  mpf_set_default_prec(512);
 }
 
 DownloadAll::~DownloadAll()
@@ -433,7 +434,6 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
     {
       std::filesystem::create_directories(dir);
     }
-  mpf_set_default_prec(1024);
   mpf_class Volume(0), Money(0), PSD(0), PSOD(0);
   int linecount = 0;
   double money, volume;
@@ -504,20 +504,16 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 	}
       f.close();
     }
-  std::sort(
-      split.begin(),
-      split.end(),
-      [&af]
-      (auto &el1,
-       auto &el2)
-	 {
-	   double f =
-	   af.grigtojulian(std::get<1>(el1), std::get<2>(el1), std::get<3>(el1), 0, 0, 0);
-	   double s =
-	   af.grigtojulian(std::get<1>(el2), std::get<2>(el2), std::get<3>(el2), 0, 0, 0);
-	   return f < s;
-	 });
-
+  std::sort(split.begin(), split.end(), [&af]
+  (auto &el1, auto &el2)
+    {
+      double f = af.grigtojulian(std::get<1>(el1), std::get<2>(el1),
+	  std::get<3>(el1), 0, 0, 0);
+      double s = af.grigtojulian(std::get<1>(el2), std::get<2>(el2),
+	  std::get<3>(el2), 0, 0, 0);
+      return f < s;
+    });
+  auto res_split = split;
   std::vector<std::tuple<std::string, int, int, int>>::iterator itspl;
   if(split.size() > 0)
     {
@@ -527,6 +523,7 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
     {
       itspl = split.end();
     }
+  bool apply_split = false;
   if(!std::filesystem::exists(finalpath))
     {
       finalv.push_back(instrname + "\n");
@@ -603,6 +600,61 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 		  strm.imbue(loc);
 		  strm << tmp;
 		  strm >> tmpmon;
+		  if(itspl != split.end())
+		    {
+		      std::string datestring = line.substr(0, line.find(";"));
+		      std::string val = datestring;
+		      val = val.substr(0, val.find("."));
+		      std::stringstream strm;
+		      std::locale loc("C");
+		      strm.imbue(loc);
+		      strm << val;
+		      int day;
+		      strm >> day;
+
+		      val = datestring;
+		      val.erase(0, val.find(".") + std::string(".").size());
+		      val = val.substr(0, val.find("."));
+		      strm.clear();
+		      strm.str("");
+		      strm << val;
+		      int month;
+		      strm >> month;
+
+		      val = datestring;
+		      val.erase(0, val.rfind(".") + std::string(".").size());
+		      strm.clear();
+		      strm.str("");
+		      strm << val;
+		      int year;
+		      strm >> year;
+
+		      double td = af.grigtojulian(day, month, year, 0, 0, 0);
+
+		      double spl_date = af.grigtojulian(std::get<1>(*itspl),
+							std::get<2>(*itspl),
+							std::get<3>(*itspl), 0,
+							0, 0);
+		      if(td > spl_date)
+			{
+			  apply_split = true;
+			  split.erase(itspl);
+			  if(split.size() > 0)
+			    {
+			      itspl = split.begin();
+			    }
+			  else
+			    {
+			      itspl = split.end();
+			    }
+			}
+		    }
+		  if(apply_split)
+		    {
+		      Volume = 0;
+		      Money = 0;
+		      apply_split = false;
+		    }
 		  Volume = Volume + tmpvol;
 		  Money = Money + tmpmon;
 		}
@@ -611,8 +663,30 @@ DownloadAll::saveRes(std::vector<std::string> &source, std::string instrname,
 	}
       f.close();
     }
+
+  split = res_split;
+  double lastdate = Db;
+  split.erase(std::remove_if(split.begin(), split.end(), [&af, lastdate]
+  (auto &el)
+    {
+      double date =
+      af.grigtojulian(std::get<1>(el),
+	  std::get<2>(el), std::get<3>(el), 0, 0, 0);
+      return lastdate > date;
+    }),
+	      split.end());
+
+  if(split.size() > 0)
+    {
+      itspl = split.begin();
+    }
+  else
+    {
+      itspl = split.end();
+    }
+
   std::string temp;
-  bool apply_split = false;
+  apply_split = false;
   for(size_t i = 0; i < source.size(); i++)
     {
       line = source[i];
