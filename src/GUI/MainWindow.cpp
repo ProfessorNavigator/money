@@ -503,7 +503,7 @@ MainWindow::aboutProg()
   aboutd->set_name("dialog");
 
   aboutd->set_program_name("Money");
-  aboutd->set_version("3.1.1");
+  aboutd->set_version("3.1.2");
   aboutd->set_copyright(
       "Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>");
   AuxFunc af;

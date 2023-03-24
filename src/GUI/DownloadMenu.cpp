@@ -1003,6 +1003,11 @@ DownloadMenu::calcIndex()
 	delete progr_disp;
 	delete opn_disp;
 	delete canceled_disp;
+	Glib::RefPtr<Glib::MainContext> mc = Glib::MainContext::get_default();
+	while(mc->pending())
+	  {
+	    mc->iteration(true);
+	  }
 	delete all_comp_disp;
       });
 
