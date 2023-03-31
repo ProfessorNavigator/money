@@ -984,41 +984,32 @@ DownloadMenu::calcIndex()
     canceled_disp->emit();
   };
 
-  canceled_disp->connect(
-      [window, progr_disp, opn_disp, canceled_disp, all_comp_disp]
-      {
-	window->close();
-	delete all_comp_disp;
-	delete progr_disp;
-	delete opn_disp;
-	delete canceled_disp;
-      });
+  canceled_disp->connect([window, progr_disp, opn_disp, canceled_disp]
+  {
+    window->close();
+    delete progr_disp;
+    delete opn_disp;
+    delete canceled_disp;
+  });
 
-  all_comp_disp->connect(
-      [window, mw, progr_disp, opn_disp, canceled_disp, all_comp_disp]
-      {
-	window->close();
-	DownloadMenu dm(mw);
-	dm.finishMessage();
-	delete progr_disp;
-	delete opn_disp;
-	delete canceled_disp;
-	Glib::RefPtr<Glib::MainContext> mc = Glib::MainContext::get_default();
-	while(mc->pending())
-	  {
-	    mc->iteration(true);
-	  }
-	delete all_comp_disp;
-      });
+  all_comp_disp->connect([window, mw, progr_disp, opn_disp, canceled_disp]
+  {
+    DownloadMenu dm(mw);
+    dm.finishMessage(window);
+    delete progr_disp;
+    delete opn_disp;
+    delete canceled_disp;
+  });
 
   calc->allComplet = [all_comp_disp]
   {
     all_comp_disp->emit();
   };
 
-  window->signal_close_request().connect([window]
+  window->signal_close_request().connect([window, all_comp_disp]
   {
     window->hide();
+    delete all_comp_disp;
     delete window;
     return true;
   },
@@ -1167,9 +1158,8 @@ DownloadMenu::downloadDeals(Gtk::Window *win)
       [window, mw, nodelas_disp, neterror_disp, canceled_disp, progr_disp,
        fin_disp]
       {
-	window->close();
 	DownloadMenu dm(mw);
-	dm.finishMessage();
+	dm.finishMessage(window);
 	delete progr_disp;
 	delete nodelas_disp;
 	delete neterror_disp;
@@ -1385,8 +1375,7 @@ DownloadMenu::downlodSinglInstrAll(Gtk::Window *win, Gtk::TreeView *tv)
       [window, mw, fin_disp, pulse_disp, glob_err_disp, canceled_disp]
       {
 	DownloadMenu dm(mw);
-	dm.finishMessage();
-	window->close();
+	dm.finishMessage(window);
 	delete pulse_disp;
 	delete glob_err_disp;
 	delete canceled_disp;
@@ -1414,10 +1403,10 @@ DownloadMenu::downlodSinglInstrAll(Gtk::Window *win, Gtk::TreeView *tv)
 }
 
 void
-DownloadMenu::finishMessage()
+DownloadMenu::finishMessage(Gtk::Window *win)
 {
-  Gtk::Window *window = new Gtk::Window;
-  window->set_application(Mwin->get_application());
+  Gtk::Window *window = win;
+  window->unset_child();
   window->set_title(gettext("Downloading completed"));
   window->set_name("finishMessage");
   window->set_transient_for(*Mwin);
@@ -1440,16 +1429,6 @@ DownloadMenu::finishMessage()
   close->set_name("closeButton");
   close->signal_clicked().connect(sigc::mem_fun(*window, &Gtk::Window::close));
   grid->attach(*close, 0, 1, 1, 1);
-
-  window->signal_close_request().connect([window, this]
-  {
-    window->hide();
-    delete window;
-    return true;
-  },
-					 false);
-
-  window->present();
 }
 
 void
@@ -1587,8 +1566,7 @@ DownloadMenu::downlodSinglInstrDeals(Gtk::Window *win, Gtk::TreeView *tv)
        nodeals_disp]
       {
 	DownloadMenu dm(mw);
-	dm.finishMessage();
-	window->close();
+	dm.finishMessage(window);
 	delete pulse_disp;
 	delete canceled_disp;
 	delete net_err_disp;

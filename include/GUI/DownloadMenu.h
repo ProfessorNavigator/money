@@ -54,7 +54,7 @@ private:
   void
   errorMessage();
   void
-  finishMessage();
+  finishMessage(Gtk::Window *win);
   void
   saveDate(int dt);
   void
