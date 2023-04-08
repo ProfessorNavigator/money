@@ -67,7 +67,6 @@ GraphicWidget::graphic(std::string file, Gtk::Window *win, int graphvar)
   Gtk::Overlay *overlay = Gtk::make_managed<Gtk::Overlay>();
   window->set_title(gettext("Diagram"));
   window->set_child(*overlay);
-  window->set_transient_for(*win);
   window->fullscreen();
 
   Gtk::Grid *grid = Gtk::make_managed<Gtk::Grid>();
