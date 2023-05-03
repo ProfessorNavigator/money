@@ -480,6 +480,7 @@ GraphicWidget::on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int width,
   image = image->scale_simple(width, height, Gdk::InterpType::BILINEAR);
   Gdk::Cairo::set_source_pixbuf(cr, image, 0, 0);
   cr->paint();
+  cr->rectangle(0, 0, image->get_width(), image->get_height());
   cr->fill();
 }
 

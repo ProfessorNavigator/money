@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Money\n"
-"POT-Creation-Date: 2023-01-23 12:36+0400\n"
-"PO-Revision-Date: 2023-01-23 12:40+0400\n"
+"POT-Creation-Date: 2023-05-03 17:37+0400\n"
+"PO-Revision-Date: 2023-05-03 17:37+0400\n"
 "Last-Translator: Юрий Бобылев\n"
 "Language-Team: Юрий Бобылев\n"
 "Language: ru_RU\n"
@@ -203,15 +203,15 @@ msgstr "Поиск аномалий"
 msgid "Search parameters"
 msgstr "Параметры поиска"
 
-#: GUI/AnomalySearch.cpp:116 GUI/DownloadMenu.cpp:1886
+#: GUI/AnomalySearch.cpp:116 GUI/DownloadMenu.cpp:1877
 msgid "Day"
 msgstr "День"
 
-#: GUI/AnomalySearch.cpp:122 GUI/DownloadMenu.cpp:1892
+#: GUI/AnomalySearch.cpp:122 GUI/DownloadMenu.cpp:1883
 msgid "Month"
 msgstr "Месяц"
 
-#: GUI/AnomalySearch.cpp:128 GUI/DownloadMenu.cpp:1898
+#: GUI/AnomalySearch.cpp:128 GUI/DownloadMenu.cpp:1889
 msgid "Year"
 msgstr "Год"
 
@@ -232,8 +232,8 @@ msgid "Clear"
 msgstr "Очистить"
 
 #: GUI/AnomalySearch.cpp:241 GUI/AnomalySearch.cpp:453 GUI/DownloadMenu.cpp:692
-#: GUI/DownloadMenu.cpp:936 GUI/DownloadMenu.cpp:1063 GUI/DownloadMenu.cpp:1303
-#: GUI/DownloadMenu.cpp:1505 GUI/DownloadMenu.cpp:2010
+#: GUI/DownloadMenu.cpp:944 GUI/DownloadMenu.cpp:1067 GUI/DownloadMenu.cpp:1306
+#: GUI/DownloadMenu.cpp:1497 GUI/DownloadMenu.cpp:2001
 #: GUI/GraphicWidget.cpp:575 GUI/MainWindow.cpp:391 GUI/OpenDialog.cpp:287
 #: GUI/OpenDialogDeals.cpp:524
 msgid "Cancel"
@@ -243,7 +243,7 @@ msgstr "Отмена"
 msgid "Searching..."
 msgstr "Поиск..."
 
-#: GUI/AnomalySearch.cpp:521 GUI/DownloadMenu.cpp:1220
+#: GUI/AnomalySearch.cpp:521 GUI/DownloadMenu.cpp:1223
 msgid "Error!"
 msgstr "Ошибка!"
 
@@ -267,9 +267,9 @@ msgstr "Неправильно введена глубина поиска!"
 msgid "Wrong sensitivity input!"
 msgstr "Неправильно введена чувствительность!"
 
-#: GUI/AnomalySearch.cpp:560 GUI/AnomalySearch.cpp:901 GUI/DownloadMenu.cpp:873
-#: GUI/DownloadMenu.cpp:1228 GUI/DownloadMenu.cpp:1432
-#: GUI/GraphicWidget.cpp:274 GUI/MainWindow.cpp:470
+#: GUI/AnomalySearch.cpp:560 GUI/AnomalySearch.cpp:901 GUI/DownloadMenu.cpp:881
+#: GUI/DownloadMenu.cpp:1231 GUI/DownloadMenu.cpp:1434
+#: GUI/GraphicWidget.cpp:273 GUI/MainWindow.cpp:470
 msgid "Close"
 msgstr "Закрыть"
 
@@ -321,137 +321,137 @@ msgstr "Все сделки за текущую дату"
 msgid "All results"
 msgstr "Все итоги торгов"
 
-#: GUI/DownloadMenu.cpp:670 GUI/DownloadMenu.cpp:1279 GUI/DownloadMenu.cpp:1481
+#: GUI/DownloadMenu.cpp:670 GUI/DownloadMenu.cpp:1282 GUI/DownloadMenu.cpp:1473
 msgid "Downloading..."
 msgstr "Загрузка..."
 
-#: GUI/DownloadMenu.cpp:682 GUI/DownloadMenu.cpp:1290 GUI/DownloadMenu.cpp:1492
+#: GUI/DownloadMenu.cpp:682 GUI/DownloadMenu.cpp:1293 GUI/DownloadMenu.cpp:1484
 msgid "Downloading in progress..."
 msgstr "Загрузка..."
 
-#: GUI/DownloadMenu.cpp:855 GUI/DownloadMenu.cpp:1219 GUI/MainWindow.cpp:464
+#: GUI/DownloadMenu.cpp:863 GUI/DownloadMenu.cpp:1222 GUI/MainWindow.cpp:464
 msgid "Network error"
 msgstr "Ошибка сети"
 
-#: GUI/DownloadMenu.cpp:865
+#: GUI/DownloadMenu.cpp:873
 msgid "Network error!"
 msgstr "Ошибка сети!"
 
-#: GUI/DownloadMenu.cpp:918
+#: GUI/DownloadMenu.cpp:926
 msgid "PPm calculation"
 msgstr "Расчёт ПСд"
 
-#: GUI/DownloadMenu.cpp:1042
+#: GUI/DownloadMenu.cpp:1046
 msgid "Transactions downloading"
 msgstr "Загрузка сделок"
 
-#: GUI/DownloadMenu.cpp:1052
+#: GUI/DownloadMenu.cpp:1056
 msgid "Transaction downloading progress:"
 msgstr "Прогресс загрузки сделок:"
 
-#: GUI/DownloadMenu.cpp:1212
+#: GUI/DownloadMenu.cpp:1215
 msgid "No transactions today"
 msgstr "Торги не проводились"
 
-#: GUI/DownloadMenu.cpp:1214
+#: GUI/DownloadMenu.cpp:1217
 msgid "Message"
 msgstr "Сообщение"
 
-#: GUI/DownloadMenu.cpp:1416
+#: GUI/DownloadMenu.cpp:1418
 msgid "Downloading completed"
 msgstr "Загрузка завершена"
 
-#: GUI/DownloadMenu.cpp:1426
+#: GUI/DownloadMenu.cpp:1428
 msgid "Downloading completed!"
 msgstr "Загрузка завершена!"
 
-#: GUI/DownloadMenu.cpp:1639
+#: GUI/DownloadMenu.cpp:1630
 msgid "Split/Backsplit"
 msgstr "Дробление/Консолидация"
 
-#: GUI/DownloadMenu.cpp:1699
+#: GUI/DownloadMenu.cpp:1690
 msgid "Instrument ID"
 msgstr "Код инсрумента"
 
-#: GUI/DownloadMenu.cpp:1700
+#: GUI/DownloadMenu.cpp:1691
 msgid "Split/Backsplit date"
 msgstr "Дата дробления/консолидации"
 
-#: GUI/DownloadMenu.cpp:1798 GUI/DownloadMenu.cpp:1818
-#: GUI/DownloadMenu.cpp:1851 GUI/DownloadMenu.cpp:1932
+#: GUI/DownloadMenu.cpp:1789 GUI/DownloadMenu.cpp:1809
+#: GUI/DownloadMenu.cpp:1842 GUI/DownloadMenu.cpp:1923
 msgid "Add instrument"
 msgstr "Добавить инструмент"
 
-#: GUI/DownloadMenu.cpp:1799 GUI/DownloadMenu.cpp:1829
+#: GUI/DownloadMenu.cpp:1790 GUI/DownloadMenu.cpp:1820
 msgid "Remove instrument"
 msgstr "Удалить инструмент"
 
-#: GUI/DownloadMenu.cpp:1866
+#: GUI/DownloadMenu.cpp:1857
 msgid "Instriment ID"
 msgstr "Код инструмента"
 
-#: GUI/DownloadMenu.cpp:1880
+#: GUI/DownloadMenu.cpp:1871
 msgid "Date of split/backsplit"
 msgstr "Дата дробления /консолидации"
 
-#: GUI/GraphicWidget.cpp:135 GUI/GraphicWidget.cpp:149
-#: GUI/GraphicWidget.cpp:154
+#: GUI/GraphicWidget.cpp:134 GUI/GraphicWidget.cpp:148
+#: GUI/GraphicWidget.cpp:153
 msgid "Instrument: "
 msgstr "Инструмент: "
 
-#: GUI/GraphicWidget.cpp:165
+#: GUI/GraphicWidget.cpp:164
 msgid "Date: "
 msgstr "Дата: "
 
-#: GUI/GraphicWidget.cpp:173
+#: GUI/GraphicWidget.cpp:172
 msgid "Increase"
 msgstr "Увеличить"
 
-#: GUI/GraphicWidget.cpp:182
+#: GUI/GraphicWidget.cpp:181
 msgid "Decrease"
 msgstr "Уменьшить"
 
-#: GUI/GraphicWidget.cpp:191
+#: GUI/GraphicWidget.cpp:190
 msgid "Move up"
 msgstr "Сдвинуть вверх"
 
-#: GUI/GraphicWidget.cpp:200
+#: GUI/GraphicWidget.cpp:199
 msgid "Move down"
 msgstr "Сдвинуть вниз"
 
-#: GUI/GraphicWidget.cpp:209
+#: GUI/GraphicWidget.cpp:208
 msgid "Move left"
 msgstr "Сдвинуть влево"
 
-#: GUI/GraphicWidget.cpp:218
+#: GUI/GraphicWidget.cpp:217
 msgid "Move right"
 msgstr "Сдвинуть вправо"
 
-#: GUI/GraphicWidget.cpp:227
+#: GUI/GraphicWidget.cpp:226
 msgid "Recover"
 msgstr "Восстановить"
 
-#: GUI/GraphicWidget.cpp:236
+#: GUI/GraphicWidget.cpp:235
 msgid "Save as jpg"
 msgstr "Сохранить в jpg"
 
-#: GUI/GraphicWidget.cpp:245
+#: GUI/GraphicWidget.cpp:244
 msgid "Save as png"
 msgstr "Сохранить в png"
 
-#: GUI/GraphicWidget.cpp:254
+#: GUI/GraphicWidget.cpp:253
 msgid "Save as svg"
 msgstr "Сохранить в svg"
 
-#: GUI/GraphicWidget.cpp:263
+#: GUI/GraphicWidget.cpp:262
 msgid "Minimize"
 msgstr "Свернуть"
 
-#: GUI/GraphicWidget.cpp:323
+#: GUI/GraphicWidget.cpp:322
 msgid "Date"
 msgstr "Дата"
 
-#: GUI/GraphicWidget.cpp:331
+#: GUI/GraphicWidget.cpp:330
 msgid "CPP"
 msgstr "ИПС"
 

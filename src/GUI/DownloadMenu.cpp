@@ -719,6 +719,7 @@ DownloadMenu::downloadAll(Gtk::Window *win)
   Glib::Dispatcher *net_err_disp = new Glib::Dispatcher;
   Glib::Dispatcher *save_date_disp = new Glib::Dispatcher;
   Glib::Dispatcher *fin_disp = new Glib::Dispatcher;
+  std::mutex *finish_lock = new std::mutex;
 
   progr_disp->connect([progbr, progbar]
   {
@@ -790,28 +791,31 @@ DownloadMenu::downloadAll(Gtk::Window *win)
     net_err_disp->emit();
   };
 
-  save_date_disp->connect([svdt, mw]
+  save_date_disp->connect([svdt, mw, finish_lock]
   {
     int dt = *svdt;
     DownloadMenu dm(mw);
     dm.saveDate(dt);
+    finish_lock->unlock();
   });
 
-  dall->saveDate = [save_date_disp, svdt]
+  dall->saveDate = [save_date_disp, svdt, finish_lock]
   (int date)
     {
+      finish_lock->lock();
       *svdt = date;
       save_date_disp->emit();
     };
 
-  dall->finished = [fin_disp]
+  dall->finished = [fin_disp, finish_lock]
   {
+    finish_lock->lock();
     fin_disp->emit();
   };
 
   fin_disp->connect(
       [window, mw, progr_disp, glob_err_disp, canceled_disp, net_err_disp,
-       save_date_disp, fin_disp]
+       save_date_disp, fin_disp, finish_lock]
       {
 	window->close();
 	DownloadMenu dm(mw);
@@ -821,6 +825,7 @@ DownloadMenu::downloadAll(Gtk::Window *win)
 	delete glob_err_disp;
 	delete canceled_disp;
 	delete net_err_disp;
+	finish_lock->unlock();
 	delete fin_disp;
       });
 
@@ -834,13 +839,16 @@ DownloadMenu::downloadAll(Gtk::Window *win)
 
   window->present();
 
-  std::thread *thr = new std::thread([dall, cncl, progbr, svdt]
+  std::thread *thr = new std::thread([dall, cncl, progbr, svdt, finish_lock]
   {
     dall->downloadAll();
+    finish_lock->lock();
     delete cncl;
     delete dall;
     delete progbr;
     delete svdt;
+    finish_lock->unlock();
+    delete finish_lock;
   });
   thr->detach();
   delete thr;

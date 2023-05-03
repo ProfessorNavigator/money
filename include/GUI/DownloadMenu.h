@@ -24,6 +24,7 @@
 #include <fstream>
 #include <filesystem>
 #include <thread>
+#include <mutex>
 #include <string>
 #include <libintl.h>
 #include "AuxFunc.h"

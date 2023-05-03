@@ -395,7 +395,7 @@ DownloadAll::downloadAll()
 	    {
 	      dt = 2450531.0;
 	    }
-	  saveDate(dt);
+	  saveDate(static_cast<int>(dt));
 	}
       if(finished)
 	{
@@ -410,7 +410,7 @@ DownloadAll::downloadAll()
 	    {
 	      dt = 2450531.0;
 	    }
-	  saveDate(dt);
+	  saveDate(static_cast<int>(dt));
 	}
       if(finished)
 	{
