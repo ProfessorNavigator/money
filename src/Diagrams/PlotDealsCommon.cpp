@@ -27,6 +27,7 @@ PlotDealsCommon::PlotDealsCommon(
   height = Height;
   width = Width;
   plotdate = Plotdate;
+  calcForDraw();
 }
 
 PlotDealsCommon::~PlotDealsCommon()
@@ -51,9 +52,9 @@ PlotDealsCommon::calcForDraw()  //График покупательной спо
   af.homePath(&line);
   line = line + "/.Money/BoardsList";
   p = af.utf8to(line);
-  if(std::filesystem::exists(p))
+  f.open(p, std::ios_base::in);
+  if(f.is_open())
     {
-      f.open(p, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -92,14 +93,14 @@ PlotDealsCommon::calcForDraw()  //График покупательной спо
   temp.clear();
   count = 0;
 
-  if(!std::filesystem::exists(filename))
+  f.open(filename, std::ios_base::in);
+  if(!f.is_open())
     {
       std::cout << "File to plot common (Deals) not opened" << std::endl;
     }
   else
     {
       std::tuple<int, int, int> temptup;
-      f.open(filename, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -209,24 +210,144 @@ PlotDealsCommon::calcForDraw()  //График покупательной спо
       std::get<2>(plotdate->at(i)) = Dc[i];
     }
 
-  if(plotdate->size() > 0)
-    {
-      datebeg = std::get<0>(plotdate->at(0));
-      dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
-    }
   for(size_t i = 0; i < Tc.size(); i++)
     {
       MRSP.push_back((Dc[i] / Tc[i] - 1) * 100);
       std::get<3>(plotdate->at(i)) = MRSP[i];
     }
   mpf_class summ(0);
+  mpf_class time_b(0);
   for(size_t i = 0; i < Quan.size(); i++)
     {
       summ = summ + Quan[i];
-      mpf_class dn = static_cast<double>(i + 1);
-      mpf_class res = summ / dn;
-      sharesvol.push_back(res.get_d());
-      std::get<4>(plotdate->at(i)) = res.get_d();
+      std::string val = std::get<0>(plotdate->at(i));
+      val = val.substr(0, val.find(":"));
+      mpf_class time_cur(val);
+      time_cur = time_cur * mpf_class(3600);
+      val = std::get<0>(plotdate->at(i));
+      val.erase(0, val.find(":") + std::string(":").size());
+      val = val.substr(0, val.find(":"));
+      time_cur = time_cur + mpf_class(val) * 60;
+      val = std::get<0>(plotdate->at(i));
+      val.erase(0, val.rfind(":") + std::string(":").size());
+      time_cur = time_cur + mpf_class(val);
+      if(i > 0)
+	{
+	  if(time_cur > time_b)
+	    {
+	      time_cur = time_cur - time_b;
+	    }
+	  mpf_class res = summ / time_cur;
+	  sharesvol.push_back(res.get_d());
+	  std::get<4>(plotdate->at(i)) = res.get_d();
+	}
+      else
+	{
+	  time_b = time_cur;
+	  sharesvol.push_back(Quan[i].get_d());
+	  std::get<4>(plotdate->at(i)) = Quan[i].get_d();
+	}
+    }
+}
+
+void
+PlotDealsCommon::cleanVectors(int dateb, int datee)
+{
+  std::locale loc("C");
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [dateb, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find(":"));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(":") + std::string(":").size());
+	  val = val.substr(0, val.find(":"));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(":") + std::string(":").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  return day * 3600 + month * 60 + year < dateb;
+	}),
+      plotdate->end());
+
+  size_t sz = Tc.size() - plotdate->size();
+
+  if(sz > 0)
+    {
+      Tc.erase(Tc.begin(), Tc.begin() + sz);
+      Dc.erase(Dc.begin(), Dc.begin() + sz);
+      MRSP.erase(MRSP.begin(), MRSP.begin() + sz);
+      sharesvol.erase(sharesvol.begin(), sharesvol.begin() + sz);
+    }
+
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [datee, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find(":"));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(":") + std::string(":").size());
+	  val = val.substr(0, val.find(":"));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(":") + std::string(":").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  return day * 3600 + month * 60 + year > datee;
+	}),
+      plotdate->end());
+
+  sz = Tc.size() - plotdate->size();
+  if(sz > 0)
+    {
+      Tc.erase(Tc.end() - sz, Tc.end());
+      Dc.erase(Dc.end() - sz, Dc.end());
+      MRSP.erase(MRSP.end() - sz, MRSP.end());
+      sharesvol.erase(sharesvol.end() - sz, sharesvol.end());
+    }
+  if(plotdate->size() > 0)
+    {
+      datebeg = std::get<0>(plotdate->at(0));
+      dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
     }
 }
 
@@ -234,7 +355,6 @@ int
 PlotDealsCommon::Draw(mglGraph *gr)
 {
   std::vector<int> X;
-  calcForDraw();
 
   for(size_t i = 0; i < MRSP.size(); i++)
     {
@@ -249,8 +369,6 @@ PlotDealsCommon::Draw(mglGraph *gr)
     }
   d = number / d;
 
-  mglData x(X), y(MRSP);
-
   std::vector<int> X1;
   std::vector<double> DC;
   for(size_t i = 0; i < Tc.size(); i++)
@@ -259,6 +377,23 @@ PlotDealsCommon::Draw(mglGraph *gr)
       DC.push_back(Dc[0]);
     }
   mglData x1(X1), y1(Tc), y11(Dc), ydc(DC);
+  double miny1, maxy1;
+  if(y1.Minimal() <= y11.Minimal())
+    {
+      miny1 = y1.Minimal();
+    }
+  else
+    {
+      miny1 = y11.Minimal();
+    }
+  if(y1.Maximal() >= y11.Maximal())
+    {
+      maxy1 = y1.Maximal();
+    }
+  else
+    {
+      maxy1 = y11.Maximal();
+    }
 
   std::vector<int> X2;
   std::vector<double> Y2;
@@ -282,17 +417,17 @@ PlotDealsCommon::Draw(mglGraph *gr)
   gr->SubPlot(1, 3, 0, ">^_");
   gr->Title(grnm.c_str(), "", 5);
   gr->SetQuality(3);
-  gr->SetRanges(x1, y11);
+  gr->SetRanges(x1.Minimal(), x1.Maximal(), miny1, maxy1);
   gr->SetFontSize(3);
   gr->SetOriginTick(false);
 
   std::vector<double> ticks;
-  double tickstep = (y11.Maximal() - y11.Minimal()) / 3;
+  double tickstep = (maxy1 - miny1) / 3;
   if(tickstep < 0)
     {
       tickstep = -tickstep;
     }
-  double tickval = y11.Minimal();
+  double tickval = miny1;
   std::stringstream strm;
   std::locale loc("C");
   std::string tickstr, tick;
@@ -361,10 +496,8 @@ PlotDealsCommon::Draw(mglGraph *gr)
   gr->ClearLegend();
 
   //Подписи оси х
-  mglPoint p1(x1.Minimal(),
-	      y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
-  mglPoint p5(x1.Maximal(),
-	      y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
+  mglPoint p1(x1.Minimal(), maxy1 + ((maxy1 - miny1) * 0.02));
+  mglPoint p5(x1.Maximal(), maxy1 + ((maxy1 - miny1) * 0.02));
   datebeg = af.utf8to(datebeg);
   dateend = af.utf8to(dateend);
   gr->Puts(p1, datebeg.c_str(), "k", 3);
@@ -373,6 +506,7 @@ PlotDealsCommon::Draw(mglGraph *gr)
   grnm = gettext("PPTm/PPm in %");
   grnm = af.utf8to(grnm);
 
+  mglData x(X), y(MRSP);
   //Общие настройки графика
   gr->SetObjId(21);
   gr->SubPlot(1, 3, 1, ">^_");
@@ -436,7 +570,7 @@ PlotDealsCommon::Draw(mglGraph *gr)
   gr->Puts(p11, datebeg.c_str(), "k", 3);
   gr->Puts(p51, dateend.c_str(), "k", 3);
 
-  grnm = gettext("Average shares volume per deal");
+  grnm = gettext("Average shares volume per second");
   grnm = af.utf8to(grnm);
 
   //Общие настройки графика

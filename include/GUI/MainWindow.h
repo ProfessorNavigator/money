@@ -74,6 +74,8 @@ private:
   void
   dtRespFunc(int *resp, Gtk::Window *window, Gtk::Grid *grid,
 	     Gtk::Button *cancel, Gtk::Label *msg);
+  void
+  dateQuieryPlotGlobal(int graph_ch, int variant);
   Gdk::Rectangle
   screenRes();
   void

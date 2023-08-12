@@ -27,6 +27,7 @@ PlotAllCommon::PlotAllCommon(
   height = Height;
   width = Width;
   plotdate = Plotdate;
+  calcForDraw();
 }
 
 PlotAllCommon::~PlotAllCommon()
@@ -48,9 +49,9 @@ PlotAllCommon::calcForDraw()
   af.homePath(&line);
   line = line + "/.Money/BoardsList";
   p = af.utf8to(line);
-  if(std::filesystem::exists(p))
+  f.open(p, std::ios_base::in);
+  if(f.is_open())
     {
-      f.open(p, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -88,13 +89,13 @@ PlotAllCommon::calcForDraw()
   line.clear();
   temp.clear();
   count = 0;
-  if(!std::filesystem::exists(filename))
+  f.open(filename, std::ios_base::in);
+  if(!f.is_open())
     {
       std::cout << "File to plot common graphics (All) not opened" << std::endl;
     }
   else
     {
-      f.open(filename, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -167,11 +168,6 @@ PlotAllCommon::calcForDraw()
       std::get<3>(plotdate->at(i)) = Ot[i];
     }
 
-  if(plotdate->size() > 0)
-    {
-      datebeg = std::get<0>(plotdate->at(0));
-      dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
-    }
   mpf_class summ(0);
   for(size_t i = 0; i < volume.size(); i++)
     {
@@ -190,23 +186,140 @@ PlotAllCommon::calcForDraw()
     }
 }
 
+void
+PlotAllCommon::cleanVectors(double dateb, double datee)
+{
+  std::locale loc("C");
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [dateb, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find("."));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(".") + std::string(".").size());
+	  val = val.substr(0, val.find("."));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(".") + std::string(".").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  AuxFunc af;
+	  double JD = af.grigtojulian(day, month, year, 0, 0, 0.0);
+
+	  return JD < dateb;
+	}),
+      plotdate->end());
+
+  size_t sz = Tc.size() - plotdate->size();
+
+  if(sz > 0)
+    {
+      Tc.erase(Tc.begin(), Tc.begin() + sz);
+      Dc.erase(Dc.begin(), Dc.begin() + sz);
+      Ot.erase(Ot.begin(), Ot.begin() + sz);
+      sharesvol.erase(sharesvol.begin(), sharesvol.begin() + sz);
+    }
+
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [datee, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find("."));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(".") + std::string(".").size());
+	  val = val.substr(0, val.find("."));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(".") + std::string(".").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  AuxFunc af;
+	  double JD = af.grigtojulian(day, month, year, 0, 0, 0.0);
+
+	  return JD > datee;
+	}),
+      plotdate->end());
+
+  sz = Tc.size() - plotdate->size();
+  if(sz > 0)
+    {
+      Tc.erase(Tc.end() - sz, Tc.end());
+      Dc.erase(Dc.end() - sz, Dc.end());
+      Ot.erase(Ot.end() - sz, Ot.end());
+      sharesvol.erase(sharesvol.end() - sz, sharesvol.end());
+    }
+  if(plotdate->size() > 0)
+    {
+      datebeg = std::get<0>(plotdate->at(0));
+      dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
+    }
+}
+
 int
 PlotAllCommon::Draw(mglGraph *gr)
 {
-  calcForDraw();
   std::vector<int> X;
   for(size_t i = 0; i < Tc.size(); i++)
     {
       X.push_back(i);
     }
   mglData x(X), y(Tc), y1(Dc);
-  mglData x3(X), y3(sharesvol);
 
-  //Координаты подписей оси х
-  mglPoint p1(x.Minimal(),
-	      y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
-  mglPoint p5(x.Maximal(),
-	      y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
+  double miny1, maxy1;
+  if(y.Minimal() <= y1.Minimal())
+    {
+      miny1 = y.Minimal();
+    }
+  else
+    {
+      miny1 = y1.Minimal();
+    }
+  if(y.Maximal() >= y1.Maximal())
+    {
+      maxy1 = y.Maximal();
+    }
+  else
+    {
+      maxy1 = y1.Maximal();
+    }
 
   int d = 6;
   int number = X.size();
@@ -222,7 +335,7 @@ PlotAllCommon::Draw(mglGraph *gr)
     {
       if(i > 0)
 	{
-	  mglPoint p(i, y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
+	  mglPoint p(i, maxy1 + ((maxy1 - miny1) * 0.02));
 	  Coord.push_back(p);
 	  dates.push_back(std::get<0>(plotdate->at(i)));
 	}
@@ -237,17 +350,17 @@ PlotAllCommon::Draw(mglGraph *gr)
   gr->SubPlot(1, 3, 0, ">^_");
   gr->Title(grnm.c_str(), "", 5);
   gr->SetQuality(3);
-  gr->SetRanges(x, y1);
+  gr->SetRanges(x.Minimal(), x.Maximal(), miny1, maxy1);
   gr->SetFontSize(3);
   gr->SetOriginTick(false);
 
   std::vector<double> ticks;
-  double tickstep = (y1.Maximal() - y1.Minimal()) / 3;
+  double tickstep = (maxy1 - miny1) / 3;
   if(tickstep < 0)
     {
       tickstep = -tickstep;
     }
-  double tickval = y1.Minimal();
+  double tickval = miny1;
   std::stringstream strm;
   std::locale loc("C");
   std::string tickstr, tick;
@@ -306,6 +419,8 @@ PlotAllCommon::Draw(mglGraph *gr)
   //Подписи оси х
   datebeg = af.utf8to(datebeg);
   dateend = af.utf8to(dateend);
+  mglPoint p1(x.Minimal(), maxy1 + ((maxy1 - miny1) * 0.02));
+  mglPoint p5(x.Maximal(), maxy1 + ((maxy1 - miny1) * 0.02));
   gr->Puts(p1, datebeg.c_str(), "k", 3);
   gr->Puts(p5, dateend.c_str(), "k", 3);
 
@@ -332,19 +447,33 @@ PlotAllCommon::Draw(mglGraph *gr)
       Zer.push_back(0);
     }
   mglData x1(X1), y11(Ot), y12(Zer);
+  double miny2, maxy2;
+  if(y11.Minimal() <= y12.Minimal())
+    {
+      miny2 = y11.Minimal();
+    }
+  else
+    {
+      miny2 = y12.Minimal();
+    }
+  if(y11.Maximal() >= y12.Maximal())
+    {
+      maxy2 = y11.Maximal();
+    }
+  else
+    {
+      maxy2 = y12.Maximal();
+    }
 
   //Координаты подписей оси х
-  mglPoint p11(x1.Minimal(),
-	       y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
-  mglPoint p51(x.Maximal(),
-	       y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
+  mglPoint p11(x1.Minimal(), maxy2 + ((maxy2 - miny2) * 0.02));
+  mglPoint p51(x.Maximal(), maxy2 + ((maxy2 - miny2) * 0.02));
   Coord.clear();
   for(size_t i = 0; i < X1.size(); i = i + d)
     {
       if(i > 0)
 	{
-	  mglPoint p(i,
-		     y11.Maximal() + ((y11.Maximal() - y11.Minimal()) * 0.02));
+	  mglPoint p(i, maxy2 + ((maxy2 - miny2) * 0.02));
 	  Coord.push_back(p);
 	}
     }
@@ -357,17 +486,17 @@ PlotAllCommon::Draw(mglGraph *gr)
   gr->SubPlot(1, 3, 1, ">^_");
   gr->Title(grnm.c_str(), "", 5);
   gr->SetQuality(3);
-  gr->SetRanges(x1, y11);
+  gr->SetRanges(x1.Minimal(), x1.Maximal(), miny2, maxy2);
   gr->SetFontSize(3);
   gr->SetOriginTick(false);
 
   ticks.clear();
-  tickstep = (y11.Maximal() - y11.Minimal()) / 3;
+  tickstep = (maxy2 - miny2) / 3;
   if(tickstep < 0)
     {
       tickstep = -tickstep;
     }
-  tickval = y11.Minimal();
+  tickval = miny2;
   tickstr.clear();
   for(int i = 0; i < 2; i++)
     {
@@ -418,6 +547,7 @@ PlotAllCommon::Draw(mglGraph *gr)
   gr->Legend(1.1, 1.3);
   gr->ClearLegend();
 
+  mglData x3(X), y3(sharesvol);
   Coord.clear();
   for(size_t i = 0; i < X1.size(); i = i + d)
     {

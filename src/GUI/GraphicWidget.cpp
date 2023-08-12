@@ -32,7 +32,7 @@ GraphicWidget::GraphicWidget(int width, int height, Gtk::Window *mwin,
 
 GraphicWidget::~GraphicWidget()
 {
-  if(gr != nullptr)
+  if(gr)
     {
       gr->SetPlotFactor(0);
       gr->Zoom(0.0, 0.0, 1.0, 1.0);
@@ -43,10 +43,12 @@ GraphicWidget::~GraphicWidget()
 void
 GraphicWidget::plot(int variant, int graph, std::string opendate)
 {
+
   Opendate = opendate;
   if(variant == 0 || variant == 1)
     {
-      graphic(plotfnm, Mwin, graph);
+      gr = new mglGraph;
+      plotMglFunc(plotfnm, graph);
     }
   else if(variant == 2)
     {
@@ -54,6 +56,8 @@ GraphicWidget::plot(int variant, int graph, std::string opendate)
       std::string file;
       af.homePath(&file);
       file = file + "/Money/PPm/PPm.csv";
+      gr = new mglGraph;
+      plotMglFunc(file, graph);
       graphic(file, Mwin, graph);
     }
 }
@@ -75,8 +79,6 @@ GraphicWidget::graphic(std::string file, Gtk::Window *win, int graphvar)
   grid->set_valign(Gtk::Align::CENTER);
   grid->set_margin(5);
 
-  gr = new mglGraph;
-  plotMglFunc(file, graphvar);
   Gtk::DrawingArea *drar = Gtk::make_managed<Gtk::DrawingArea>();
   drar->set_draw_func(
       sigc::bind(sigc::mem_fun(*this, &GraphicWidget::on_draw)));
@@ -393,68 +395,70 @@ GraphicWidget::plotMglFunc(std::string file, int variant)
 {
   if(variant == 0)
     {
-      PlotPriceAll prall(file, Height, Width, &dateplot);
-      prall.Draw(gr);
+      PlotPriceAll *prall = new PlotPriceAll(file, Height, Width, &dateplot);
+      dateQuieryPlotGlobal(file, variant, reinterpret_cast<void*>(prall));
     }
   if(variant == 1)
     {
-      PSD psd(file, Height, Width, &dateplot);
-      psd.Draw(gr);
+      PSD *psd = new PSD(file, Height, Width, &dateplot);
+      dateQuieryPlotGlobal(file, variant, reinterpret_cast<void*>(psd));
     }
   if(variant == 2)
     {
-      PlotVolumeAll val(file, Height, Width, &dateplot);
-      val.Draw(gr);
+      PlotVolumeAll *val = new PlotVolumeAll(file, Height, Width, &dateplot);
+      dateQuieryPlotGlobal(file, variant, reinterpret_cast<void*>(val));
     }
   if(variant == 3)
     {
-      PlotMoneyVolumeAll val(file, Height, Width, &dateplot);
-      val.Draw(gr);
+      PlotMoneyVolumeAll *val = new PlotMoneyVolumeAll(file, Height, Width,
+						       &dateplot);
+      dateQuieryPlotGlobal(file, variant, reinterpret_cast<void*>(val));
     }
 
   if(variant == 4)
     {
-      PlotPriceDeals pd(file, Height, Width, &dateplot);
-      pd.Draw(gr);
+      PlotPriceDeals *pd = new PlotPriceDeals(file, Height, Width, &dateplot);
+      dateQuieryPlotGlobal(file, variant, reinterpret_cast<void*>(pd));
     }
   if(variant == 5)
     {
-      PSDDeals psdd(file, Height, Width, &dateplot);
-      psdd.Draw(gr);
+      PSDDeals *psdd = new PSDDeals(file, Height, Width, &dateplot);
+      dateQuieryPlotGlobal(file, variant, reinterpret_cast<void*>(psdd));
     }
   if(variant == 6)
     {
-      PlotVolumeDeals vd(file, Height, Width, &dateplot);
-      vd.Draw(gr);
+      PlotVolumeDeals *vd = new PlotVolumeDeals(file, Height, Width, &dateplot);
+      dateQuieryPlotGlobal(file, variant, reinterpret_cast<void*>(vd));
     }
   if(variant == 7)
     {
-      PlotMoneyVolumeDeals vd(file, Height, Width, &dateplot);
-      vd.Draw(gr);
+      PlotMoneyVolumeDeals *vd = new PlotMoneyVolumeDeals(file, Height, Width,
+							  &dateplot);
+      dateQuieryPlotGlobal(file, variant, reinterpret_cast<void*>(vd));
     }
   if(variant == 8)
     {
-      PlotAllCommon ac(file, Height, Width, &dateplot);
-      ac.Draw(gr);
+      PlotAllCommon *ac = new PlotAllCommon(file, Height, Width, &dateplot);
+      dateQuieryPlotGlobal(file, variant, reinterpret_cast<void*>(ac));
     }
   if(variant == 9)
     {
-      PlotDealsCommon dc(file, Height, Width, &dateplot);
-      dc.Draw(gr);
+      PlotDealsCommon *dc = new PlotDealsCommon(file, Height, Width, &dateplot);
+      dateQuieryPlotGlobal(file, variant, reinterpret_cast<void*>(dc));
     }
   if(variant == 10)
     {
-      PlotPSDGlobal psdg(file, Height, Width, &dateplot);
+      PlotPSDGlobal psdg(file, Height, Width, &dateplot, Opendate);
       psdg.Draw(gr);
     }
   if(variant == 11)
     {
-      PlotVolumeGlobal pvg(file, Height, Width, &dateplot);
+      PlotVolumeGlobal pvg(file, Height, Width, &dateplot, Opendate);
       pvg.Draw(gr);
     }
   if(variant == 12)
     {
-      PlotMoneyGlobal pmg(file, Height, Width, &dateplot);
+      PlotMoneyGlobal pmg(file, Height, Width, &dateplot, Opendate);
       pmg.Draw(gr);
     }
   int grwarn = gr->GetWarn();
@@ -467,6 +471,476 @@ GraphicWidget::plotMglFunc(std::string file, int variant)
     {
       std::cerr << "MathGL global warning: " << grwstr << std::endl;
     }
+}
+
+void
+GraphicWidget::dateQuieryPlotGlobal(std::string file, int variant, void *point)
+{
+  std::vector<Glib::ustring> date_val;
+  if(dateplot.size() > 0
+      && (variant == 0 || variant == 1 || variant == 2 || variant == 3
+	  || variant == 8))
+    {
+      std::string val = std::get<0>(*dateplot.begin());
+      val = val.substr(0, val.find("."));
+      date_val.push_back(Glib::ustring(val));
+
+      val = std::get<0>(*dateplot.begin());
+      val.erase(0, val.find(".") + std::string(".").size());
+      val = val.substr(0, val.find("."));
+      date_val.push_back(Glib::ustring(val));
+
+      val = std::get<0>(*dateplot.begin());
+      val.erase(0, val.rfind(".") + std::string(".").size());
+      date_val.push_back(Glib::ustring(val));
+
+      val = std::get<0>(*(dateplot.end() - 1));
+      val = val.substr(0, val.find("."));
+      date_val.push_back(Glib::ustring(val));
+
+      val = std::get<0>(*(dateplot.end() - 1));
+      val.erase(0, val.find(".") + std::string(".").size());
+      val = val.substr(0, val.find("."));
+      date_val.push_back(Glib::ustring(val));
+
+      val = std::get<0>(*(dateplot.end() - 1));
+      val.erase(0, val.rfind(".") + std::string(".").size());
+      date_val.push_back(Glib::ustring(val));
+    }
+  else if(dateplot.size() > 0)
+    {
+      std::string val = std::get<0>(*dateplot.begin());
+      val = val.substr(0, val.find(":"));
+      date_val.push_back(Glib::ustring(val));
+
+      val = std::get<0>(*dateplot.begin());
+      val.erase(0, val.find(":") + std::string(":").size());
+      val = val.substr(0, val.find(":"));
+      date_val.push_back(Glib::ustring(val));
+
+      val = std::get<0>(*dateplot.begin());
+      val.erase(0, val.rfind(":") + std::string(":").size());
+      date_val.push_back(Glib::ustring(val));
+
+      val = std::get<0>(*(dateplot.end() - 1));
+      val = val.substr(0, val.find(":"));
+      date_val.push_back(Glib::ustring(val));
+
+      val = std::get<0>(*(dateplot.end() - 1));
+      val.erase(0, val.find(":") + std::string(":").size());
+      val = val.substr(0, val.find(":"));
+      date_val.push_back(Glib::ustring(val));
+
+      val = std::get<0>(*(dateplot.end() - 1));
+      val.erase(0, val.rfind(":") + std::string(":").size());
+      date_val.push_back(Glib::ustring(val));
+    }
+  Gtk::Window *window = new Gtk::Window;
+  window->set_application(Mwin->get_application());
+  window->set_title(gettext("Interval"));
+  window->set_transient_for(*Mwin);
+  window->set_name("mainWindow");
+  window->set_default_size(1, 1);
+
+  Gtk::Grid *grid = Gtk::make_managed<Gtk::Grid>();
+  grid->set_halign(Gtk::Align::FILL);
+  grid->set_valign(Gtk::Align::FILL);
+  window->set_child(*grid);
+
+  Gtk::Label *beg_date_lb = Gtk::make_managed<Gtk::Label>();
+  beg_date_lb->set_margin(5);
+  beg_date_lb->set_halign(Gtk::Align::CENTER);
+  beg_date_lb->set_use_markup(true);
+  beg_date_lb->set_markup(
+      Glib::ustring("<b>") + Glib::ustring(gettext("Interval"))
+	  + Glib::ustring("</b>"));
+  grid->attach(*beg_date_lb, 0, 0, 4, 1);
+
+  Gtk::Label *day_lb = Gtk::make_managed<Gtk::Label>();
+  day_lb->set_margin(5);
+  day_lb->set_halign(Gtk::Align::CENTER);
+  if(variant == 0 || variant == 1 || variant == 2 || variant == 3
+      || variant == 8)
+    {
+      day_lb->set_text(gettext("Day"));
+    }
+  else
+    {
+      day_lb->set_text(gettext("Hours"));
+    }
+  grid->attach(*day_lb, 1, 1, 1, 1);
+
+  Gtk::Label *month_lb = Gtk::make_managed<Gtk::Label>();
+  month_lb->set_margin(5);
+  month_lb->set_halign(Gtk::Align::CENTER);
+  if(variant == 0 || variant == 1 || variant == 2 || variant == 3
+      || variant == 8)
+    {
+      month_lb->set_text(gettext("Month"));
+    }
+  else
+    {
+      month_lb->set_text(gettext("Minutes"));
+    }
+  grid->attach(*month_lb, 2, 1, 1, 1);
+
+  Gtk::Label *year_lb = Gtk::make_managed<Gtk::Label>();
+  year_lb->set_margin(5);
+  year_lb->set_halign(Gtk::Align::CENTER);
+  if(variant == 0 || variant == 1 || variant == 2 || variant == 3
+      || variant == 8)
+    {
+      year_lb->set_text(gettext("Year"));
+    }
+  else
+    {
+      year_lb->set_text(gettext("Seconds"));
+    }
+  grid->attach(*year_lb, 3, 1, 1, 1);
+
+  Gtk::Label *from_l = Gtk::make_managed<Gtk::Label>();
+  from_l->set_margin(5);
+  from_l->set_halign(Gtk::Align::CENTER);
+  from_l->set_text(gettext("From:"));
+  grid->attach(*from_l, 0, 2, 1, 1);
+
+  Gtk::Entry *day_f_ent = Gtk::make_managed<Gtk::Entry>();
+  day_f_ent->set_margin(5);
+  day_f_ent->set_halign(Gtk::Align::CENTER);
+  day_f_ent->set_width_chars(2);
+  day_f_ent->set_max_width_chars(2);
+  day_f_ent->set_max_length(2);
+  day_f_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  day_f_ent->set_alignment(Gtk::Align::CENTER);
+  if(date_val.size() == 6)
+    {
+      day_f_ent->set_text(date_val[0]);
+    }
+  grid->attach(*day_f_ent, 1, 2, 1, 1);
+
+  Gtk::Entry *month_f_ent = Gtk::make_managed<Gtk::Entry>();
+  month_f_ent->set_margin(5);
+  month_f_ent->set_halign(Gtk::Align::CENTER);
+  month_f_ent->set_width_chars(2);
+  month_f_ent->set_max_width_chars(2);
+  month_f_ent->set_max_length(2);
+  month_f_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  month_f_ent->set_alignment(Gtk::Align::CENTER);
+  if(date_val.size() == 6)
+    {
+      month_f_ent->set_text(date_val[1]);
+    }
+  grid->attach(*month_f_ent, 2, 2, 1, 1);
+
+  Gtk::Entry *year_f_ent = Gtk::make_managed<Gtk::Entry>();
+  year_f_ent->set_margin(5);
+  year_f_ent->set_halign(Gtk::Align::CENTER);
+  year_f_ent->set_width_chars(4);
+  year_f_ent->set_max_width_chars(4);
+  year_f_ent->set_max_length(4);
+  year_f_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  year_f_ent->set_alignment(Gtk::Align::CENTER);
+  if(date_val.size() == 6)
+    {
+      year_f_ent->set_text(date_val[2]);
+    }
+  grid->attach(*year_f_ent, 3, 2, 1, 1);
+
+  Gtk::Label *to_l = Gtk::make_managed<Gtk::Label>();
+  to_l->set_margin(5);
+  to_l->set_halign(Gtk::Align::CENTER);
+  to_l->set_text(gettext("To:"));
+  grid->attach(*to_l, 0, 3, 1, 1);
+
+  Gtk::Entry *day_to_ent = Gtk::make_managed<Gtk::Entry>();
+  day_to_ent->set_margin(5);
+  day_to_ent->set_halign(Gtk::Align::CENTER);
+  day_to_ent->set_width_chars(2);
+  day_to_ent->set_max_width_chars(2);
+  day_to_ent->set_max_length(2);
+  day_to_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  day_to_ent->set_alignment(Gtk::Align::CENTER);
+  if(date_val.size() == 6)
+    {
+      day_to_ent->set_text(date_val[3]);
+    }
+  grid->attach(*day_to_ent, 1, 3, 1, 1);
+
+  Gtk::Entry *month_to_ent = Gtk::make_managed<Gtk::Entry>();
+  month_to_ent->set_margin(5);
+  month_to_ent->set_halign(Gtk::Align::CENTER);
+  month_to_ent->set_width_chars(2);
+  month_to_ent->set_max_width_chars(2);
+  month_to_ent->set_max_length(2);
+  month_to_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  month_to_ent->set_alignment(Gtk::Align::CENTER);
+  if(date_val.size() == 6)
+    {
+      month_to_ent->set_text(date_val[4]);
+    }
+  grid->attach(*month_to_ent, 2, 3, 1, 1);
+
+  Gtk::Entry *year_to_ent = Gtk::make_managed<Gtk::Entry>();
+  year_to_ent->set_margin(5);
+  year_to_ent->set_halign(Gtk::Align::CENTER);
+  year_to_ent->set_width_chars(4);
+  year_to_ent->set_max_width_chars(4);
+  year_to_ent->set_max_length(4);
+  year_to_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  year_to_ent->set_alignment(Gtk::Align::CENTER);
+  if(date_val.size() == 6)
+    {
+      year_to_ent->set_text(date_val[5]);
+    }
+  grid->attach(*year_to_ent, 3, 3, 1, 1);
+
+  Gtk::Button *show = Gtk::make_managed<Gtk::Button>();
+  show->set_margin(5);
+  show->set_halign(Gtk::Align::CENTER);
+  show->set_label(gettext("Show"));
+  show->set_name("confirmButton");
+  show->signal_clicked().connect(
+      [window, variant, this, day_f_ent, month_f_ent, year_f_ent, day_to_ent,
+       month_to_ent, year_to_ent, point, file]
+      {
+	std::string val(day_f_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	std::stringstream strm;
+	std::locale loc("C");
+	strm.imbue(loc);
+	strm << val;
+	int day;
+	strm >> day;
+
+	val = std::string(month_f_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << val;
+	int month;
+	strm >> month;
+
+	val = std::string(year_f_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << val;
+	int year;
+	strm >> year;
+
+	AuxFunc af;
+	double JDbeg;
+	if(variant == 0 || variant == 1 || variant == 2 || variant == 3
+	    || variant == 8)
+	  {
+	    JDbeg = af.grigtojulian(day, month, year, 0, 0, 0.0);
+	  }
+	else
+	  {
+	    JDbeg = static_cast<double>(day * 3600 + month * 60 + year);
+	  }
+
+	val = std::string(day_to_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << val;
+	strm >> day;
+
+	val = std::string(month_to_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << val;
+	strm >> month;
+
+	val = std::string(year_to_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << val;
+	strm >> year;
+	double JDend;
+	if(variant == 0 || variant == 1 || variant == 2 || variant == 3
+	    || variant == 8)
+	  {
+	    JDend = af.grigtojulian(day, month, year, 0, 0, 0.0);
+	  }
+	else
+	  {
+	    JDend = static_cast<double>(day * 3600 + month * 60 + year);
+	  }
+
+	if(JDend > JDbeg)
+	  {
+	    if(variant == 0)
+	      {
+		PlotPriceAll *prall = reinterpret_cast<PlotPriceAll*>(point);
+		prall->cleanVectors(JDbeg, JDend);
+		prall->Draw(this->gr);
+	      }
+	    else if(variant == 1)
+	      {
+		PSD *psd = reinterpret_cast<PSD*>(point);
+		psd->cleanVectors(JDbeg, JDend);
+		psd->Draw(this->gr);
+	      }
+	    else if(variant == 2)
+	      {
+		PlotVolumeAll *val = reinterpret_cast<PlotVolumeAll*>(point);
+		val->cleanVectors(JDbeg, JDend);
+		val->Draw(this->gr);
+	      }
+	    else if(variant == 3)
+	      {
+		PlotMoneyVolumeAll *val =
+		    reinterpret_cast<PlotMoneyVolumeAll*>(point);
+		val->cleanVectors(JDbeg, JDend);
+		val->Draw(this->gr);
+	      }
+	    else if(variant == 4)
+	      {
+		PlotPriceDeals *pd = reinterpret_cast<PlotPriceDeals*>(point);
+		pd->cleanVectors(static_cast<int>(JDbeg),
+				 static_cast<int>(JDend));
+		pd->Draw(this->gr);
+	      }
+	    else if(variant == 5)
+	      {
+		PSDDeals *psdd = reinterpret_cast<PSDDeals*>(point);
+		psdd->cleanVectors(static_cast<int>(JDbeg),
+				   static_cast<int>(JDend));
+		psdd->Draw(this->gr);
+	      }
+	    else if(variant == 6)
+	      {
+		PlotVolumeDeals *vd = reinterpret_cast<PlotVolumeDeals*>(point);
+		vd->cleanVectors(static_cast<int>(JDbeg),
+				 static_cast<int>(JDend));
+		vd->Draw(this->gr);
+	      }
+	    else if(variant == 7)
+	      {
+		PlotMoneyVolumeDeals *vd =
+		    reinterpret_cast<PlotMoneyVolumeDeals*>(point);
+		vd->cleanVectors(static_cast<int>(JDbeg),
+				 static_cast<int>(JDend));
+		vd->Draw(this->gr);
+	      }
+	    else if(variant == 8)
+	      {
+		PlotAllCommon *ac = reinterpret_cast<PlotAllCommon*>(point);
+		ac->cleanVectors(JDbeg, JDend);
+		ac->Draw(this->gr);
+	      }
+	    else if(variant == 9)
+	      {
+		PlotDealsCommon *dc = reinterpret_cast<PlotDealsCommon*>(point);
+		dc->cleanVectors(static_cast<int>(JDbeg),
+				 static_cast<int>(JDend));
+		dc->Draw(this->gr);
+	      }
+	  }
+
+	this->graphic(file, this->Mwin, variant);
+	window->close();
+      });
+  grid->attach(*show, 0, 4, 2, 1);
+
+  Gtk::Button *cancel = Gtk::make_managed<Gtk::Button>();
+  cancel->set_margin(5);
+  cancel->set_halign(Gtk::Align::CENTER);
+  cancel->set_label(gettext("Cancel"));
+  cancel->set_name("closeButton");
+  cancel->signal_clicked().connect([window]
+  {
+    window->close();
+  });
+  grid->attach(*cancel, 2, 4, 2, 1);
+
+  window->signal_close_request().connect([window, point, variant]
+  {
+    if(variant == 0)
+      {
+	PlotPriceAll *prall = reinterpret_cast<PlotPriceAll*>(point);
+	delete prall;
+      }
+    else if(variant == 1)
+      {
+	PSD *psd = reinterpret_cast<PSD*>(point);
+	delete psd;
+      }
+    else if(variant == 2)
+      {
+	PlotVolumeAll *val = reinterpret_cast<PlotVolumeAll*>(point);
+	delete val;
+      }
+    else if(variant == 3)
+      {
+	PlotMoneyVolumeAll *val = reinterpret_cast<PlotMoneyVolumeAll*>(point);
+	delete val;
+      }
+    else if(variant == 4)
+      {
+	PlotPriceDeals *pd = reinterpret_cast<PlotPriceDeals*>(point);
+	delete pd;
+      }
+    else if(variant == 5)
+      {
+	PSDDeals *psdd = reinterpret_cast<PSDDeals*>(point);
+	delete psdd;
+      }
+    else if(variant == 6)
+      {
+	PlotVolumeDeals *vd = reinterpret_cast<PlotVolumeDeals*>(point);
+	delete vd;
+      }
+    else if(variant == 7)
+      {
+	PlotMoneyVolumeDeals *vd =
+	    reinterpret_cast<PlotMoneyVolumeDeals*>(point);
+	delete vd;
+      }
+    else if(variant == 8)
+      {
+	PlotAllCommon *ac = reinterpret_cast<PlotAllCommon*>(point);
+	delete ac;
+      }
+    else if(variant == 9)
+      {
+	PlotDealsCommon *dc = reinterpret_cast<PlotDealsCommon*>(point);
+	delete dc;
+      }
+    window->hide();
+    delete window;
+    return true;
+  },
+					 false);
+
+  window->show();
 }
 
 void
@@ -823,7 +1297,7 @@ GraphicWidget::rightClick(int n_press, double x, double y,
 	      strm.str("");
 	      strm.imbue(loc);
 	      strm << std::fixed << tmpd;
-	      labost->set_text("ОСт " + Glib::ustring(strm.str()));
+	      labost->set_text(gettext("ECg ") + Glib::ustring(strm.str()));
 	      grid->attach(*labost, 0, 4, 1, 1);
 	    }
 	  if(gr->GetSplId(x, Height - y) == 14)
@@ -836,7 +1310,7 @@ GraphicWidget::rightClick(int n_press, double x, double y,
 	      std::locale loc("C");
 	      strm.imbue(loc);
 	      strm << std::fixed << tmpd;
-	      labpsd->set_text("Цена " + Glib::ustring(strm.str()));
+	      labpsd->set_text(gettext("Price ") + Glib::ustring(strm.str()));
 	      grid->attach(*labpsd, 0, 1, 1, 1);
 
 	      Gtk::Label *labost = Gtk::make_managed<Gtk::Label>();
@@ -847,7 +1321,7 @@ GraphicWidget::rightClick(int n_press, double x, double y,
 	      strm.str("");
 	      strm.imbue(loc);
 	      strm << std::fixed << tmpd;
-	      labost->set_text("ОСт " + Glib::ustring(strm.str()));
+	      labost->set_text(gettext("ECg ") + Glib::ustring(strm.str()));
 	      grid->attach(*labost, 0, 2, 1, 1);
 	    }
 	  if(gr->GetSplId(x, Height - y) == 31)
@@ -883,7 +1357,7 @@ GraphicWidget::rightClick(int n_press, double x, double y,
 	      std::stringstream strm;
 	      std::locale loc("C");
 	      strm.imbue(loc);
-	      strm << std::fixed << std::setprecision(0) << tmpd;
+	      strm << std::fixed << std::setprecision(2) << tmpd;
 	      labpsd->set_text(
 		  gettext("Turnover ") + Glib::ustring(strm.str()));
 	      grid->attach(*labpsd, 0, 1, 1, 1);

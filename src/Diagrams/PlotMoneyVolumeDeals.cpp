@@ -27,6 +27,7 @@ PlotMoneyVolumeDeals::PlotMoneyVolumeDeals(
   height = Height;
   width = Width;
   plotdate = Plotdate;
+  calcForDraw();
 }
 
 PlotMoneyVolumeDeals::~PlotMoneyVolumeDeals()
@@ -50,9 +51,9 @@ PlotMoneyVolumeDeals::calcForDraw()
   af.homePath(&line);
   line = line + "/.Money/BoardsList";
   p = af.utf8to(line);
-  if(std::filesystem::exists(p))
+  f.open(p, std::ios_base::in);
+  if(f.is_open())
     {
-      f.open(p, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -91,13 +92,13 @@ PlotMoneyVolumeDeals::calcForDraw()
   temp.clear();
   count = 0;
 
-  if(!std::filesystem::exists(filename))
+  f.open(filename, std::ios_base::in);
+  if(!f.is_open())
     {
       std::cout << "File to plot daily money volume not opened" << std::endl;
     }
   else
     {
-      f.open(filename, std::ios_base::in);
       std::tuple<int, int> temptup;
       while(!f.eof())
 	{
@@ -188,7 +189,98 @@ PlotMoneyVolumeDeals::calcForDraw()
       VolMmid.push_back(res.get_d());
       std::get<2>(plotdate->at(i)) = VolMmid[i];
     }
+}
 
+void
+PlotMoneyVolumeDeals::cleanVectors(int dateb, int datee)
+{
+  std::locale loc("C");
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [dateb, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find(":"));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(":") + std::string(":").size());
+	  val = val.substr(0, val.find(":"));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(":") + std::string(":").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  return day * 3600 + month * 60 + year < dateb;
+	}),
+      plotdate->end());
+
+  size_t sz = VolumeM.size() - plotdate->size();
+
+  if(sz > 0)
+    {
+      VolumeM.erase(VolumeM.begin(), VolumeM.begin() + sz);
+      VolMmid.erase(VolMmid.begin(), VolMmid.begin() + sz);
+    }
+
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [datee, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find(":"));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(":") + std::string(":").size());
+	  val = val.substr(0, val.find(":"));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(":") + std::string(":").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  return day * 3600 + month * 60 + year > datee;
+	}),
+      plotdate->end());
+
+  sz = VolumeM.size() - plotdate->size();
+  if(sz > 0)
+    {
+      VolumeM.erase(VolumeM.end() - sz, VolumeM.end());
+      VolMmid.erase(VolMmid.end() - sz, VolMmid.end());
+    }
   if(plotdate->size() > 0)
     {
       datebeg = std::get<0>(plotdate->at(0));
@@ -200,7 +292,6 @@ int
 PlotMoneyVolumeDeals::Draw(mglGraph *gr)
 {
   std::vector<int> X;
-  calcForDraw();
   for(size_t i = 0; i < VolumeM.size(); i++)
     {
       X.push_back(i);
@@ -224,7 +315,25 @@ PlotMoneyVolumeDeals::Draw(mglGraph *gr)
   gr->SetSize(width, height);
   gr->Title(grnm.c_str(), "", 5);
   gr->SetQuality(3);
-  gr->SetRanges(x, y);
+  double miny, maxy;
+  if(y.Minimal() >= y2.Minimal())
+    {
+      miny = y2.Minimal();
+    }
+  else
+    {
+      miny = y.Minimal();
+    }
+
+  if(y.Maximal() >= y2.Maximal())
+    {
+      maxy = y.Maximal();
+    }
+  else
+    {
+      maxy = y2.Maximal();
+    }
+  gr->SetRanges(x.Minimal(), x.Maximal(), miny, maxy);
   gr->SetFontSize(3);
   gr->SetOriginTick(false);
 
@@ -234,7 +343,7 @@ PlotMoneyVolumeDeals::Draw(mglGraph *gr)
     {
       tickstep = -tickstep;
     }
-  double tickval = y.Minimal();
+  double tickval = miny;
   std::stringstream strm;
   std::locale loc("C");
   std::string tickstr, tick;
@@ -299,8 +408,8 @@ PlotMoneyVolumeDeals::Draw(mglGraph *gr)
   gr->Legend(1.1, 1.3);
 
   //Подписи оси х
-  mglPoint p1(x.Minimal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-  mglPoint p5(x.Maximal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p1(x.Minimal(), maxy + ((maxy - miny) * 0.02));
+  mglPoint p5(x.Maximal(), maxy + ((maxy - miny) * 0.02));
   datebeg = af.utf8to(datebeg);
   dateend = af.utf8to(dateend);
   gr->Puts(p1, datebeg.c_str(), "k", 3);

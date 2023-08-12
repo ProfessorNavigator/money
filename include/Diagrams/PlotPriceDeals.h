@@ -39,6 +39,8 @@ public:
       std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
   virtual
   ~PlotPriceDeals();
+  void
+  cleanVectors(int dateb, int datee);
   int
   Draw(mglGraph *gr);
 private:

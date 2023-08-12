@@ -36,7 +36,7 @@ public:
       std::string file,
       int Height,
       int Width,
-      std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
+      std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate, std::string Variant);
   virtual
   ~PlotPSDGlobal();
   int
@@ -44,6 +44,8 @@ public:
 private:
   void
   calcForDraw();
+  void
+  cleanVectors();
   std::filesystem::path filename;
   int width, height;
   std::vector<double> Index;
@@ -51,6 +53,7 @@ private:
   std::string datebeg;
   std::string dateend;
   std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  std::string Variant;
 };
 
 #endif /* INCLUDE_DIAGRAMS_PLOTPSDGLOBAL_H_ */

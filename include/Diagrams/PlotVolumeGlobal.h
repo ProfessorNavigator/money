@@ -36,7 +36,8 @@ public:
       std::string file,
       int Height,
       int Width,
-      std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate);
+      std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate,
+      std::string Variant);
   virtual
   ~PlotVolumeGlobal();
   int
@@ -44,12 +45,15 @@ public:
 private:
   void
   calcForDraw();
+  void
+  cleanVectors();
   std::filesystem::path filename;
   int height, width;
   std::vector<double> Volume;
   std::vector<double> Volmid;
   std::string datebeg, dateend;
   std::vector<std::tuple<std::string, double, double, double, double>> *plotdate;
+  std::string Variant;
 };
 
 #endif /* INCLUDE_DIAGRAMS_PLOTVOLUMEGLOBAL_H_ */

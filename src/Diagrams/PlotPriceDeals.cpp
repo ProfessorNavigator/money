@@ -27,6 +27,7 @@ PlotPriceDeals::PlotPriceDeals(
   height = Height;
   width = Width;
   plotdate = Plotdate;
+  calcForDraw();
 }
 
 PlotPriceDeals::~PlotPriceDeals()
@@ -53,9 +54,9 @@ PlotPriceDeals::calcForDraw()
   af.homePath(&line);
   line = line + "/.Money/BoardsList";
   p = af.utf8to(line);
-  if(std::filesystem::exists(p))
+  f.open(p, std::ios_base::in);
+  if(f.is_open())
     {
-      f.open(p, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -94,14 +95,14 @@ PlotPriceDeals::calcForDraw()
   temp.clear();
   count = 0;
 
-  if(!std::filesystem::exists(filename))
+  f.open(filename, std::ios_base::in);
+  if(!f.is_open())
     {
       std::cout << "File to plot daily price not opened" << std::endl;
     }
   else
     {
       std::tuple<int, int, int> temptup;
-      f.open(filename, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -221,7 +222,98 @@ PlotPriceDeals::calcForDraw()
       Tc.push_back(Pricemid[i].get_d());
       std::get<2>(plotdate->at(i)) = Tc[i];
     }
+}
 
+void
+PlotPriceDeals::cleanVectors(int dateb, int datee)
+{
+  std::locale loc("C");
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [dateb, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find(":"));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(":") + std::string(":").size());
+	  val = val.substr(0, val.find(":"));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(":") + std::string(":").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  return day * 3600 + month * 60 + year < dateb;
+	}),
+      plotdate->end());
+
+  size_t sz = Price.size() - plotdate->size();
+
+  if(sz > 0)
+    {
+      Price.erase(Price.begin(), Price.begin() + sz);
+      Tc.erase(Tc.begin(), Tc.begin() + sz);
+    }
+
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [datee, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find(":"));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(":") + std::string(":").size());
+	  val = val.substr(0, val.find(":"));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(":") + std::string(":").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  return day * 3600 + month * 60 + year > datee;
+	}),
+      plotdate->end());
+
+  sz = Price.size() - plotdate->size();
+  if(sz > 0)
+    {
+      Price.erase(Price.end() - sz, Price.end());
+      Tc.erase(Tc.end() - sz, Tc.end());
+    }
   if(plotdate->size() > 0)
     {
       datebeg = std::get<0>(plotdate->at(0));
@@ -233,7 +325,6 @@ int
 PlotPriceDeals::Draw(mglGraph *gr)
 {
   std::vector<int> X;
-  calcForDraw();
   for(size_t i = 0; i < Tc.size(); i++)
     {
       X.push_back(i);
@@ -247,12 +338,6 @@ PlotPriceDeals::Draw(mglGraph *gr)
     }
   d = number / d;
 
-  //Координаты подписей оси х
-  mglPoint p1(x.Minimal(),
-	      y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
-  mglPoint p5(x.Maximal(),
-	      y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
-
   AuxFunc af;
   std::string grnm = gettext("Price");
   grnm = af.utf8to(grnm);
@@ -262,17 +347,35 @@ PlotPriceDeals::Draw(mglGraph *gr)
   gr->SetSize(width, height);
   gr->Title(grnm.c_str(), "", 5);
   gr->SetQuality(3);
-  gr->SetRanges(x, y1);
+  double miny, maxy;
+  if(y.Minimal() >= y1.Minimal())
+    {
+      miny = y1.Minimal();
+    }
+  else
+    {
+      miny = y.Minimal();
+    }
+
+  if(y.Maximal() >= y1.Maximal())
+    {
+      maxy = y.Maximal();
+    }
+  else
+    {
+      maxy = y1.Maximal();
+    }
+  gr->SetRanges(x.Minimal(), x.Maximal(), miny, maxy);
   gr->SetFontSize(3);
   gr->SetOriginTick(false);
 
   std::vector<double> ticks;
-  double tickstep = (y1.Maximal() - y1.Minimal()) / 3;
+  double tickstep = (maxy - miny) / 3;
   if(tickstep < 0)
     {
       tickstep = -tickstep;
     }
-  double tickval = y1.Minimal();
+  double tickval = miny;
   std::stringstream strm;
   std::locale loc("C");
   std::string tickstr, tick;
@@ -338,6 +441,11 @@ PlotPriceDeals::Draw(mglGraph *gr)
   //Подписи оси х
   datebeg = af.utf8to(datebeg);
   dateend = af.utf8to(dateend);
+  //Координаты подписей оси х
+  mglPoint p1(x.Minimal(),
+	      maxy + ((maxy - miny) * 0.02));
+  mglPoint p5(x.Maximal(),
+	      maxy + ((maxy - miny) * 0.02));
   gr->Puts(p1, datebeg.c_str(), "k", 3);
   gr->Puts(p5, dateend.c_str(), "k", 3);
 

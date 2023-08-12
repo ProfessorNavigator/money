@@ -27,6 +27,7 @@ PSD::PSD(
   height = Height;
   width = Width;
   plotdate = Plotdate;
+  calcForDraw();
 }
 
 PSD::~PSD()
@@ -48,9 +49,9 @@ PSD::calcForDraw()
   af.homePath(&line);
   line = line + "/.Money/BoardsList";
   p = af.utf8to(line);
-  if(std::filesystem::exists(p))
+  f.open(p, std::ios_base::in);
+  if(f.is_open())
     {
-      f.open(p, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -89,13 +90,13 @@ PSD::calcForDraw()
   temp.clear();
   count = 0;
 
-  if(!std::filesystem::exists(filename))
+  f.open(filename, std::ios_base::in);
+  if(!f.is_open())
     {
       std::cout << "File to plot price(All) not opened" << std::endl;
     }
   else
     {
-      f.open(filename, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -147,7 +148,104 @@ PSD::calcForDraw()
 	}
       f.close();
     }
+}
 
+void
+PSD::cleanVectors(double dateb, double datee)
+{
+  std::locale loc("C");
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [dateb, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find("."));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(".") + std::string(".").size());
+	  val = val.substr(0, val.find("."));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(".") + std::string(".").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  AuxFunc af;
+	  double JD = af.grigtojulian(day, month, year, 0, 0, 0.0);
+
+	  return JD < dateb;
+	}),
+      plotdate->end());
+
+  size_t sz = Dc.size() - plotdate->size();
+
+  if(sz > 0)
+    {
+      Dc.erase(Dc.begin(), Dc.begin() + sz);
+      Tc.erase(Tc.begin(), Tc.begin() + sz);
+    }
+
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [datee, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find("."));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(".") + std::string(".").size());
+	  val = val.substr(0, val.find("."));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(".") + std::string(".").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  AuxFunc af;
+	  double JD = af.grigtojulian(day, month, year, 0, 0, 0.0);
+
+	  return JD > datee;
+	}),
+      plotdate->end());
+
+  sz = Dc.size() - plotdate->size();
+  if(sz > 0)
+    {
+      Dc.erase(Dc.end() - sz, Dc.end());
+      Tc.erase(Tc.end() - sz, Tc.end());
+    }
   if(plotdate->size() > 0)
     {
       datebeg = std::get<0>(plotdate->at(0));
@@ -158,19 +256,33 @@ PSD::calcForDraw()
 int
 PSD::Draw(mglGraph *gr)
 {
-  calcForDraw();
   std::vector<int> X;
   for(size_t i = 0; i < Tc.size(); i++)
     {
       X.push_back(i);
     }
   mglData x(X), y(Tc), y1(Dc);
+  double miny, maxy;
+  if(y.Minimal() <= y1.Minimal())
+    {
+      miny = y.Minimal();
+    }
+  else
+    {
+      miny = y1.Minimal();
+    }
 
+  if(y.Maximal() >= y1.Maximal())
+    {
+      maxy = y.Maximal();
+    }
+  else
+    {
+      maxy = y1.Maximal();
+    }
   //Координаты подписей оси х
-  mglPoint p1(x.Minimal(),
-	      y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
-  mglPoint p5(x.Maximal(),
-	      y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
+  mglPoint p1(x.Minimal(), maxy + ((maxy - miny) * 0.02));
+  mglPoint p5(x.Maximal(), maxy + ((maxy - miny) * 0.02));
 
   AuxFunc af;
   std::string grnm = gettext("Purchasing power of money");
@@ -190,7 +302,7 @@ PSD::Draw(mglGraph *gr)
     {
       if(i > 0)
 	{
-	  mglPoint p(i, y1.Maximal() + ((y1.Maximal() - y1.Minimal()) * 0.02));
+	  mglPoint p(i, maxy + ((maxy - miny) * 0.02));
 	  Coord.push_back(p);
 	  dates.push_back(std::get<0>(plotdate->at(i)));
 	}
@@ -200,18 +312,17 @@ PSD::Draw(mglGraph *gr)
   gr->SetSize(width, height);
   gr->Title(grnm.c_str(), "", 5);
   gr->SetQuality(3);
-  gr->SetRange('x', x);
-  gr->SetRange('y', y1);
+  gr->SetRanges(x.Minimal(), x.Maximal(), miny, maxy);
   gr->SetFontSize(3);
   gr->SetOriginTick(false);
 
   std::vector<double> ticks;
-  double tickstep = (y1.Maximal() - y1.Minimal()) / 3;
+  double tickstep = (maxy - miny) / 3;
   if(tickstep < 0)
     {
       tickstep = -tickstep;
     }
-  double tickval = y1.Minimal();
+  double tickval = miny;
   std::stringstream strm;
   std::locale loc("C");
   std::string tickstr, tick;

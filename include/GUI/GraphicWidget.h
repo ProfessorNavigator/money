@@ -68,6 +68,8 @@ private:
 	     Glib::RefPtr<Gtk::GestureClick> cl, Gtk::DrawingArea *drar);
   void
   plotMglFunc(std::string file, int variant);
+  void
+  dateQuieryPlotGlobal(std::string file, int variant, void *point);
 
   std::vector<double> plotincr;
   int Height, Width;

@@ -322,28 +322,19 @@ MainWindow::plotDealsCommon()
 void
 MainWindow::plotPSDGlobal()
 {
-  Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(req.get_width(), req.get_height(), this,
-					"");
-  gr->plot(2, 10, "");
+  dateQuieryPlotGlobal(2, 10);
 }
 
 void
 MainWindow::plotVolumeGlobal()
 {
-  Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(req.get_width(), req.get_height(), this,
-					"");
-  gr->plot(2, 11, "");
+  dateQuieryPlotGlobal(2, 11);
 }
 
 void
 MainWindow::plotMoneyGlobal()
 {
-  Gdk::Rectangle req = screenRes();
-  GraphicWidget *gr = new GraphicWidget(req.get_width(), req.get_height(), this,
-					"");
-  gr->plot(2, 12, "");
+  dateQuieryPlotGlobal(2, 12);
 }
 
 void
@@ -483,6 +474,317 @@ MainWindow::dtRespFunc(int *resp, Gtk::Window *window, Gtk::Grid *grid,
     }
 }
 
+void
+MainWindow::dateQuieryPlotGlobal(int graph_ch, int variant)
+{
+  std::vector<Glib::ustring> date_val;
+  std::string filename;
+  AuxFunc af;
+  af.homePath(&filename);
+  filename = filename + "/.Money/DateBegin";
+  std::filesystem::path filepath = std::filesystem::u8path(filename);
+  std::fstream f;
+  f.open(filepath, std::ios_base::in | std::ios_base::binary);
+  if(f.is_open())
+    {
+      std::string line;
+      line.resize(std::filesystem::file_size(filepath));
+      f.read(&line[0], line.size());
+      f.close();
+      std::stringstream strm;
+      std::locale loc("C");
+      strm.imbue(loc);
+      strm << line;
+      double JDN;
+      strm >> JDN;
+      if(JDN > 2450531.0)
+	{
+	  date_val.push_back(Glib::ustring(af.togrigday(JDN)));
+	  date_val.push_back(Glib::ustring(af.togrigmonth(JDN)));
+	  date_val.push_back(Glib::ustring(af.togrigyear(JDN)));
+	}
+    }
+  if(date_val.size() == 0)
+    {
+      time_t ctm = time(NULL);
+      ctm = ctm + 3600 * 3;
+      ctm = ctm - 3600 * 24;
+      tm *moscow = gmtime(&ctm);
+      std::stringstream strm;
+      std::locale loc("C");
+      strm.imbue(loc);
+      strm << moscow->tm_mday;
+      date_val.push_back(Glib::ustring(strm.str()));
+
+      strm.clear();
+      strm.str("");
+      strm.imbue(loc);
+      strm << moscow->tm_mon + 1;
+      if(moscow->tm_mon + 1 < 10)
+	{
+	  date_val.push_back(Glib::ustring("0") + Glib::ustring(strm.str()));
+	}
+      else
+	{
+	  date_val.push_back(Glib::ustring(strm.str()));
+	}
+
+      strm.clear();
+      strm.str("");
+      strm.imbue(loc);
+      strm << moscow->tm_year + 1900;
+      date_val.push_back(Glib::ustring(strm.str()));
+    }
+
+  Gtk::Window *window = new Gtk::Window;
+  window->set_application(this->get_application());
+  window->set_title(gettext("Interval"));
+  window->set_transient_for(*this);
+  window->set_name("mainWindow");
+  window->set_default_size(1, 1);
+
+  Gtk::Grid *grid = Gtk::make_managed<Gtk::Grid>();
+  grid->set_halign(Gtk::Align::FILL);
+  grid->set_valign(Gtk::Align::FILL);
+  window->set_child(*grid);
+
+  Gtk::Label *beg_date_lb = Gtk::make_managed<Gtk::Label>();
+  beg_date_lb->set_margin(5);
+  beg_date_lb->set_halign(Gtk::Align::CENTER);
+  beg_date_lb->set_use_markup(true);
+  beg_date_lb->set_markup(
+      Glib::ustring("<b>") + Glib::ustring(gettext("Interval"))
+	  + Glib::ustring("</b>"));
+  grid->attach(*beg_date_lb, 0, 0, 4, 1);
+
+  Gtk::Label *day_lb = Gtk::make_managed<Gtk::Label>();
+  day_lb->set_margin(5);
+  day_lb->set_halign(Gtk::Align::CENTER);
+  day_lb->set_text(gettext("Day"));
+  grid->attach(*day_lb, 1, 1, 1, 1);
+
+  Gtk::Label *month_lb = Gtk::make_managed<Gtk::Label>();
+  month_lb->set_margin(5);
+  month_lb->set_halign(Gtk::Align::CENTER);
+  month_lb->set_text(gettext("Month"));
+  grid->attach(*month_lb, 2, 1, 1, 1);
+
+  Gtk::Label *year_lb = Gtk::make_managed<Gtk::Label>();
+  year_lb->set_margin(5);
+  year_lb->set_halign(Gtk::Align::CENTER);
+  year_lb->set_text(gettext("Year"));
+  grid->attach(*year_lb, 3, 1, 1, 1);
+
+  Gtk::Label *from_l = Gtk::make_managed<Gtk::Label>();
+  from_l->set_margin(5);
+  from_l->set_halign(Gtk::Align::CENTER);
+  from_l->set_text(gettext("From:"));
+  grid->attach(*from_l, 0, 2, 1, 1);
+
+  Gtk::Entry *day_f_ent = Gtk::make_managed<Gtk::Entry>();
+  day_f_ent->set_margin(5);
+  day_f_ent->set_halign(Gtk::Align::CENTER);
+  day_f_ent->set_width_chars(2);
+  day_f_ent->set_max_width_chars(2);
+  day_f_ent->set_max_length(2);
+  day_f_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  day_f_ent->set_alignment(Gtk::Align::CENTER);
+  day_f_ent->set_text("23");
+  grid->attach(*day_f_ent, 1, 2, 1, 1);
+
+  Gtk::Entry *month_f_ent = Gtk::make_managed<Gtk::Entry>();
+  month_f_ent->set_margin(5);
+  month_f_ent->set_halign(Gtk::Align::CENTER);
+  month_f_ent->set_width_chars(2);
+  month_f_ent->set_max_width_chars(2);
+  month_f_ent->set_max_length(2);
+  month_f_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  month_f_ent->set_alignment(Gtk::Align::CENTER);
+  month_f_ent->set_text("03");
+  grid->attach(*month_f_ent, 2, 2, 1, 1);
+
+  Gtk::Entry *year_f_ent = Gtk::make_managed<Gtk::Entry>();
+  year_f_ent->set_margin(5);
+  year_f_ent->set_halign(Gtk::Align::CENTER);
+  year_f_ent->set_width_chars(4);
+  year_f_ent->set_max_width_chars(4);
+  year_f_ent->set_max_length(4);
+  year_f_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  year_f_ent->set_alignment(Gtk::Align::CENTER);
+  year_f_ent->set_text("1997");
+  grid->attach(*year_f_ent, 3, 2, 1, 1);
+
+  Gtk::Label *to_l = Gtk::make_managed<Gtk::Label>();
+  to_l->set_margin(5);
+  to_l->set_halign(Gtk::Align::CENTER);
+  to_l->set_text(gettext("To:"));
+  grid->attach(*to_l, 0, 3, 1, 1);
+
+  Gtk::Entry *day_to_ent = Gtk::make_managed<Gtk::Entry>();
+  day_to_ent->set_margin(5);
+  day_to_ent->set_halign(Gtk::Align::CENTER);
+  day_to_ent->set_width_chars(2);
+  day_to_ent->set_max_width_chars(2);
+  day_to_ent->set_max_length(2);
+  day_to_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  day_to_ent->set_alignment(Gtk::Align::CENTER);
+  if(date_val.size() > 0)
+    {
+      day_to_ent->set_text(date_val[0]);
+    }
+  grid->attach(*day_to_ent, 1, 3, 1, 1);
+
+  Gtk::Entry *month_to_ent = Gtk::make_managed<Gtk::Entry>();
+  month_to_ent->set_margin(5);
+  month_to_ent->set_halign(Gtk::Align::CENTER);
+  month_to_ent->set_width_chars(2);
+  month_to_ent->set_max_width_chars(2);
+  month_to_ent->set_max_length(2);
+  month_to_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  month_to_ent->set_alignment(Gtk::Align::CENTER);
+  if(date_val.size() > 1)
+    {
+      month_to_ent->set_text(date_val[1]);
+    }
+  grid->attach(*month_to_ent, 2, 3, 1, 1);
+
+  Gtk::Entry *year_to_ent = Gtk::make_managed<Gtk::Entry>();
+  year_to_ent->set_margin(5);
+  year_to_ent->set_halign(Gtk::Align::CENTER);
+  year_to_ent->set_width_chars(4);
+  year_to_ent->set_max_width_chars(4);
+  year_to_ent->set_max_length(4);
+  year_to_ent->set_input_purpose(Gtk::InputPurpose::DIGITS);
+  year_to_ent->set_alignment(Gtk::Align::CENTER);
+  if(date_val.size() > 2)
+    {
+      year_to_ent->set_text(date_val[2]);
+    }
+  grid->attach(*year_to_ent, 3, 3, 1, 1);
+
+  Gtk::Button *show = Gtk::make_managed<Gtk::Button>();
+  show->set_margin(5);
+  show->set_halign(Gtk::Align::CENTER);
+  show->set_label(gettext("Show"));
+  show->set_name("confirmButton");
+  show->signal_clicked().connect(
+      [graph_ch, variant, this, day_f_ent, month_f_ent, year_f_ent, day_to_ent,
+       month_to_ent, year_to_ent]
+      {
+	std::string val(day_f_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	std::stringstream strm;
+	std::locale loc("C");
+	strm.imbue(loc);
+	strm << val;
+	int day;
+	strm >> day;
+
+	val = std::string(month_f_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << val;
+	int month;
+	strm >> month;
+
+	val = std::string(year_f_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << val;
+	int year;
+	strm >> year;
+
+	AuxFunc af;
+	double JD = af.grigtojulian(day, month, year, 0, 0, 0.0);
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << std::fixed << JD;
+	std::string plotvar = strm.str();
+
+	val = std::string(day_to_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << val;
+	strm >> day;
+
+	val = std::string(month_to_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << val;
+	strm >> month;
+
+	val = std::string(year_to_ent->get_text());
+	if(val.empty())
+	  {
+	    return void();
+	  }
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << val;
+	strm >> year;
+
+	JD = af.grigtojulian(day, month, year, 0, 0, 0.0);
+	strm.clear();
+	strm.str("");
+	strm.imbue(loc);
+	strm << std::fixed << JD;
+
+	plotvar = plotvar + " " + strm.str();
+
+	Gdk::Rectangle req = this->screenRes();
+	GraphicWidget *gr = new GraphicWidget(req.get_width(), req.get_height(),
+					      this, "");
+	gr->plot(graph_ch, variant, plotvar);
+      });
+  grid->attach(*show, 0, 4, 2, 1);
+
+  Gtk::Button *cancel = Gtk::make_managed<Gtk::Button>();
+  cancel->set_margin(5);
+  cancel->set_halign(Gtk::Align::CENTER);
+  cancel->set_label(gettext("Cancel"));
+  cancel->set_name("closeButton");
+  cancel->signal_clicked().connect([window]
+  {
+    window->close();
+  });
+  grid->attach(*cancel, 2, 4, 2, 1);
+
+  window->signal_close_request().connect([window]
+  {
+    window->hide();
+    delete window;
+    return true;
+  },
+					 false);
+
+  window->show();
+}
+
 Gdk::Rectangle
 MainWindow::screenRes()
 {
@@ -503,7 +805,7 @@ MainWindow::aboutProg()
   aboutd->set_name("dialog");
 
   aboutd->set_program_name("Money");
-  aboutd->set_version("3.1.5");
+  aboutd->set_version("3.2");
   aboutd->set_copyright(
       "Copyright 2021-2023 Yury Bobylev <bobilev_yury@mail.ru>");
   AuxFunc af;

@@ -27,6 +27,7 @@ PlotVolumeDeals::PlotVolumeDeals(
   height = Height;
   width = Width;
   plotdate = Plotdate;
+  calcForDraw();
 }
 
 PlotVolumeDeals::~PlotVolumeDeals()
@@ -45,14 +46,14 @@ PlotVolumeDeals::calcForDraw()
   std::fstream f;
   std::string line, midd, temp;
   int count = 0;
-  if(!std::filesystem::exists(filename))
+  f.open(filename, std::ios_base::in);
+  if(!f.is_open())
     {
       std::cout << "File to plot daily volume not opened" << std::endl;
     }
   else
     {
       std::tuple<int, int, int> temptup;
-      f.open(filename, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -154,7 +155,98 @@ PlotVolumeDeals::calcForDraw()
       Volmid.push_back(res.get_d());
       std::get<2>(plotdate->at(i)) = Volmid[i];
     }
+}
 
+void
+PlotVolumeDeals::cleanVectors(int dateb, int datee)
+{
+  std::locale loc("C");
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [dateb, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find(":"));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(":") + std::string(":").size());
+	  val = val.substr(0, val.find(":"));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(":") + std::string(":").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  return day * 3600 + month * 60 + year < dateb;
+	}),
+      plotdate->end());
+
+  size_t sz = Volume.size() - plotdate->size();
+
+  if(sz > 0)
+    {
+      Volume.erase(Volume.begin(), Volume.begin() + sz);
+      Volmid.erase(Volmid.begin(), Volmid.begin() + sz);
+    }
+
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [datee, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find(":"));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(":") + std::string(":").size());
+	  val = val.substr(0, val.find(":"));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(":") + std::string(":").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  return day * 3600 + month * 60 + year > datee;
+	}),
+      plotdate->end());
+
+  sz = Volume.size() - plotdate->size();
+  if(sz > 0)
+    {
+      Volume.erase(Volume.end() - sz, Volume.end());
+      Volmid.erase(Volmid.end() - sz, Volmid.end());
+    }
   if(plotdate->size() > 0)
     {
       datebeg = std::get<0>(plotdate->at(0));
@@ -166,7 +258,6 @@ int
 PlotVolumeDeals::Draw(mglGraph *gr)
 {
   std::vector<int> X;
-  calcForDraw();
   for(size_t i = 0; i < Volume.size(); i++)
     {
       X.push_back(i);
@@ -190,12 +281,30 @@ PlotVolumeDeals::Draw(mglGraph *gr)
   gr->SetSize(width, height);
   gr->Title(grnm.c_str(), "", 5);
   gr->SetQuality(3);
-  gr->SetRanges(x, y);
+  double miny, maxy;
+  if(y.Minimal() <= y2.Minimal())
+    {
+      miny = y.Minimal();
+    }
+  else
+    {
+      miny = y2.Minimal();
+    }
+
+  if(y.Maximal() >= y2.Maximal())
+    {
+      maxy = y.Maximal();
+    }
+  else
+    {
+      maxy = y2.Maximal();
+    }
+  gr->SetRanges(x.Minimal(), x.Maximal(), miny, maxy);
   gr->SetFontSize(3);
   gr->SetOriginTick(false);
 
   std::vector<double> ticks;
-  double tickstep = (y.Maximal() - y.Minimal()) / 3;
+  double tickstep = (maxy - miny) / 3;
   if(tickstep < 0)
     {
       tickstep = -tickstep;
@@ -246,8 +355,8 @@ PlotVolumeDeals::Draw(mglGraph *gr)
   gr->Legend(1.1, 1.3);
 
   //Подписи оси х
-  mglPoint p1(x.Minimal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-  mglPoint p5(x.Maximal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  mglPoint p1(x.Minimal(), maxy + ((maxy - miny) * 0.02));
+  mglPoint p5(x.Maximal(), maxy + ((maxy - miny) * 0.02));
   datebeg = af.utf8to(datebeg);
   dateend = af.utf8to(dateend);
   gr->Puts(p1, datebeg.c_str(), "k", 3);

@@ -65,7 +65,7 @@ OpenDialogDeals::createDialog(int variant, Gdk::Rectangle rec)
       std::string f = el1;
       std::string s = el2;
       std::string day = f;
-      day.substr(0, day.find("."));
+      day = day.substr(0, day.find("."));
       std::stringstream strm;
       std::locale loc("C");
       strm << day;
@@ -93,7 +93,7 @@ OpenDialogDeals::createDialog(int variant, Gdk::Rectangle rec)
       double jd1 = af.grigtojulian(d, m, y, 0, 0, 0);
 
       day = s;
-      day.substr(0, day.find("."));
+      day = day.substr(0, day.find("."));
       strm.clear();
       strm.str("");
       strm.imbue(loc);

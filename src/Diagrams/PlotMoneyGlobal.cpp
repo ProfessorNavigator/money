@@ -21,12 +21,14 @@ PlotMoneyGlobal::PlotMoneyGlobal(
     std::string file,
     int Height,
     int Width,
-    std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate)
+    std::vector<std::tuple<std::string, double, double, double, double>> *Plotdate,
+    std::string Variant)
 {
   filename = std::filesystem::u8path(file);
   height = Height;
   width = Width;
   plotdate = Plotdate;
+  this->Variant = Variant;
 }
 
 PlotMoneyGlobal::~PlotMoneyGlobal()
@@ -41,13 +43,13 @@ PlotMoneyGlobal::calcForDraw()
   std::string line, temp;
   int count = 0;
   std::fstream f;
-  if(!std::filesystem::exists(filename))
+  f.open(filename, std::ios_base::in);
+  if(!f.is_open())
     {
       std::cout << "File to plot money volume (global) not opened" << std::endl;
     }
   else
     {
-      f.open(filename, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -74,11 +76,6 @@ PlotMoneyGlobal::calcForDraw()
 	    }
 	  count = count + 1;
 	}
-      if(plotdate->size() > 0)
-	{
-	  datebeg = std::get<0>(plotdate->at(0));
-	  dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
-	}
       f.close();
     }
   mpf_class summ(0);
@@ -92,6 +89,132 @@ PlotMoneyGlobal::calcForDraw()
       Moneymid.push_back(res.get_d());
       std::get<2>(plotdate->at(i)) = Moneymid[i];
     }
+  if(Variant.empty())
+    {
+      Variant = "all";
+    }
+  if(Variant != "all")
+    {
+      cleanVectors();
+    }
+  if(plotdate->size() > 0)
+    {
+      datebeg = std::get<0>(plotdate->at(0));
+      dateend = std::get<0>(plotdate->at(plotdate->size() - 1));
+    }
+}
+
+void
+PlotMoneyGlobal::cleanVectors()
+{
+  std::string bstr = Variant.substr(0, Variant.find(" "));
+  std::string endstr = Variant;
+  endstr.erase(0, endstr.find(" ") + std::string(" ").size());
+  std::stringstream strm;
+  std::locale loc("C");
+  strm.imbue(loc);
+  double dateb;
+  strm << bstr;
+  strm >> dateb;
+
+  strm.clear();
+  strm.str("");
+  strm.imbue(loc);
+  double datee;
+  strm << endstr;
+  strm >> datee;
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [dateb, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find("."));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(".") + std::string(".").size());
+	  val = val.substr(0, val.find("."));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(".") + std::string(".").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  AuxFunc af;
+	  double JD = af.grigtojulian(day, month, year, 0, 0, 0.0);
+
+	  return JD < dateb;
+	}),
+      plotdate->end());
+
+  size_t sz = Money.size() - plotdate->size();
+
+  if(sz > 0)
+    {
+      Money.erase(Money.begin(), Money.begin() + sz);
+      Moneymid.erase(Moneymid.begin(), Moneymid.begin() + sz);
+    }
+
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [datee, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find("."));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(".") + std::string(".").size());
+	  val = val.substr(0, val.find("."));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(".") + std::string(".").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  AuxFunc af;
+	  double JD = af.grigtojulian(day, month, year, 0, 0, 0.0);
+
+	  return JD > datee;
+	}),
+      plotdate->end());
+
+  sz = Money.size() - plotdate->size();
+  if(sz > 0)
+    {
+      Money.erase(Money.end() - sz, Money.end());
+      Moneymid.erase(Moneymid.end() - sz, Moneymid.end());
+    }
 }
 
 int
@@ -104,8 +227,25 @@ PlotMoneyGlobal::Draw(mglGraph *gr)
       X.push_back(i);
     }
   mglData x(X), y(Money), y2(Moneymid);
-  mglPoint p1(x.Minimal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
-  mglPoint p5(x.Maximal(), y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+  double miny, maxy;
+  if(y.Minimal() <= y2.Minimal())
+    {
+      miny = y.Minimal();
+    }
+  else
+    {
+      miny = y2.Minimal();
+    }
+  if(y.Maximal() >= y2.Maximal())
+    {
+      maxy = y.Maximal();
+    }
+  else
+    {
+      maxy = y2.Maximal();
+    }
+  mglPoint p1(x.Minimal(), maxy + ((maxy -miny) * 0.02));
+  mglPoint p5(x.Maximal(), maxy + ((maxy -miny) * 0.02));
 
   int d = 6;
   int number = X.size();
@@ -121,7 +261,7 @@ PlotMoneyGlobal::Draw(mglGraph *gr)
     {
       if(i > 0)
 	{
-	  mglPoint p(i, y.Maximal() + ((y.Maximal() - y.Minimal()) * 0.02));
+	  mglPoint p(i, maxy + ((maxy - miny) * 0.02));
 	  Coord.push_back(p);
 	  dates.push_back(std::get<0>(plotdate->at(i)));
 	}
@@ -132,18 +272,17 @@ PlotMoneyGlobal::Draw(mglGraph *gr)
   AuxFunc af;
   gr->Title(af.utf8to(gettext("Money turnover")).c_str(), "", 5);
   gr->SetQuality(3);
-  gr->SetRange('x', x);
-  gr->SetRange('y', y);
+  gr->SetRanges(x.Minimal(), x.Maximal(), miny, maxy);
   gr->SetFontSize(3);
   gr->SetOriginTick(false);
 
   std::vector<double> ticks;
-  double tickstep = (y.Maximal() - y.Minimal()) / 3;
+  double tickstep = (maxy - miny) / 3;
   if(tickstep < 0)
     {
       tickstep = -tickstep;
     }
-  double tickval = y.Minimal();
+  double tickval = miny;
   std::stringstream strm;
   std::locale loc("C");
   std::string tickstr, tick;

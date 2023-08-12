@@ -27,6 +27,7 @@ PlotPriceAll::PlotPriceAll(
   height = Height;
   width = Width;
   plotdate = Plotdate;
+  calcForDraw();
 }
 
 PlotPriceAll::~PlotPriceAll()
@@ -49,9 +50,9 @@ PlotPriceAll::calcForDraw()
   af.homePath(&line);
   line = line + "/.Money/BoardsList";
   p = af.utf8to(line);
-  if(std::filesystem::exists(p))
+  f.open(p, std::ios_base::in);
+  if(f.is_open())
     {
-      f.open(p, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -90,13 +91,13 @@ PlotPriceAll::calcForDraw()
   temp.clear();
   count = 0;
 
-  if(!std::filesystem::exists(filepath))
+  f.open(filepath, std::ios_base::in);
+  if(!f.is_open())
     {
       std::cout << "File for plot price (all) not opened" << std::endl;
     }
   else
     {
-      f.open(filepath, std::ios_base::in);
       while(!f.eof())
 	{
 	  getline(f, line);
@@ -179,7 +180,108 @@ PlotPriceAll::calcForDraw()
 	}
       f.close();
     }
+}
 
+void
+PlotPriceAll::cleanVectors(double dateb, double datee)
+{
+  std::locale loc("C");
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [dateb, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find("."));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(".") + std::string(".").size());
+	  val = val.substr(0, val.find("."));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(".") + std::string(".").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  AuxFunc af;
+	  double JD = af.grigtojulian(day, month, year, 0, 0, 0.0);
+
+	  return JD < dateb;
+	}),
+      plotdate->end());
+
+  size_t sz = Pricemid.size() - plotdate->size();
+
+  if(sz > 0)
+    {
+      Pricemid.erase(Pricemid.begin(), Pricemid.begin() + sz);
+      Pricebeg.erase(Pricebeg.begin(), Pricebeg.begin() + sz);
+      Priceend.erase(Priceend.begin(), Priceend.begin() + sz);
+      Tc.erase(Tc.begin(), Tc.begin() + sz);
+    }
+
+  plotdate->erase(
+      std::remove_if(plotdate->begin(), plotdate->end(), [datee, loc]
+      (auto &el)
+	{
+	  std::string val = std::get<0>(el);
+	  val = val.substr(0, val.find("."));
+
+	  std::stringstream strm;
+	  strm.imbue(loc);
+	  strm << val;
+	  int day;
+	  strm >> day;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.find(".") + std::string(".").size());
+	  val = val.substr(0, val.find("."));
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int month;
+	  strm >> month;
+
+	  val = std::get<0>(el);
+	  val.erase(0, val.rfind(".") + std::string(".").size());
+	  strm.clear();
+	  strm.str("");
+	  strm.imbue(loc);
+	  strm << val;
+	  int year;
+	  strm >> year;
+
+	  AuxFunc af;
+	  double JD = af.grigtojulian(day, month, year, 0, 0, 0.0);
+
+	  return JD > datee;
+	}),
+      plotdate->end());
+
+  sz = Pricemid.size() - plotdate->size();
+  if(sz > 0)
+    {
+      Pricemid.erase(Pricemid.end() - sz, Pricemid.end());
+      Pricebeg.erase(Pricebeg.end() - sz, Pricebeg.end());
+      Priceend.erase(Priceend.end() - sz, Priceend.end());
+      Tc.erase(Tc.end() - sz, Tc.end());
+    }
   if(plotdate->size() > 0)
     {
       datebeg = std::get<0>(plotdate->at(0));
@@ -190,7 +292,6 @@ PlotPriceAll::calcForDraw()
 int
 PlotPriceAll::Draw(mglGraph *gr)
 {
-  calcForDraw();
   std::vector<int> X;
   std::vector<double> comp;
   for(size_t i = 0; i < Pricemid.size(); i++)
@@ -240,8 +341,7 @@ PlotPriceAll::Draw(mglGraph *gr)
   gr->SetSize(width, height);
   gr->Title(grnm.c_str(), "", 5);
   gr->SetQuality(3);
-  gr->SetRange('x', x);
-  gr->SetRange('y', minval, maxval);
+  gr->SetRanges(x.Minimal(), x.Maximal(), minval, maxval);
   gr->SetFontSize(3);
   gr->SetOriginTick(false);
 
