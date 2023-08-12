@@ -43,7 +43,8 @@ AuxFunc::grigtojulian(int day, int month, int year, int hour, int minut,
   if(J >= 0)
     {
       JD = static_cast<double>(J) + static_cast<double>(hour) / 24.0
-	  + static_cast<double>(minut) / 1440.0 + sec / 86400.0;    }
+	  + static_cast<double>(minut) / 1440.0 + sec / 86400.0;
+    }
   else
     {
       double k = static_cast<double>(hour) / 24.0
@@ -167,15 +168,15 @@ AuxFunc::callNetwork(std::string urli, std::string filename, int *check)
       curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
       if(!MONEY_CA_CERT.empty())
 	{
-	  std::filesystem::path ca_cert = std::filesystem::u8path(MONEY_CA_CERT);
+	  std::filesystem::path ca_cert = std::filesystem::u8path(
+	      MONEY_CA_CERT);
 	  curl_easy_setopt(curl, CURLOPT_CAINFO, ca_cert.string().c_str());
 	}
       res = curl_easy_perform(curl);
       if(res != CURLE_OK)
 	{
 	  *check = 0;
-	  std::cerr << "CURL error: " << curl_easy_strerror(res)
-	      << std::endl;
+	  std::cerr << "CURL error: " << curl_easy_strerror(res) << std::endl;
 	}
       else
 	{
@@ -413,7 +414,7 @@ AuxFunc::fileNames(std::string adress, std::vector<std::string> &filenames)
   z = zip_open(adress.c_str(), ZIP_RDONLY, &er);
   if(er < 1)
     {
-      num = zip_get_num_files(z);
+      num = zip_get_num_entries(z, ZIP_FL_UNCHANGED);
 
       for(int i = 0; i < num; i++)
 	{
@@ -443,7 +444,7 @@ AuxFunc::fileNames(std::string adress,
   z = zip_open(adress.c_str(), ZIP_RDONLY, &er);
   if(er < 1)
     {
-      num = zip_get_num_files(z);
+      num = zip_get_num_entries(z, ZIP_FL_UNCHANGED);
 
       for(int i = 0; i < num; i++)
 	{
