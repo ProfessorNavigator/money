@@ -1,0 +1,24 @@
+target_sources(Money
+    PRIVATE
+        AddCoefWindow.h
+        Board.h
+        CoeffModel.h
+        CommonGraphSelectionWindow.h
+        Deal.h
+        DealsGraphSelectionWindow.h
+        DiagramWidget.h
+        DiagramWindow.h
+        DownloadProcessWindow.h
+        DownloadTechnicalInfoWindow.h
+        DownloadWindow.h
+        FileReader.h
+        GraphDataWindow.h
+        LoadingDialog.h
+        MainWindow.h
+        MoneyAux.h        
+        PPM.h
+        PPMGraphSelectionWindow.h
+        Security.h
+        TradeDay.h
+)
+

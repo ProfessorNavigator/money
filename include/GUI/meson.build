@@ -1,1 +1,0 @@
-incgui = include_directories ('.')

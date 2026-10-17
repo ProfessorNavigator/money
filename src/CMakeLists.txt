@@ -1,0 +1,24 @@
+target_sources(Money
+    PRIVATE
+        AddCoefWindow.cpp
+        Board.cpp
+        CoeffModel.cpp
+        CommonGraphSelectionWindow.cpp
+        Deal.cpp
+        DealsGraphSelectionWindow.cpp
+        DiagramWidget.cpp
+        DiagramWindow.cpp
+        DownloadProcessWindow.cpp
+        DownloadTechnicalInfoWindow.cpp
+        DownloadWindow.cpp
+        FileReader.cpp
+        GraphDataWindow.cpp
+        LoadingDialog.cpp
+        main.cpp
+        MainWindow.cpp
+        MoneyAux.cpp
+        PPM.cpp
+        PPMGraphSelectionWindow.cpp
+        Security.cpp
+        TradeDay.cpp
+)

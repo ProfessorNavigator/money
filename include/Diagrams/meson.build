@@ -1,1 +1,0 @@
-incdiagrams = include_directories ('.')

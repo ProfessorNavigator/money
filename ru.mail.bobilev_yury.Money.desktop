@@ -1,7 +1,7 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Name=Money
-Comment=Money collects MOEX statistic
+Comment=Collects MOEX statistic
 GenericName=Money
 Exec=money
 Icon=money
