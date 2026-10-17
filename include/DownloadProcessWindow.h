@@ -86,6 +86,7 @@ private:
 
   std::atomic<bool> allow_close;
   std::atomic<bool> cancel_all;
+  bool cancel_all_omp = false;
 
   QNetworkAccessManager *network;
 

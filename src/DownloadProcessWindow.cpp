@@ -100,16 +100,15 @@ DownloadProcessWindow::createWindow()
           [this]
             {
               cancel_all.store(true, std::memory_order_relaxed);
+#pragma omp atomic write
+              cancel_all_omp = true;
             });
   v_box->addWidget(cancel, 0, Qt::AlignCenter);
 
   connect(this, &DownloadProcessWindow::signalFinished, this,
           [this]
             {
-              if(!cancel_all.load(std::memory_order_relaxed))
-                {
-                  finalDialog();
-                }
+              finalDialog();
               allow_close.store(true, std::memory_order_relaxed);
               this->close();
             });
@@ -352,7 +351,10 @@ DownloadProcessWindow::formDownloadVectors()
         }
 
       downloadAll();
-      calculatePPM();
+      if(!cancel_all.load(std::memory_order_relaxed))
+        {
+          calculatePPM();
+        }
     }
 
   emit signalFinished();
@@ -789,6 +791,8 @@ DownloadProcessWindow::downloadUrl(const QString &url,
                   return void();
                 }
               cancel_all.store(true, std::memory_order_relaxed);
+#pragma omp atomic write
+              cancel_all_omp = true;
               std::lock_guard<std::mutex> lglock(next_url_mtx);
               stop_urls = true;
               next_url = true;
@@ -819,6 +823,8 @@ DownloadProcessWindow::parseReply(QNetworkReply *repl,
   if(buf.empty())
     {
       cancel_all.store(true, std::memory_order_relaxed);
+#pragma omp atomic write
+      cancel_all_omp = true;
       std::lock_guard<std::mutex> lglock(next_url_mtx);
       stop_urls = true;
       next_url = true;
@@ -873,6 +879,8 @@ DownloadProcessWindow::parseReply(QNetworkReply *repl,
       if(!f.is_open())
         {
           cancel_all.store(true, std::memory_order_relaxed);
+#pragma omp atomic write
+          cancel_all_omp = true;
           std::lock_guard<std::mutex> lglock(next_url_mtx);
           stop_urls = true;
           next_url = true;
@@ -889,6 +897,8 @@ DownloadProcessWindow::parseReply(QNetworkReply *repl,
       if(n == std::string::npos)
         {
           cancel_all.store(true, std::memory_order_relaxed);
+#pragma omp atomic write
+          cancel_all_omp = true;
           std::lock_guard<std::mutex> lglock(next_url_mtx);
           stop_urls = true;
           next_url = true;
@@ -909,6 +919,8 @@ DownloadProcessWindow::parseReply(QNetworkReply *repl,
       if(n2 == std::string::npos)
         {
           cancel_all.store(true, std::memory_order_relaxed);
+#pragma omp atomic write
+          cancel_all_omp = true;
           std::lock_guard<std::mutex> lglock(next_url_mtx);
           stop_urls = true;
           next_url = true;
@@ -932,6 +944,8 @@ DownloadProcessWindow::parseReply(QNetworkReply *repl,
       if(!f.is_open())
         {
           cancel_all.store(true, std::memory_order_relaxed);
+#pragma omp atomic write
+          cancel_all_omp = true;
           std::lock_guard<std::mutex> lglock(next_url_mtx);
           stop_urls = true;
           next_url = true;
@@ -988,6 +1002,13 @@ DownloadProcessWindow::calculatePPM()
 #pragma omp for
   for(auto it = paths.begin(); it != paths.end(); it++)
     {
+      bool cncl;
+#pragma omp atomic read
+      cncl = cancel_all_omp;
+      if(cncl)
+        {
+          continue;
+        }
       std::vector<TradeDay> tdv = fr.readAll(*it);
       tdv.erase(std::remove_if(tdv.begin(), tdv.end(),
                                [](const TradeDay &el)
@@ -1172,7 +1193,16 @@ DownloadProcessWindow::finalDialog()
   window->setLayout(v_box);
 
   QLabel *lab = new QLabel;
-  lab->setText(tr("Downloading completed"));
+  if(cancel_all.load(std::memory_order_relaxed))
+    {
+      lab->setWordWrap(true);
+      lab->setText(tr("Downloading has been interrupted"));
+    }
+  else
+    {
+      lab->setText(tr("Downloading completed"));
+    }
+  lab->setAlignment(Qt::AlignCenter);
   v_box->addWidget(lab, 0, Qt::AlignCenter);
 
   QPushButton *close = new QPushButton;

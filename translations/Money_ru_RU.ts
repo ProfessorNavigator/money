@@ -231,27 +231,27 @@
     </message>
     <message>
         <location filename="../src/DealsGraphSelectionWindow.cpp" line="182"/>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="704"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="707"/>
         <source>Prices</source>
         <translation>Цены</translation>
     </message>
     <message>
         <location filename="../src/DealsGraphSelectionWindow.cpp" line="183"/>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="810"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="813"/>
         <source>PPM</source>
         <translation>ПСД</translation>
     </message>
     <message>
         <location filename="../src/DealsGraphSelectionWindow.cpp" line="184"/>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="852"/>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="882"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="855"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="885"/>
         <source>Turnover</source>
         <translation>Оборот</translation>
     </message>
     <message>
         <location filename="../src/DealsGraphSelectionWindow.cpp" line="185"/>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="927"/>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="956"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="930"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="959"/>
         <source>Money turnover</source>
         <translation>Оборот денег</translation>
     </message>
@@ -266,56 +266,56 @@
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="511"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="514"/>
         <source>Start time</source>
         <translation>Начальное время</translation>
     </message>
     <message>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="525"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="528"/>
         <source>End time</source>
         <translation>Конечное время</translation>
     </message>
     <message>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="724"/>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="798"/>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="873"/>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="948"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="727"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="801"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="876"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="951"/>
         <source>Deal number</source>
         <translation>Номер сделки</translation>
     </message>
     <message>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="732"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="735"/>
         <source>Price</source>
         <translation>Цена</translation>
     </message>
     <message>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="734"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="737"/>
         <source>PPM calculated price</source>
         <translation>Цена рассчитанная из ПСД</translation>
     </message>
     <message>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="777"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="780"/>
         <source>Purchasing power of money</source>
         <translation>Покупательная способность денег</translation>
     </message>
     <message>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="801"/>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="876"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="804"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="879"/>
         <source>Shares</source>
         <translation>Акции</translation>
     </message>
     <message>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="808"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="811"/>
         <source>Deal PPM</source>
         <translation>ПСД для сделки</translation>
     </message>
     <message>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="884"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="887"/>
         <source>Average turnover</source>
         <translation>Средний оборот</translation>
     </message>
     <message>
-        <location filename="../src/DealsGraphSelectionWindow.cpp" line="959"/>
+        <location filename="../src/DealsGraphSelectionWindow.cpp" line="962"/>
         <source>Average money turnover</source>
         <translation>Средний оборот денег</translation>
     </message>
@@ -362,17 +362,22 @@
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../src/DownloadProcessWindow.cpp" line="980"/>
+        <location filename="../src/DownloadProcessWindow.cpp" line="994"/>
         <source>PPM calculation:</source>
         <translation>Расчёт ПСД:</translation>
     </message>
     <message>
-        <location filename="../src/DownloadProcessWindow.cpp" line="1175"/>
+        <location filename="../src/DownloadProcessWindow.cpp" line="1199"/>
+        <source>Downloading has been interrupted</source>
+        <translation>Загрузка была прервана</translation>
+    </message>
+    <message>
+        <location filename="../src/DownloadProcessWindow.cpp" line="1203"/>
         <source>Downloading completed</source>
         <translation>Загрузка завершена</translation>
     </message>
     <message>
-        <location filename="../src/DownloadProcessWindow.cpp" line="1179"/>
+        <location filename="../src/DownloadProcessWindow.cpp" line="1209"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
