@@ -215,6 +215,7 @@ DealsGraphSelectionWindow::setDate(int date_index)
 {
   if(date_index >= date->count())
     {
+      emit signalLoaded();
       return void();
     }
   std::filesystem::path dir_p
@@ -283,6 +284,7 @@ DealsGraphSelectionWindow::setInstrument(int instrument_index)
 {
   if(instrument_index >= instrument->count())
     {
+      emit signalLoaded();
       return void();
     }
   std::filesystem::path p
@@ -333,6 +335,7 @@ DealsGraphSelectionWindow::setInstrument(int instrument_index)
 
   if(board->count() <= 0)
     {
+      emit signalLoaded();
       return void();
     }
 
