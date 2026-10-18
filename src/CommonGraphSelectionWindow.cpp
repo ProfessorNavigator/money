@@ -87,7 +87,7 @@ CommonGraphSelectionWindow::createWindow()
         {
           QString val = it->id.c_str();
           val += " ";
-          val += it->name;
+          val += it->name.c_str();
           instrument->addItem(val, QVariant::fromValue(it->id));
           prev = it->id;
         }
