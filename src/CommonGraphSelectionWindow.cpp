@@ -505,8 +505,8 @@ CommonGraphSelectionWindow::checkInput()
   for(auto it = values.begin(); it != values.end(); it++)
     {
       normalized.push_back(*it);
-      t += it->turnover;
-      mt += it->money_turnover;
+      t += mpf_class(static_cast<double>(it->turnover));
+      mt += mpf_class(it->money_turnover);
       it->average_turnover = t / count;
       it->average_money_turnover = mt / count;
       auto it_last = normalized.rbegin();
@@ -543,7 +543,7 @@ CommonGraphSelectionWindow::checkInput()
         {
           it_last->turnover *= std::get<2>(*it_cv);
         }
-      t_norm += mpf_class(it_last->turnover);
+      t_norm += mpf_class(static_cast<double>(it_last->turnover));
       mt_norm += mpf_class(it_last->money_turnover);
       it_last->ppm = t_norm / mt_norm;
       it_last->daily_ppm = it_last->turnover / it_last->money_turnover;

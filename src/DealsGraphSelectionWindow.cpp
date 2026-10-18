@@ -580,7 +580,7 @@ DealsGraphSelectionWindow::checkInput()
     {
       plot_v.push_back(*it);
       auto it_last = plot_v.rbegin();
-      t += mpf_class(it->quantity);
+      t += mpf_class(static_cast<double>(it->quantity));
       mt += mpf_class(it->money_volume);
       it_last->ppm = t / mt;
       it_last->ppm_price = mt / t;
