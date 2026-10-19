@@ -3,7 +3,7 @@
 Name=Money
 Comment=Collects MOEX statistic
 GenericName=Money
-Exec=money
+Exec=Money
 Icon=money
 Categories=Science;Economy;
 Terminal=false
