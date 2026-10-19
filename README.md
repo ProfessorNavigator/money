@@ -33,7 +33,7 @@ If everything was correct, you can find Money.exe file in `msys_directory/mingw_
 ## Dependencies
 
 Money uses CMake building system, so to build it from source you need CMake.
-Also you need [Qt6](https://www.qt.io/), [icu](https://icu.unicode.org/) (version >= 69), [mathgl](http://mathgl.sourceforge.net/), and [gmp](https://gmplib.org/) (actually you need its' C++ binding gmpxx). All libraries must have headers (for building), so if you use for example Debian Linux, you need ...-dev versions of packages.
+Also you need [Qt6](https://www.qt.io/), [icu](https://icu.unicode.org/) (version >= 69), [mathgl](http://mathgl.sourceforge.net/), [gmp](https://gmplib.org/) (actually you need its' C++ binding gmpxx) and [LibUDB](https://github.com/ProfessorNavigator/libudb). All libraries must have headers (for building), so if you use for example Debian Linux, you need ...-dev versions of packages.
 
 ## Usage
 
