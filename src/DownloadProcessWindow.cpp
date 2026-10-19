@@ -130,8 +130,13 @@ DownloadProcessWindow::createWindow()
 void
 DownloadProcessWindow::formDownloadVectors()
 {
+  Algorithm::parallelSort(securities.begin(), securities.end(),
+                          [](const Security &el1, const Security &el2)
+                            {
+                              return el1.id < el2.id;
+                            });
   if(mode == Mode::Deals)
-    {
+    {      
       for(auto it = securities.begin(); it != securities.end(); it++)
         {
           if(to_download.empty())
