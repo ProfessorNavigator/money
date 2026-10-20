@@ -168,7 +168,7 @@
     <message>
         <location filename="../src/CommonGraphSelectionWindow.cpp" line="802"/>
         <source>PPM calculated price</source>
-        <translation>Цена рассчитанная из ПСД</translation>
+        <translation>Цена, рассчитанная из ПСД</translation>
     </message>
     <message>
         <location filename="../src/CommonGraphSelectionWindow.cpp" line="843"/>
@@ -291,7 +291,7 @@
     <message>
         <location filename="../src/DealsGraphSelectionWindow.cpp" line="737"/>
         <source>PPM calculated price</source>
-        <translation>Цена рассчитанная из ПСД</translation>
+        <translation>Цена, рассчитанная из ПСД</translation>
     </message>
     <message>
         <location filename="../src/DealsGraphSelectionWindow.cpp" line="780"/>
@@ -577,7 +577,7 @@
     <message>
         <location filename="../src/GraphDataWindow.cpp" line="376"/>
         <source>PPM calculated price</source>
-        <translation>Цена рассчитанная из ПСД</translation>
+        <translation>Цена, рассчитанная из ПСД</translation>
     </message>
     <message>
         <location filename="../src/GraphDataWindow.cpp" line="430"/>
