@@ -225,6 +225,16 @@ DownloadTechnicalInfoWindow::errorDialog(QNetworkReply::NetworkError code)
 void
 DownloadTechnicalInfoWindow::formListingRequests()
 {
+  std::string str = QDir::homePath().toStdString();
+  std::filesystem::path p(std::u8string(str.begin(), str.end()));
+  p /= u8".local";
+  p /= u8"share";
+  p /= u8"Money";
+  p /= u8"foreign_securities.csv";
+  std::filesystem::remove_all(p);
+  p = p.parent_path() / u8"securities.csv";
+  std::filesystem::remove_all(p);
+
   int count = 0;
   QString limit("100");
   for(;;)

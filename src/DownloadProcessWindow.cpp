@@ -234,7 +234,7 @@ DownloadProcessWindow::formDownloadVectors()
                       strm >> std::get_time(&tm, "%Y-%m-%d");
                       std::chrono::time_point<std::chrono::system_clock> cur_tm
                           = std::chrono::system_clock::from_time_t(
-                              std::mktime(&tm));
+                              std::mktime(&tm));                      
                       if(cur_tm > last_tm)
                         {
                           it_last->history_till = it->history_till;
